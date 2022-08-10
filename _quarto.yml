@@ -1,0 +1,19 @@
+project:
+  type: website
+
+website:
+  title: "Quarto do Marcel"
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/marceelrf
+      - icon: twitter
+        href: https://twitter.com/marceelrf
+format:
+  html:
+    theme: lux
+    css: styles.css
+
+editor: visual
+

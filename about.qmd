@@ -1,0 +1,24 @@
+---
+title: "About"
+image: photoAbout.jpeg
+about:
+  template: jolla
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/marceelrf
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com/in/marceelrf
+    - icon: github
+      text: Github
+      href: https://github.com/marceelrf
+---
+
+Hello, my name is Marcel Ferreira (or Marshall) and I am a Data Scientist and Researcher in Biomaterials and Bioinformatics applied in 3D Bioprinting. Currently my research is focused on bone tissue.
+
+Welcome to my blog where I will provide professional content about R, machine learning, biomaterials and bioinformatics, among others, and also personal content about the glorious São Paulo Futebol Clube.
+
+This blog is my first adventure using [Quarto](https://quarto.org/)!
+
+You can find me on the social networks below (***Important***: My twitter is for mostly personal content, please don't take me seriously!).

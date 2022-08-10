@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Welcome to my blog where I will provide professional content about R, machine learning, biomaterials and bioinformatics, among others, and also personal content about the glorious São Paulo Futebol Clube.\nThis blog is my first adventure using Quarto!\nYou can find me on the social networks below (Important: My twitter is for mostly personal content, please don’t take me seriously!)."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Quarto Do Marcel",
+    "section": "",
+    "text": "news\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nAug 10, 2022\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nAug 10, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
+    "section": "",
+    "text": "1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "Mee"
+  }
+]
