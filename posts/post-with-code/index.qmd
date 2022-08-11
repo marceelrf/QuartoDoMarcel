@@ -8,7 +8,7 @@ image: "tidyspec_prov.png"
 
 Hello everybody, I'm really excited to announce that I have finished (or almost) my first R package. The `tidyspec`: a package to analyze spectroscopy data using tidy-data philosophy.
 
-![preliminar hex](tidyspec_prov.png)
+![preliminar hex](tidyspec_prov.png){width="800"}
 
 In the next few weeks I will be writing the function documentation and then finalizing the package.
 I am very happy because when I started using R to analyze my FTIR (infrared spectroscopy) data I could not apply `tidyverse` functions to my pipelines. It took me months of wracking my brains to find a model to leverage the existing packages and connect them to the `tidyverse`.
