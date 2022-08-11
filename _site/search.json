@@ -11,14 +11,14 @@
     "href": "index.html",
     "title": "Quarto Do Marcel",
     "section": "",
-    "text": "news\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nAug 10, 2022\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nAug 10, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\nNo matching items"
+    "text": "news\n\n\nR\n\n\nFTIR\n\n\nbiomaterials\n\n\n\n\n\n\n\n\n\n\n\nAug 11, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nAug 10, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/post-with-code/index.html",
     "href": "posts/post-with-code/index.html",
-    "title": "Post With Code",
+    "title": "My first R package",
     "section": "",
-    "text": "1 + 1\n\n[1] 2"
+    "text": "preliminar hex\n\n\nIn the next few weeks I will be writing the function documentation and then finalizing the package. I am very happy because when I started using R to analyze my FTIR (infrared spectroscopy) data I could not apply tidyverse functions to my pipelines. It took me months of wracking my brains to find a model to leverage the existing packages and connect them to the tidyverse.\nYou can check the github repository.\nEnjoy!"
   },
   {
     "objectID": "posts/welcome/index.html",
