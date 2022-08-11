@@ -3,6 +3,7 @@ project:
 
 website:
   title: "Quarto do Marcel"
+  site-url: https://quartodomarcel.netlify.app/
   navbar:
     right:
       - about.qmd
@@ -10,6 +11,8 @@ website:
         href: https://github.com/marceelrf
       - icon: twitter
         href: https://twitter.com/marceelrf
+      - icon: rss
+        href: index.xml
 format:
   html:
     theme: lux
