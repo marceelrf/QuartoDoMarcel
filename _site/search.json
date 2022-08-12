@@ -11,7 +11,7 @@
     "href": "index.html",
     "title": "Quarto Do Marcel",
     "section": "",
-    "text": "news\n\n\nR\n\n\nFTIR\n\n\nbiomaterials\n\n\n\n\n\n\n\n\n\n\n\nAug 11, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nAug 10, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\nNo matching items"
+    "text": "R\n\n\nbase\n\n\n\n\n\n\n\n\n\n\n\nAug 12, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\nR\n\n\nFTIR\n\n\nbiomaterials\n\n\n\n\n\n\n\n\n\n\n\nAug 11, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nAug 10, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/post-with-code/index.html",
@@ -19,6 +19,27 @@
     "title": "My first R package",
     "section": "",
     "text": "preliminar hex\n\n\nIn the next few weeks I will be writing the function documentation and then finalizing the package. I am very happy because when I started using R to analyze my FTIR (infrared spectroscopy) data I could not apply tidyverse functions to my pipelines. It took me months of wracking my brains to find a model to leverage the existing packages and connect them to the tidyverse.\nYou can check the github repository.\nEnjoy!"
+  },
+  {
+    "objectID": "posts/R-objects/index.html",
+    "href": "posts/R-objects/index.html",
+    "title": "R objects",
+    "section": "",
+    "text": "R is an extremely powerful language for data analysis and is used in many different fields. But many users start without taking the time to assimilate the different types of objects, which leads to mistakes that could simply be avoided. This in turn can lead to frustration, which is the gateway to the dark side of the force.\nvia GIPHY\nWhen I started analyzing data with R I was on a very tight deadline and had to skip these steps, and I made a lot of mistakes. Really, a lot!\nSo in this post I will talk about the basic object types, or classes, in R. Basic but effective. I hope it helps you."
+  },
+  {
+    "objectID": "posts/R-objects/index.html#atomic-data",
+    "href": "posts/R-objects/index.html#atomic-data",
+    "title": "R objects",
+    "section": "Atomic data",
+    "text": "Atomic data\nThese are the basic data classes in R. More complex objects will always be built using them. There are 6 classes in R: logical, integer, real, complex, string (or character) and raw. logical are values like TRUE or FALSE (Known as Booleans). integer, real and complex are numeric types. character are values like words, in other languages this type of values are call as strings. And about raw I must be honest with you. I have never used it!\n\n#logical\nTRUE\n\n[1] TRUE\n\n#integer\n1L\n\n[1] 1\n\n#real\n1.2\n\n[1] 1.2\n\n#complex\ncomplex(real = 1,imaginary = 2)\n\n[1] 1+2i\n\n#character\n\"String\"\n\n[1] \"String\"\n\n\nYou may have notice that there is special ways to create these objects. We use \"\" to define a character. We add L to the end of a number to make it explicit that it is an integer. We need the complex() function to create a complex number. And logicals are defined by the uppercase words TRUE and FALSE, and their respective initials, T and F."
+  },
+  {
+    "objectID": "posts/R-objects/index.html#vectors",
+    "href": "posts/R-objects/index.html#vectors",
+    "title": "R objects",
+    "section": "Vectors",
+    "text": "Vectors\nVectors are one-dimensional objects composed of a set of elements, where the order does not necessarily have a meaning, serving only to locate the element in the vector. The functions c() is used to create vector in R.\n\nv1 <- c(1,3,5)\nv1\n\n[1] 1 3 5\n\nv2 <- c(\"ball\",\"house\")\nv2\n\n[1] \"ball\"  \"house\"\n\nv3 <- c(T,T,F)\nv3\n\n[1]  TRUE  TRUE FALSE\n\n\nThe operator [] can be used to extract the element of certain position in a vector. For example, let’s extract the second element of the vectors v1, v2 and v3.\n\nv1[2]\n\n[1] 3\n\nv2[2]\n\n[1] \"house\"\n\nv3[2]\n\n[1] TRUE\n\n\nPay attention when use this operator to not try access an non existing position in a vector. such as trying to access the fourth element in a vector (v1) with only three elements. This will result in a NA value, which is represent the missing values in R, which are a very important topic that I will cover in the future. Stay tuned!\n\nv1[4]\n\n[1] NA\n\n\nThere are other ways to create vectors in R considering their classes that I will dedicate a separate post for this.\nIn R different classes cannot coexist in the same vector (we will see what a vector is later, for now just trust me) and there is coercion when we put them together. Coercion occurs in the following order:\ncharacter > complex > real > integer > logical\nThis means, if you put a character and a numeric together in a vector, R will coerce the numeric to become a character. If you put a logical in the same vector as a numeric it will be turned into a numeric. The functions class() and typeof() can be used to check the class and type, respectively, of R objects.\n\n#class and typeof usage\nclass(\"ball\")\n\n[1] \"character\"\n\ntypeof(1L)\n\n[1] \"integer\"\n\nclass(1.2)\n\n[1] \"numeric\"\n\n#coercion\nobj1 <-c(\"ball\",1)\nclass(obj1)\n\n[1] \"character\"\n\ntypeof(obj1)\n\n[1] \"character\"\n\nobj2 <-c(TRUE,1)\nclass(obj2)\n\n[1] \"numeric\"\n\ntypeof(obj2)\n\n[1] \"double\"\n\n\nThis behavior is the source of major errors and it is always necessary to check that your objects are of the desired class. After all, it is impossible to perform mathematical operations with character in R, for example.\nHowever, the coercion behavior can be used to our advantage in the case of the trick of using logicals and numeric together. Like in the case where we want to know how many numbers in an vector are greater than a certain value. By using the > (greater than) operator we perform a logical test that returns TRUE/FALSE values. The sum() function, on the other hand, adds up all the elements of a vector and if it receives a logical vector it will transform TRUE into 1 and FALSE into 0.\n\n#a numeric vector\nv1 <- c(1,2,3,2,4,5,8,2,1)\n\n\n#logical test\nv1 > 3\n\n[1] FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE\n\n#use sum to get how many numbers are grater than 3\nsum(v1 > 3)\n\n[1] 3\n\n\nThe post is getting long, so that’s it for now! In the next one we will talk about objects with larger dimensions like matrix and data.frame.\nI’m waiting for you!"
   },
   {
     "objectID": "posts/welcome/index.html",

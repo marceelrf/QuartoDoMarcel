@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://quartodomarcel.netlify.app/posts/post-with-code/index.html</loc>
-    <lastmod>2022-08-11T20:35:42.176Z</lastmod>
+    <loc>https://quartodomarcel.netlify.app/about.html</loc>
+    <lastmod>2022-08-12T21:58:18.915Z</lastmod>
   </url>
   <url>
     <loc>https://quartodomarcel.netlify.app/index.html</loc>
-    <lastmod>2022-08-11T20:35:55.598Z</lastmod>
+    <lastmod>2022-08-12T21:58:19.430Z</lastmod>
+  </url>
+  <url>
+    <loc>https://quartodomarcel.netlify.app/posts/post-with-code/index.html</loc>
+    <lastmod>2022-08-12T21:58:19.865Z</lastmod>
+  </url>
+  <url>
+    <loc>https://quartodomarcel.netlify.app/posts/R-objects/index.html</loc>
+    <lastmod>2022-08-12T21:58:20.933Z</lastmod>
+  </url>
+  <url>
+    <loc>https://quartodomarcel.netlify.app/posts/welcome/index.html</loc>
+    <lastmod>2022-08-12T21:58:21.394Z</lastmod>
   </url>
 </urlset>
