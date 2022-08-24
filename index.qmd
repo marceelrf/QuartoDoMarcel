@@ -11,3 +11,6 @@ listing:
 page-layout: full
 title-block-banner: true
 ---
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9124147692602552"
+     crossorigin="anonymous"></script>
