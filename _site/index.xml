@@ -10,7 +10,112 @@
 <atom:link href="https://quartodomarcel.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.0.36</generator>
-<lastBuildDate>Fri, 12 Aug 2022 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 24 Aug 2022 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>R objects 2</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/R-objects-2/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>In the last post (<strong>R objects</strong>) we have seen the <code>atomic</code> classes and <code>vectors</code>, which are one-dimensional arrangements of these classes. But, as you can imagine, it’s not always possible to represent our data using one-dimensional object. When talking about two-dimensional objects tables are something extremely common in our daily lives. R has two types of objects for representing tables (2D objects): <code>matrix</code> and <code>data.frames</code>, very similar objects, but with one <strong>very important difference</strong>: <code>matrix</code> only accept <strong>ONE</strong> <code>atomic</code> class, while <code>data.frames</code> accept <strong>ONE</strong> per column.</p>
+<section id="matrix" class="level2">
+<h2 class="anchored" data-anchor-id="matrix">Matrix</h2>
+<p>To create a <code>matrix</code> we need a <code>vector</code> (Yes, a <code>vector</code>) and the function <code>matrix()</code>. This function takes the <code>vector</code> and arrange in a object containing the number of rows and columns that we specify in the arguments <code>nrow</code> and <code>ncol</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">v1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>)</span>
+<span id="cb1-2"></span>
+<span id="cb1-3">Mat1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">matrix</span>(<span class="at" style="color: #657422;">data =</span> v1,</span>
+<span id="cb1-4">               <span class="at" style="color: #657422;">nrow =</span> <span class="dv" style="color: #AD0000;">2</span>,</span>
+<span id="cb1-5">               <span class="at" style="color: #657422;">ncol =</span> <span class="dv" style="color: #AD0000;">3</span>)</span>
+<span id="cb1-6">Mat1</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    3    2
+[2,]    2    1    3</code></pre>
+</div>
+</div>
+<p>It’s possible to control the order of the elements in the <code>matrix</code> using the argument <code>byrow</code>, which controls whether the elements will be filled by rows or columns (<strong><em>default</em></strong>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">matrix</span>(<span class="at" style="color: #657422;">data =</span> v1,</span>
+<span id="cb3-2">       <span class="at" style="color: #657422;">nrow =</span> <span class="dv" style="color: #AD0000;">2</span>,</span>
+<span id="cb3-3">       <span class="at" style="color: #657422;">ncol =</span> <span class="dv" style="color: #AD0000;">3</span>,</span>
+<span id="cb3-4">       <span class="at" style="color: #657422;">byrow =</span> T)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    2    3
+[2,]    1    2    3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">matrix</span>(<span class="at" style="color: #657422;">data =</span> v1,</span>
+<span id="cb5-2">       <span class="at" style="color: #657422;">nrow =</span> <span class="dv" style="color: #AD0000;">2</span>,</span>
+<span id="cb5-3">       <span class="at" style="color: #657422;">ncol =</span> <span class="dv" style="color: #AD0000;">3</span>,</span>
+<span id="cb5-4">       <span class="at" style="color: #657422;">byrow =</span> F)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    3    2
+[2,]    2    1    3</code></pre>
+</div>
+</div>
+<p>The last argument, <code>dimnames</code>, allows us to choose names for the dimensions (rows and columns), but for this argument we need to use <code>lists</code>, and since we haven’t talked about this object class yet, I will show you how to achieve the same results using functions. The functions <code>rownames()</code> and <code>colnames()</code> are used to extract the row and column names, respectively. We can use an <code>vector</code> of <code>characters</code>, equal in length to the number of rows or columns, to choose their names.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="co" style="color: #5E5E5E;">#Columns</span></span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;">colnames</span>(Mat1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;">colnames</span>(Mat1) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Col1"</span>,<span class="st" style="color: #20794D;">"Col2"</span>,<span class="st" style="color: #20794D;">"Col3"</span>)</span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;">colnames</span>(Mat1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Col1" "Col2" "Col3"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="co" style="color: #5E5E5E;">#Rows</span></span>
+<span id="cb11-2"><span class="fu" style="color: #4758AB;">rownames</span>(Mat1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;">rownames</span>(Mat1) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Row1"</span>,<span class="st" style="color: #20794D;">"Row2"</span>)</span>
+<span id="cb13-2"><span class="fu" style="color: #4758AB;">rownames</span>(Mat1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Row1" "Row2"</code></pre>
+</div>
+</div>
+<p>Similar to <code>vectors</code>, we can extract the elements using squarebrackets, but now we have to pass the indices to rows and columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="co" style="color: #5E5E5E;">#Extract the 2nd row</span></span>
+<span id="cb15-2">Mat1[<span class="dv" style="color: #AD0000;">2</span>,]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Col1 Col2 Col3 
+   2    1    3 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="co" style="color: #5E5E5E;">#Extract the 1st and 3rd columns</span></span>
+<span id="cb17-2">Mat1[,<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">3</span>)]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Col1 Col3
+Row1    1    2
+Row2    2    3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="co" style="color: #5E5E5E;">#Extract the element row = 2 column = 2</span></span>
+<span id="cb19-2">Mat1[<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+</section>
+<section id="data-frames" class="level2">
+<h2 class="anchored" data-anchor-id="data-frames">Data frames</h2>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>base</category>
+  <guid>https://quartodomarcel.netlify.app/posts/R-objects-2/index.html</guid>
+  <pubDate>Wed, 24 Aug 2022 04:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/R-objects-2/matrix-2502954_1280.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>R objects</title>
   <dc:creator>Marcel Ferreira</dc:creator>

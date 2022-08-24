@@ -11,7 +11,7 @@
     "href": "index.html",
     "title": "Quarto Do Marcel",
     "section": "",
-    "text": "R\n\n\nbase\n\n\n\n\n\n\n\n\n\n\n\nAug 12, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\nR\n\n\nFTIR\n\n\nbiomaterials\n\n\n\n\n\n\n\n\n\n\n\nAug 11, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nAug 10, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\nNo matching items"
+    "text": "R\n\n\nbase\n\n\n\n\nTwo dimensional objects\n\n\n\n\n\n\nAug 24, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nR\n\n\nbase\n\n\n\n\n\n\n\n\n\n\n\nAug 12, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\nR\n\n\nFTIR\n\n\nbiomaterials\n\n\n\n\n\n\n\n\n\n\n\nAug 11, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nAug 10, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/post-with-code/index.html",
@@ -40,6 +40,27 @@
     "title": "R objects",
     "section": "Vectors",
     "text": "Vectors\nVectors are one-dimensional objects composed of a set of elements, where the order does not necessarily have a meaning, serving only to locate the element in the vector. The functions c() is used to create vector in R.\n\nv1 <- c(1,3,5)\nv1\n\n[1] 1 3 5\n\nv2 <- c(\"ball\",\"house\")\nv2\n\n[1] \"ball\"  \"house\"\n\nv3 <- c(T,T,F)\nv3\n\n[1]  TRUE  TRUE FALSE\n\n\nThe operator [] can be used to extract the element of certain position in a vector. For example, let’s extract the second element of the vectors v1, v2 and v3.\n\nv1[2]\n\n[1] 3\n\nv2[2]\n\n[1] \"house\"\n\nv3[2]\n\n[1] TRUE\n\n\nPay attention when use this operator to not try access an non existing position in a vector. such as trying to access the fourth element in a vector (v1) with only three elements. This will result in a NA value, which is represent the missing values in R, which are a very important topic that I will cover in the future. Stay tuned!\n\nv1[4]\n\n[1] NA\n\n\nThere are other ways to create vectors in R considering their classes that I will dedicate a separate post for this.\nIn R different classes cannot coexist in the same vector (we will see what a vector is later, for now just trust me) and there is coercion when we put them together. Coercion occurs in the following order:\ncharacter > complex > real > integer > logical\nThis means, if you put a character and a numeric together in a vector, R will coerce the numeric to become a character. If you put a logical in the same vector as a numeric it will be turned into a numeric. The functions class() and typeof() can be used to check the class and type, respectively, of R objects.\n\n#class and typeof usage\nclass(\"ball\")\n\n[1] \"character\"\n\ntypeof(1L)\n\n[1] \"integer\"\n\nclass(1.2)\n\n[1] \"numeric\"\n\n#coercion\nobj1 <-c(\"ball\",1)\nclass(obj1)\n\n[1] \"character\"\n\ntypeof(obj1)\n\n[1] \"character\"\n\nobj2 <-c(TRUE,1)\nclass(obj2)\n\n[1] \"numeric\"\n\ntypeof(obj2)\n\n[1] \"double\"\n\n\nThis behavior is the source of major errors and it is always necessary to check that your objects are of the desired class. After all, it is impossible to perform mathematical operations with character in R, for example.\nHowever, the coercion behavior can be used to our advantage in the case of the trick of using logicals and numeric together. Like in the case where we want to know how many numbers in an vector are greater than a certain value. By using the > (greater than) operator we perform a logical test that returns TRUE/FALSE values. The sum() function, on the other hand, adds up all the elements of a vector and if it receives a logical vector it will transform TRUE into 1 and FALSE into 0.\n\n#a numeric vector\nv1 <- c(1,2,3,2,4,5,8,2,1)\n\n\n#logical test\nv1 > 3\n\n[1] FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE\n\n#use sum to get how many numbers are grater than 3\nsum(v1 > 3)\n\n[1] 3\n\n\nThe post is getting long, so that’s it for now! In the next one we will talk about objects with larger dimensions like matrix and data.frame.\nI’m waiting for you!"
+  },
+  {
+    "objectID": "posts/R-objects-2/index.html",
+    "href": "posts/R-objects-2/index.html",
+    "title": "R objects 2",
+    "section": "",
+    "text": "In the last post (R objects) we have seen the atomic classes and vectors, which are one-dimensional arrangements of these classes. But, as you can imagine, it’s not always possible to represent our data using one-dimensional object. When talking about two-dimensional objects tables are something extremely common in our daily lives. R has two types of objects for representing tables (2D objects): matrix and data.frames, very similar objects, but with one very important difference: matrix only accept ONE atomic class, while data.frames accept ONE per column."
+  },
+  {
+    "objectID": "posts/R-objects-2/index.html#matrix",
+    "href": "posts/R-objects-2/index.html#matrix",
+    "title": "R objects 2",
+    "section": "Matrix",
+    "text": "Matrix\nTo create a matrix we need a vector (Yes, a vector) and the function matrix(). This function takes the vector and arrange in a object containing the number of rows and columns that we specify in the arguments nrow and ncol.\n\nv1 <- c(1,2,3,1,2,3)\n\nMat1 <- matrix(data = v1,\n               nrow = 2,\n               ncol = 3)\nMat1\n\n     [,1] [,2] [,3]\n[1,]    1    3    2\n[2,]    2    1    3\n\n\nIt’s possible to control the order of the elements in the matrix using the argument byrow, which controls whether the elements will be filled by rows or columns (default).\n\nmatrix(data = v1,\n       nrow = 2,\n       ncol = 3,\n       byrow = T)\n\n     [,1] [,2] [,3]\n[1,]    1    2    3\n[2,]    1    2    3\n\nmatrix(data = v1,\n       nrow = 2,\n       ncol = 3,\n       byrow = F)\n\n     [,1] [,2] [,3]\n[1,]    1    3    2\n[2,]    2    1    3\n\n\nThe last argument, dimnames, allows us to choose names for the dimensions (rows and columns), but for this argument we need to use lists, and since we haven’t talked about this object class yet, I will show you how to achieve the same results using functions. The functions rownames() and colnames() are used to extract the row and column names, respectively. We can use an vector of characters, equal in length to the number of rows or columns, to choose their names.\n\n#Columns\ncolnames(Mat1)\n\nNULL\n\ncolnames(Mat1) <- c(\"Col1\",\"Col2\",\"Col3\")\ncolnames(Mat1)\n\n[1] \"Col1\" \"Col2\" \"Col3\"\n\n#Rows\nrownames(Mat1)\n\nNULL\n\nrownames(Mat1) <- c(\"Row1\",\"Row2\")\nrownames(Mat1)\n\n[1] \"Row1\" \"Row2\"\n\n\nSimilar to vectors, we can extract the elements using squarebrackets, but now we have to pass the indices to rows and columns.\n\n#Extract the 2nd row\nMat1[2,]\n\nCol1 Col2 Col3 \n   2    1    3 \n\n#Extract the 1st and 3rd columns\nMat1[,c(1,3)]\n\n     Col1 Col3\nRow1    1    2\nRow2    2    3\n\n#Extract the element row = 2 column = 2\nMat1[2,2]\n\n[1] 1"
+  },
+  {
+    "objectID": "posts/R-objects-2/index.html#data-frames",
+    "href": "posts/R-objects-2/index.html#data-frames",
+    "title": "R objects 2",
+    "section": "Data frames",
+    "text": "Data frames"
   },
   {
     "objectID": "posts/welcome/index.html",

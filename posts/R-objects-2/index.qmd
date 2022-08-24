@@ -1,0 +1,112 @@
+---
+title: "R objects 2"
+description: "Two dimensional objects"
+author: "Marcel Ferreira"
+date: "2022-08-24"
+categories: [R, base]
+image: "matrix-2502954_1280.jpg"
+---
+
+In the last post (**R objects**) we have seen the `atomic` classes and `vectors`, which are one-dimensional arrangements of these classes. But, as you can imagine, it's not always possible to represent our data using one-dimensional object. When talking about two-dimensional objects tables are something extremely common in our daily lives. R has two types of objects for representing tables (2D objects): `matrix` and `data.frames`, very similar objects, but with one **very important difference**: `matrix` only accept **ONE** `atomic` class, while `data.frames` accept **ONE** per column.
+
+## Matrix
+
+To create a `matrix` we need a `vector` (Yes, a `vector`) and the function `matrix()`. This function takes the `vector` and arrange in a object containing the number of rows and columns that we specify in the arguments `nrow` and `ncol`.
+
+```{r}
+v1 <- c(1,2,3,1,2,3)
+
+Mat1 <- matrix(data = v1,
+               nrow = 2,
+               ncol = 3)
+Mat1
+```
+
+It's possible to control the order of the elements in the `matrix` using the argument `byrow`, which controls whether the elements will be filled by rows or columns (***default***).
+
+```{r}
+matrix(data = v1,
+       nrow = 2,
+       ncol = 3,
+       byrow = T)
+
+matrix(data = v1,
+       nrow = 2,
+       ncol = 3,
+       byrow = F)
+```
+
+The last argument, `dimnames`, allows us to choose names for the dimensions (rows and columns), but for this argument we need to use `lists`, and since we haven't talked about this object class yet, I will show you how to achieve the same results using functions. The functions `rownames()` and `colnames()` are used to extract the row and column names, respectively. We can use an `vector` of `characters`, equal in length to the number of rows or columns, to choose their names.
+
+```{r}
+#Columns
+colnames(Mat1)
+colnames(Mat1) <- c("Col1","Col2","Col3")
+colnames(Mat1)
+#Rows
+rownames(Mat1)
+rownames(Mat1) <- c("Row1","Row2")
+rownames(Mat1)
+```
+
+Similar to `vectors`, we can extract the elements using squarebrackets, but now we have to pass the indices to rows and columns.
+
+```{r}
+#Extract the 2nd row
+Mat1[2,]
+#Extract the 1st and 3rd columns
+Mat1[,c(1,3)]
+#Extract the element row = 2 column = 2
+Mat1[2,2]
+```
+
+## Data frames
+
+`Data frames` are objects design to store data tables in R. Similar to `matrix`, `data frames` are 2D objects but as said before, different columns can have different classes. In practice we can think of each column as being a different `vector`, and the `$` operator allows us to extract this `vector`. Thinking about data analysis, in a `data frame` each column is a variable and each row is an observation.
+
+We build `data.frames` with the function `data.frame`
+
+```{r}
+df1 <- data.frame(var1 = c(1,2,3,4),
+                  var2 = c("a","b","c","d"),
+                  var3 = c(T,T,T,F))
+df1
+```
+
+Extracting vectors
+
+```{r}
+df1$var1
+df1$var2
+df1$var3
+```
+
+As for `matrix`, we can use squartebrackets to extract elements (although I recommend extracting using the `$` operator first).
+
+```{r}
+#Using squarebrackets
+df1[2,2]
+#Using the $
+df1$var2[2]
+```
+
+The names of columns (or variable) can be used in the squarebracket to extract the column.
+
+```{r}
+df1[,"var1"]
+```
+
+For `matrix` and for `data.frames` we can find the sizes of the dimensions with the functions `nrow()`, `ncol()`, and `dim()`, which return the number of rows, columns, and both, respectively.
+
+```{r}
+#number of rows
+nrow(df1)
+#number of columns
+ncol(df1)
+#length of dimensions
+dim(df1)
+```
+
+So far, so good. In the next post I will deal with that `list` I talked about here, and we will see how powerful they are.
+
+I'll be waiting for you!
