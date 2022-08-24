@@ -105,6 +105,76 @@ Row2    2    3</code></pre>
 </section>
 <section id="data-frames" class="level2">
 <h2 class="anchored" data-anchor-id="data-frames">Data frames</h2>
+<p><code>Data frames</code> are objects design to store data tables in R. Similar to <code>matrix</code>, <code>data frames</code> are 2D objects but as said before, different columns can have different classes. In practice we can think of each column as being a different <code>vector</code>, and the <code>$</code> operator allows us to extract this <code>vector</code>. Thinking about data analysis, in a <code>data frame</code> each column is a variable and each row is an observation.</p>
+<p>We build <code>data.frames</code> with the function <code>data.frame</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">df1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">var1 =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">4</span>),</span>
+<span id="cb21-2">                  <span class="at" style="color: #657422;">var2 =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"a"</span>,<span class="st" style="color: #20794D;">"b"</span>,<span class="st" style="color: #20794D;">"c"</span>,<span class="st" style="color: #20794D;">"d"</span>),</span>
+<span id="cb21-3">                  <span class="at" style="color: #657422;">var3 =</span> <span class="fu" style="color: #4758AB;">c</span>(T,T,T,F))</span>
+<span id="cb21-4">df1</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  var1 var2  var3
+1    1    a  TRUE
+2    2    b  TRUE
+3    3    c  TRUE
+4    4    d FALSE</code></pre>
+</div>
+</div>
+<p>Extracting vectors</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">df1<span class="sc" style="color: #5E5E5E;">$</span>var1</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">df1<span class="sc" style="color: #5E5E5E;">$</span>var2</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "a" "b" "c" "d"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">df1<span class="sc" style="color: #5E5E5E;">$</span>var3</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE  TRUE  TRUE FALSE</code></pre>
+</div>
+</div>
+<p>As for <code>matrix</code>, we can use squartebrackets to extract elements (although I recommend extracting using the <code>$</code> operator first).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="co" style="color: #5E5E5E;">#Using squarebrackets</span></span>
+<span id="cb29-2">df1[<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "b"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="co" style="color: #5E5E5E;">#Using the $</span></span>
+<span id="cb31-2">df1<span class="sc" style="color: #5E5E5E;">$</span>var2[<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "b"</code></pre>
+</div>
+</div>
+<p>The names of columns (or variable) can be used in the squarebracket to extract the column.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1">df1[,<span class="st" style="color: #20794D;">"var1"</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4</code></pre>
+</div>
+</div>
+<p>For <code>matrix</code> and for <code>data.frames</code> we can find the sizes of the dimensions with the functions <code>nrow()</code>, <code>ncol()</code>, and <code>dim()</code>, which return the number of rows, columns, and both, respectively.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="co" style="color: #5E5E5E;">#number of rows</span></span>
+<span id="cb35-2"><span class="fu" style="color: #4758AB;">nrow</span>(df1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><span class="co" style="color: #5E5E5E;">#number of columns</span></span>
+<span id="cb37-2"><span class="fu" style="color: #4758AB;">ncol</span>(df1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><span class="co" style="color: #5E5E5E;">#length of dimensions</span></span>
+<span id="cb39-2"><span class="fu" style="color: #4758AB;">dim</span>(df1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4 3</code></pre>
+</div>
+</div>
+<p>So far, so good. In the next post I will deal with that <code>list</code> I talked about here, and we will see how powerful they are.</p>
+<p>I’ll be waiting for you!</p>
 
 
 </section>
