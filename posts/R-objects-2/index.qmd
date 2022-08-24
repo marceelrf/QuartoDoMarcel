@@ -7,7 +7,11 @@ categories: [R, base]
 image: "matrix-2502954_1280.jpg"
 ---
 
-In the last post (**R objects**) we have seen the `atomic` classes and `vectors`, which are one-dimensional arrangements of these classes. But, as you can imagine, it's not always possible to represent our data using one-dimensional object. When talking about two-dimensional objects tables are something extremely common in our daily lives. R has two types of objects for representing tables (2D objects): `matrix` and `data.frames`, very similar objects, but with one **very important difference**: `matrix` only accept **ONE** `atomic` class, while `data.frames` accept **ONE** per column.
+```{=html}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9124147692602552"
+     crossorigin="anonymous"></script>
+```
+In the last post ([**R objects**](https://quartodomarcel.netlify.app/posts/r-objects/)) we have seen the `atomic` classes and `vectors`, which are one-dimensional arrangements of these classes. But, as you can imagine, it's not always possible to represent our data using one-dimensional object. When talking about two-dimensional objects tables are something extremely common in our daily lives. R has two types of objects for representing tables (2D objects): `matrix` and `data.frames`, very similar objects, but with one **very important difference**: `matrix` only accept **ONE** `atomic` class, while `data.frames` accept **ONE** per column.
 
 ## Matrix
 
