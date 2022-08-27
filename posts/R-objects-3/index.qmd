@@ -1,0 +1,104 @@
+---
+title: "R objects 3"
+description: "Lists"
+author: "Marcel Ferreira"
+date: "2022-08-28"
+categories: [R, base]
+image: "checklist-gf5b297ead_1920.jpg"
+---
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9124147692602552"crossorigin="anonymous"></script>
+
+
+It is popularly known the curse of the third movie. Alien 3, Return of the Jedi, X-men: The Last Stand, Spider-Man 3, The Godfather 3, among others (MANY OTHERS) have suffered from this curse. However, MARVEL has overcome this curse recently with films like Infinity War, Thor Ragnarok, and Spider-Man with No Way Home. Inspired by her, we will conclude our trilogy of basic R objects. In this post we will look at `Lists`.
+
+## Lists
+
+`Lists` are objects similar to `vectors`, but each element can be a different object. That is, a list can contain a `vector` in one element, a `matrix` or `data.frame` in another, and even a `list` in a given element. That's right, `lists` within `lists`.
+
+<center>
+<iframe src="https://giphy.com/embed/13S1lWb5qheNBC" width="480" height="201" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/loop-dreaming-13S1lWb5qheNBC">via GIPHY</a></p>
+</iframe>
+</center>
+The function list() is used to create a list in R:
+
+```{r}
+v1 <- c(1,3,5,7)
+v2 <- c("a","b")
+df1 <- data.frame(var1 = c(1,2,3,4),
+                  var2 = c("a","b","c","d"),
+                  var3 = c(T,T,T,F))
+
+l1 <- list(v1,v2,df1)
+l1
+```
+
+We can see that the output of a `list` contains differences from the others that we have seen. Each element number on a `list` is printed by R with double square brackets. Then R will print the elements as we have seen for each class.
+
+This is something important to note when talking about how we extract elements from `lists`. If we use the single bracket operator the output will be a `list`, but only containing the element of that index. 
+
+```{r}
+#Single square bracket
+l1[2]
+
+#Double square bracket
+l1[[2]]
+```
+
+We can use the `class()` function to check the output classes.
+
+```{r}
+#Single square bracket
+class(l1[2])
+
+#Double square bracket
+class(l1[[2]])
+```
+
+When working with `lists` we can access elements internal to a given `list` element. To do this we use a double square bracket followed by a single square bracket. Example, let's extract the third element contained in the first element of the `list` `l1`.
+
+```{r}
+# The third element in the first list element
+l1[[1]][3]
+```
+
+The third element of `l1` is a `data.frame`, we can extract its columns or rows in a similar way.
+
+```{r}
+#The first column of the data.frame in the third list element
+l1[[3]][,1]
+
+#The rows number 2 and 3 in the data.frame in the third list element
+l1[[3]][2:3,]
+```
+
+Just as we can name columns and rows in `data.frames`/`matrix`, we can name each element in a `list`. This is done using the `names()` function.
+
+```{r}
+#unamed list
+names(l1)
+
+names(l1) <- c("element1","element2","element3")
+
+#named list
+names(l1)
+```
+
+And, as you may be wondering, we can use these names to extract elements from the `list` by passing them in the single or double square bracket operators. 
+
+```{r}
+l1
+
+#Single square bracket
+l1[c("element1","element3")]
+
+#Double square bracket
+l1[["element1"]]
+```
+
+## Concluding
+
+In this three posts we have seen the main objects that form the basis of R. There are others, of course, but with these well understood we can solve the vast majority of challenges when working with R.
+
+I will soon create content showing operations with these objects in practice. That's it for now. See you around!

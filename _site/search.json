@@ -11,7 +11,7 @@
     "href": "index.html",
     "title": "Quarto Do Marcel",
     "section": "",
-    "text": "R\n\n\nbase\n\n\n\n\nTwo dimensional objects\n\n\n\n\n\n\nAug 24, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nR\n\n\nbase\n\n\n\n\n\n\n\n\n\n\n\nAug 12, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\nR\n\n\nFTIR\n\n\nbiomaterials\n\n\n\n\n\n\n\n\n\n\n\nAug 11, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nAug 10, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\nNo matching items"
+    "text": "R\n\n\nbase\n\n\n\n\nLists\n\n\n\n\n\n\nAug 28, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nR\n\n\nbase\n\n\n\n\nTwo dimensional objects\n\n\n\n\n\n\nAug 24, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nR\n\n\nbase\n\n\n\n\n\n\n\n\n\n\n\nAug 12, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\nR\n\n\nFTIR\n\n\nbiomaterials\n\n\n\n\n\n\n\n\n\n\n\nAug 11, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nAug 10, 2022\n\n\nMarcel Ferreira\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/post-with-code/index.html",
@@ -61,6 +61,27 @@
     "title": "R objects 2",
     "section": "Data frames",
     "text": "Data frames\nData frames are objects design to store data tables in R. Similar to matrix, data frames are 2D objects but as said before, different columns can have different classes. In practice we can think of each column as being a different vector, and the $ operator allows us to extract this vector. Thinking about data analysis, in a data frame each column is a variable and each row is an observation.\nWe build data.frames with the function data.frame\n\ndf1 <- data.frame(var1 = c(1,2,3,4),\n                  var2 = c(\"a\",\"b\",\"c\",\"d\"),\n                  var3 = c(T,T,T,F))\ndf1\n\n  var1 var2  var3\n1    1    a  TRUE\n2    2    b  TRUE\n3    3    c  TRUE\n4    4    d FALSE\n\n\nExtracting vectors\n\ndf1$var1\n\n[1] 1 2 3 4\n\ndf1$var2\n\n[1] \"a\" \"b\" \"c\" \"d\"\n\ndf1$var3\n\n[1]  TRUE  TRUE  TRUE FALSE\n\n\nAs for matrix, we can use squartebrackets to extract elements (although I recommend extracting using the $ operator first).\n\n#Using squarebrackets\ndf1[2,2]\n\n[1] \"b\"\n\n#Using the $\ndf1$var2[2]\n\n[1] \"b\"\n\n\nThe names of columns (or variable) can be used in the squarebracket to extract the column.\n\ndf1[,\"var1\"]\n\n[1] 1 2 3 4\n\n\nFor matrix and for data.frames we can find the sizes of the dimensions with the functions nrow(), ncol(), and dim(), which return the number of rows, columns, and both, respectively.\n\n#number of rows\nnrow(df1)\n\n[1] 4\n\n#number of columns\nncol(df1)\n\n[1] 3\n\n#length of dimensions\ndim(df1)\n\n[1] 4 3\n\n\nSo far, so good. In the next post I will deal with that list I talked about here, and we will see how powerful they are.\nI’ll be waiting for you!"
+  },
+  {
+    "objectID": "posts/R-objects-3/index.html",
+    "href": "posts/R-objects-3/index.html",
+    "title": "R objects 3",
+    "section": "",
+    "text": "It is popularly known the curse of the third movie. Alien 3, Return of the Jedi, X-men: The Last Stand, Spider-Man 3, The Godfather 3, among others (MANY OTHERS) have suffered from this curse. However, MARVEL has overcome this curse recently with films like Infinity War, Thor Ragnarok, and Spider-Man with No Way Home. Inspired by her, we will conclude our trilogy of basic R objects. In this post we will look at Lists."
+  },
+  {
+    "objectID": "posts/R-objects-3/index.html#lists",
+    "href": "posts/R-objects-3/index.html#lists",
+    "title": "R objects 3",
+    "section": "Lists",
+    "text": "Lists\nLists are objects similar to vectors, but each element can be a different object. That is, a list can contain a vector in one element, a matrix or data.frame in another, and even a list in a given element. That’s right, lists within lists.\n\n\n\n\nvia GIPHY\n\n\n\nThe function list() is used to create a list in R:\n\nv1 <- c(1,3,5,7)\nv2 <- c(\"a\",\"b\")\ndf1 <- data.frame(var1 = c(1,2,3,4),\n                  var2 = c(\"a\",\"b\",\"c\",\"d\"),\n                  var3 = c(T,T,T,F))\n\nl1 <- list(v1,v2,df1)\nl1\n\n[[1]]\n[1] 1 3 5 7\n\n[[2]]\n[1] \"a\" \"b\"\n\n[[3]]\n  var1 var2  var3\n1    1    a  TRUE\n2    2    b  TRUE\n3    3    c  TRUE\n4    4    d FALSE\n\n\nWe can see that the output of a list contains differences from the others that we have seen. Each element number on a list is printed by R with double square brackets. Then R will print the elements as we have seen for each class.\nThis is something important to note when talking about how we extract elements from lists. If we use the single bracket operator the output will be a list, but only containing the element of that index.\n\n#Single square bracket\nl1[2]\n\n[[1]]\n[1] \"a\" \"b\"\n\n#Double square bracket\nl1[[2]]\n\n[1] \"a\" \"b\"\n\n\nWe can use the class() function to check the output classes.\n\n#Single square bracket\nclass(l1[2])\n\n[1] \"list\"\n\n#Double square bracket\nclass(l1[[2]])\n\n[1] \"character\"\n\n\nWhen working with lists we can access elements internal to a given list element. To do this we use a double square bracket followed by a single square bracket. Example, let’s extract the third element contained in the first element of the list l1.\n\n# The third element in the first list element\nl1[[1]][3]\n\n[1] 5\n\n\nThe third element of l1 is a data.frame, we can extract its columns or rows in a similar way.\n\n#The first column of the data.frame in the third list element\nl1[[3]][,1]\n\n[1] 1 2 3 4\n\n#The rows number 2 and 3 in the data.frame in the third list element\nl1[[3]][2:3,]\n\n  var1 var2 var3\n2    2    b TRUE\n3    3    c TRUE\n\n\nJust as we can name columns and rows in data.frames/matrix, we can name each element in a list. This is done using the names() function.\n\n#unamed list\nnames(l1)\n\nNULL\n\nnames(l1) <- c(\"element1\",\"element2\",\"element3\")\n\n#named list\nnames(l1)\n\n[1] \"element1\" \"element2\" \"element3\"\n\n\nAnd, as you may be wondering, we can use these names to extract elements from the list by passing them in the single or double square bracket operators.\n\nl1\n\n$element1\n[1] 1 3 5 7\n\n$element2\n[1] \"a\" \"b\"\n\n$element3\n  var1 var2  var3\n1    1    a  TRUE\n2    2    b  TRUE\n3    3    c  TRUE\n4    4    d FALSE\n\n#Single square bracket\nl1[c(\"element1\",\"element3\")]\n\n$element1\n[1] 1 3 5 7\n\n$element3\n  var1 var2  var3\n1    1    a  TRUE\n2    2    b  TRUE\n3    3    c  TRUE\n4    4    d FALSE\n\n#Double square bracket\nl1[[\"element1\"]]\n\n[1] 1 3 5 7"
+  },
+  {
+    "objectID": "posts/R-objects-3/index.html#concluding",
+    "href": "posts/R-objects-3/index.html#concluding",
+    "title": "R objects 3",
+    "section": "Concluding",
+    "text": "Concluding\nIn this three posts we have seen the main objects that form the basis of R. There are others, of course, but with these well understood we can solve the vast majority of challenges when working with R.\nI will soon create content showing operations with these objects in practice. That’s it for now. See you around!"
   },
   {
     "objectID": "posts/welcome/index.html",

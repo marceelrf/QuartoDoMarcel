@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/R-objects-3/index.html",
       "/posts/R-objects-2/index.html",
       "/posts/R-objects/index.html",
       "/posts/post-with-code/index.html",
