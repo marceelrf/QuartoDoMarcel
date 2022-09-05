@@ -1,0 +1,182 @@
+---
+title: "Operations with vectors"
+description: "Numeric operations"
+author: "Marcel Ferreira"
+date: "2022-09-05"
+categories: [R, base]
+image: "blackboard-gf94387624_1280.png"
+---
+
+```{=html}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9124147692602552" crossorigin="anonymous"></script>
+```
+In [previous posts](https://quartodomarcel.netlify.app/posts/r-objects/) we have talked about object types and their `atomic` classes, among them `vectors`, which are the basis for the other objects. In this post I will begin to demonstrate how the main operations with `vectors` work, today focusing on numerical operations.
+
+## Numeric vectors
+
+As said before, `vectors` are one-dimensional objects composed of a set of elements, where the order does not necessarily have a meaning, serving only to locate the element in the `vector`. Let's look at the example of `vector` `v1` below:
+
+$$
+v_1 = \{1,2,3,4,5\}
+$$
+
+`v1` represents the sequence of `integers` from 1 to 5. In R we can create any `vector` with the `c()` function, as we saw earlier. But it is not the only way. We can create sequences with the `:` operator, for `integers`, and the `seq()` function for general cases. So let's create `v1` as an object in R in these three different ways. But first a hint, when creating an object in R we can do it inside `()` and the generated object will be printed ***automatically***.
+
+```{r}
+#created with c()
+(v1_1 <- c(1,2,3,4,5))
+#created with :
+(v1_2 <- 1:5)
+#created with seq()
+(v1_3 <- seq(from = 1, to = 5, by = 1))
+```
+
+When we choose a fractional value in the argument `by`, the `seq()` function can generate any number sequence (Arithmetic Progressions).
+
+## Math using vectors
+
+The basic mathematical operations in R, addition, subtraction, multiplication, division, etc, are contained in the table below:
+
++----------------+------------------------------+----------------+-------------------------+
+| Math           | Operator                     | Code           | Example                 |
++================+==============================+================+=========================+
+| addtion        | `+`                          | `2+2`          | $2+2 =4$                |
++----------------+------------------------------+----------------+-------------------------+
+| subtraction    | `-`                          | `4-2`          | $4-2=2$                 |
++----------------+------------------------------+----------------+-------------------------+
+| multiplication | `*`                          | `2*2`          | $2\times2=4$            |
++----------------+------------------------------+----------------+-------------------------+
+| division       | `/`                          | `4/2`          | $\frac{4}{2} = 2$       |
++----------------+------------------------------+----------------+-------------------------+
+| power          | `^` or `**`                  | `2^2`          | $2^2=4$                 |
++----------------+------------------------------+----------------+-------------------------+
+| square root    | `sqrt()`                     | `sqrt(4)`      | $\sqrt{4} = 2$          |
++----------------+------------------------------+----------------+-------------------------+
+| exponential    | `exp()`                      | `exp(-4)`      | $e^{-4} = 0.0183$       |
++----------------+------------------------------+----------------+-------------------------+
+| log            | | `log()`, `log2` or `log10` | `log(0.0183)`  | $\ln(0.0183) \simeq -4$ |
++----------------+------------------------------+----------------+-------------------------+
+
+: Math operations
+
+There are others, but I believe that these will be the most used in our day to day. These operations in R work element by element. For example, when we add two `vectors` ($v_1=\{1,2,3,4,5\} v_2 = \{2,3,4,5,6\}$), R will add element 1 of `v1` to 1 of `v2`, 2 of `v1` to 2 of `v2`, and so on.
+
+$$
+v_1+v_2=\{1+2,2+3,3+4,4+5,5+6\}
+$$
+
+$$
+v_1+v_2=\{3,5,7,9,11\}
+$$
+
+Subtraction, multiplication, division, and potentiation follow the same principle.
+
+```{r}
+v1 <- 1:5
+v2 <- 2:6
+#add
+v1+v2
+#sub
+v1-v2
+#multiplication
+v1*v2
+#division
+v1/v2
+#power
+v1^v2
+```
+
+From this we can infer that it is necessary in R that `vectors` contain the same number of elements (or the same `length`), but in practice this is not what happens. In case of `vectors` of different `lengths` R will `recycle` the `vector` with the smallest number of elements to match and thus perform the math. Consider the `vectors` $v_1 = \{1,2,3,4,5\}$ and $v_3 = \{0,2,1\}$, Let's see how R performs subtraction.
+
+$$
+v_1-v_3 = \{1-0,2-2,3-1,4-0,5-2\}
+$$
+
+$$
+v_1-v_3 = \{1,0,2,4,3\}
+$$
+
+Again, the operations addition, multiplication, division and power work equally in R.
+
+```{r}
+v1 <- 1:5
+v3 <- c(0,2,1)
+#add
+v1+v3
+#sub
+v1-v3
+#multiplication
+v1*v3
+#division
+v1/v3
+#power
+v1^v3
+```
+
+Notice that a `warning` is displayed that the `vectors` have different sizes and that when we divide by `0` an `Inf` value relative to infinity is displayed. R's recycling behavior may seem strange at first, but it is useful for performing `scalar` operations with `vectors` (remembering that in practice in R there are no scalars, only unit `vectors`).
+
+$$
+5+v_1 = \{5+1,5+2,5+3,5+4,5+5\}
+$$
+
+$$
+5+v1 = \{6,7,8,9,10\}
+$$
+
+```{r}
+v1 <- 1:5
+#add
+v1+5
+#sub
+v1-5
+#multiplication
+v1*5
+#division
+v1/5
+#power
+v1^5
+```
+
+Similarly, `functions` are also applied element by element. Let's look at the same v1 being calculated its square root, exponential and logarithm.
+
+```{r}
+v1 <- 1:5
+#square root
+sqrt(v1)
+#exponential
+exp(v1)
+#log
+log(v1)
+```
+
+R also contains periodic functions like sine (`sin()`), cosine (`cos()`) and tangent (`tan()`), and an inner object to represent `pi`.
+
+```{r}
+pi
+#sine
+sin(pi)
+#cossine
+cos(pi)
+#tangent
+tan(pi)
+```
+
+It is important to see that the values calculated by R, although they are infinitesimal, are not exactly the known values.
+
+$$
+\sin(\pi) = 0
+$$
+
+$$
+\cos(\pi) = -1
+$$
+
+$$
+\tan(\pi) = 0
+$$
+
+## Concluding
+
+Well, there are many more functions and operators that can be applied, but I think we have covered the main ones. We saw how `recycling` works in operations. That's it for now. I hope to see you in the next posts!
+
+See you there!

@@ -2,30 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://quartodomarcel.netlify.app/about.html</loc>
-    <lastmod>2022-08-27T20:52:06.525Z</lastmod>
+    <lastmod>2022-09-05T19:37:27.376Z</lastmod>
   </url>
   <url>
     <loc>https://quartodomarcel.netlify.app/index.html</loc>
-    <lastmod>2022-08-27T20:52:07.239Z</lastmod>
+    <lastmod>2022-09-05T19:37:28.566Z</lastmod>
+  </url>
+  <url>
+    <loc>https://quartodomarcel.netlify.app/posts/Operations-with-vector/index.html</loc>
+    <lastmod>2022-09-05T19:37:29.717Z</lastmod>
   </url>
   <url>
     <loc>https://quartodomarcel.netlify.app/posts/post-with-code/index.html</loc>
-    <lastmod>2022-08-27T20:52:07.784Z</lastmod>
+    <lastmod>2022-09-05T19:37:30.230Z</lastmod>
   </url>
   <url>
     <loc>https://quartodomarcel.netlify.app/posts/R-objects/index.html</loc>
-    <lastmod>2022-08-27T20:52:08.470Z</lastmod>
+    <lastmod>2022-09-05T19:37:31.052Z</lastmod>
   </url>
   <url>
     <loc>https://quartodomarcel.netlify.app/posts/R-objects-2/index.html</loc>
-    <lastmod>2022-08-27T20:52:09.175Z</lastmod>
+    <lastmod>2022-09-05T19:37:31.952Z</lastmod>
   </url>
   <url>
     <loc>https://quartodomarcel.netlify.app/posts/R-objects-3/index.html</loc>
-    <lastmod>2022-08-27T20:52:10.145Z</lastmod>
+    <lastmod>2022-09-05T19:37:33.262Z</lastmod>
   </url>
   <url>
     <loc>https://quartodomarcel.netlify.app/posts/welcome/index.html</loc>
-    <lastmod>2022-08-27T20:52:10.607Z</lastmod>
+    <lastmod>2022-09-05T19:37:33.812Z</lastmod>
   </url>
 </urlset>

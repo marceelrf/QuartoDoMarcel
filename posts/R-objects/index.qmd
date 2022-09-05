@@ -7,10 +7,10 @@ categories: [R, base]
 image: "cubes-g23e20f481_1920.jpg"
 ---
 
-
+```{=html}
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9124147692602552"
      crossorigin="anonymous"></script>
-
+```
 R is an extremely powerful language for data analysis and is used in many different fields. But many users start without taking the time to assimilate the different types of objects, which leads to mistakes that could simply be avoided. This in turn can lead to frustration, which is the gateway to the dark side of the force.
 
 <center>
