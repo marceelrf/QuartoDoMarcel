@@ -10,7 +10,7 @@
 <atom:link href="https://quartodomarcel.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.2.335</generator>
-<lastBuildDate>Invalid Date</lastBuildDate>
+<lastBuildDate>Sat, 01 Apr 2023 03:00:00 GMT</lastBuildDate>
 <item>
   <title>30 days chart challenge - day 01</title>
   <dc:creator>Marcel Ferreira</dc:creator>
@@ -175,18 +175,18 @@ $Year
 <span id="cb17-4">  <span class="fu" style="color: #4758AB;">make_long</span>(<span class="st" style="color: #20794D;">"ID"</span>,<span class="st" style="color: #20794D;">"SEX"</span>,<span class="st" style="color: #20794D;">"EYE"</span>,<span class="st" style="color: #20794D;">"HAIR"</span>,<span class="st" style="color: #20794D;">"ALIGN"</span>,<span class="st" style="color: #20794D;">"ALIVE"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 120 x 4
-   x     node              next_x next_node        
-   &lt;fct&gt; &lt;chr&gt;             &lt;fct&gt;  &lt;chr&gt;            
- 1 ID    No Info           SEX    Female Characters
- 2 SEX   Female Characters EYE    No Info          
- 3 EYE   No Info           HAIR   Brown Hair       
- 4 HAIR  Brown Hair        ALIGN  No Info          
- 5 ALIGN No Info           ALIVE  Living Characters
- 6 ALIVE Living Characters &lt;NA&gt;   &lt;NA&gt;             
- 7 ID    Secret Identity   SEX    Male Characters  
- 8 SEX   Male Characters   EYE    No Info          
- 9 EYE   No Info           HAIR   Brown Hair       
-10 HAIR  Brown Hair        ALIGN  Bad Characters   
+   x     node               next_x next_node         
+   &lt;fct&gt; &lt;chr&gt;              &lt;fct&gt;  &lt;chr&gt;             
+ 1 ID    Public Identity    SEX    Female Characters 
+ 2 SEX   Female Characters  EYE    No Info           
+ 3 EYE   No Info            HAIR   Black Hair        
+ 4 HAIR  Black Hair         ALIGN  Neutral Characters
+ 5 ALIGN Neutral Characters ALIVE  Living Characters 
+ 6 ALIVE Living Characters  &lt;NA&gt;   &lt;NA&gt;              
+ 7 ID    No Info            SEX    Male Characters   
+ 8 SEX   Male Characters    EYE    No Info           
+ 9 EYE   No Info            HAIR   No Info           
+10 HAIR  No Info            ALIGN  Bad Characters    
 # ... with 110 more rows</code></pre>
 </div>
 </div>
@@ -334,8 +334,8 @@ largura desconhecida para caractere 0x51</code></pre>
   <category>R</category>
   <category>Dataviz</category>
   <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day01/index.html</guid>
-  <pubDate>Invalid Date</pubDate>
-  <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day01/Marvel_Logo.svg" medium="image" type="image/svg+xml"/>
+  <pubDate>Sat, 01 Apr 2023 03:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day01/Marvel_Logo.png" medium="image" type="image/png" height="58" width="144"/>
 </item>
 <item>
   <title>Operations with vectors</title>

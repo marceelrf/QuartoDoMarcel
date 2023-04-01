@@ -2,9 +2,9 @@
 title: "30 days chart challenge - day 01"
 description: "part to whole"
 author: "Marcel Ferreira"
-date: "`r Sys.Date()`"
+date: "2023-04-01"
 categories: [R, Dataviz]
-image: "Marvel_Logo.svg"
+image: "Marvel_Logo.png"
 ---
 
 ## Data
