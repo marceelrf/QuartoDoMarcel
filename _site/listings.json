@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/stats-with-vector/index.html",
+      "/posts/30-days-charts-challenge-day01/index.html",
       "/posts/Operations-with-vector/index.html",
       "/posts/R-objects-3/index.html",
       "/posts/R-objects-2/index.html",

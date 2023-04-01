@@ -9,8 +9,334 @@
 <link>https://quartodomarcel.netlify.app/index.html</link>
 <atom:link href="https://quartodomarcel.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.0.36</generator>
-<lastBuildDate>Mon, 05 Sep 2022 04:00:00 GMT</lastBuildDate>
+<generator>quarto-1.2.335</generator>
+<lastBuildDate>Invalid Date</lastBuildDate>
+<item>
+  <title>30 days chart challenge - day 01</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day01/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>The data that I choose to this challenge was the <strong>Marvel Chracters</strong> (https://www.kaggle.com/datasets/syedasimalishah/marvel-chracters).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+v dplyr     1.1.0     v readr     2.1.4
+v forcats   1.0.0     v stringr   1.5.0
+v ggplot2   3.4.1     v tibble    3.1.8
+v lubridate 1.9.2     v tidyr     1.3.0
+v purrr     1.0.1     
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(ggsankey)</span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;">library</span>(extrafont)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registering fonts with R</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">library</span>(cowplot)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'cowplot'
+
+The following object is masked from 'package:lubridate':
+
+    stamp</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">read_csv</span>(<span class="at" style="color: #657422;">file =</span> <span class="st" style="color: #20794D;">"Marvel Movies.csv"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 16376 Columns: 11
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (9): name, ID, ALIGN, EYE, HAIR, SEX, GSM, ALIVE, FIRST APPEARANCE
+dbl (2): APPEARANCES, Year
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Check the NA’s</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-2">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
+<span id="cb9-3">    <span class="fu" style="color: #4758AB;">across</span>(<span class="fu" style="color: #4758AB;">everything</span>(),is.na)</span>
+<span id="cb9-4">    ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-5">  <span class="fu" style="color: #4758AB;">summarise</span>(</span>
+<span id="cb9-6">    <span class="fu" style="color: #4758AB;">across</span>(<span class="fu" style="color: #4758AB;">everything</span>(),sum)</span>
+<span id="cb9-7">    )</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 x 11
+   name    ID ALIGN   EYE  HAIR   SEX   GSM ALIVE APPEARANCES FIRST APPE~1  Year
+  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
+1     0  3770  2812  9767  4264   854 16286     3        1096          815   815
+# ... with abbreviated variable name 1: `FIRST APPEARANCE`</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-2">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) <span class="fu" style="color: #4758AB;">length</span>(<span class="fu" style="color: #4758AB;">unique</span>(x)))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$name
+[1] 16376
+
+$ID
+[1] 5
+
+$ALIGN
+[1] 4
+
+$EYE
+[1] 25
+
+$HAIR
+[1] 26
+
+$SEX
+[1] 5
+
+$GSM
+[1] 7
+
+$ALIVE
+[1] 3
+
+$APPEARANCES
+[1] 359
+
+$`FIRST APPEARANCE`
+[1] 833
+
+$Year
+[1] 76</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb13-2">  <span class="fu" style="color: #4758AB;">group_by</span>(HAIR) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-3">  <span class="fu" style="color: #4758AB;">count</span>(<span class="at" style="color: #657422;">sort =</span> <span class="cn" style="color: #8f5902;">TRUE</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-4">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">prop =</span> <span class="dv" style="color: #AD0000;">100</span><span class="sc" style="color: #5E5E5E;">*</span>n<span class="sc" style="color: #5E5E5E;">/</span><span class="fu" style="color: #4758AB;">nrow</span>(data))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 26 x 3
+# Groups:   HAIR [26]
+   HAIR           n   prop
+   &lt;chr&gt;      &lt;int&gt;  &lt;dbl&gt;
+ 1 &lt;NA&gt;        4264 26.0  
+ 2 Black Hair  3755 22.9  
+ 3 Brown Hair  2339 14.3  
+ 4 Blond Hair  1582  9.66 
+ 5 No Hair     1176  7.18 
+ 6 Bald         838  5.12 
+ 7 White Hair   754  4.60 
+ 8 Red Hair     620  3.79 
+ 9 Grey Hair    531  3.24 
+10 Green Hair   117  0.714
+# ... with 16 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb15-2">    <span class="fu" style="color: #4758AB;">group_by</span>(EYE) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb15-3">  <span class="fu" style="color: #4758AB;">count</span>(<span class="at" style="color: #657422;">sort =</span> <span class="cn" style="color: #8f5902;">TRUE</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb15-4">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">prop =</span> <span class="dv" style="color: #AD0000;">100</span><span class="sc" style="color: #5E5E5E;">*</span>n<span class="sc" style="color: #5E5E5E;">/</span><span class="fu" style="color: #4758AB;">nrow</span>(data))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 25 x 3
+# Groups:   EYE [25]
+   EYE             n   prop
+   &lt;chr&gt;       &lt;int&gt;  &lt;dbl&gt;
+ 1 &lt;NA&gt;         9767 59.6  
+ 2 Blue Eyes    1962 12.0  
+ 3 Brown Eyes   1924 11.7  
+ 4 Green Eyes    613  3.74 
+ 5 Black Eyes    555  3.39 
+ 6 Red Eyes      508  3.10 
+ 7 White Eyes    400  2.44 
+ 8 Yellow Eyes   256  1.56 
+ 9 Grey Eyes      95  0.580
+10 Hazel Eyes     76  0.464
+# ... with 15 more rows</code></pre>
+</div>
+</div>
+<p><br>
+</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">(df_ex <span class="ot" style="color: #003B4F;">&lt;-</span> data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb17-2">  <span class="fu" style="color: #4758AB;">slice_sample</span>(<span class="at" style="color: #657422;">n =</span> <span class="dv" style="color: #AD0000;">20</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb17-3">    <span class="fu" style="color: #4758AB;">mutate</span>(<span class="fu" style="color: #4758AB;">across</span>(<span class="fu" style="color: #4758AB;">where</span>(is.character),<span class="at" style="color: #657422;">.f =</span> \(x) <span class="fu" style="color: #4758AB;">replace_na</span>(x,<span class="st" style="color: #20794D;">"No Info"</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb17-4">  <span class="fu" style="color: #4758AB;">make_long</span>(<span class="st" style="color: #20794D;">"ID"</span>,<span class="st" style="color: #20794D;">"SEX"</span>,<span class="st" style="color: #20794D;">"EYE"</span>,<span class="st" style="color: #20794D;">"HAIR"</span>,<span class="st" style="color: #20794D;">"ALIGN"</span>,<span class="st" style="color: #20794D;">"ALIVE"</span>))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 120 x 4
+   x     node                next_x next_node          
+   &lt;fct&gt; &lt;chr&gt;               &lt;fct&gt;  &lt;chr&gt;              
+ 1 ID    Secret Identity     SEX    Male Characters    
+ 2 SEX   Male Characters     EYE    No Info            
+ 3 EYE   No Info             HAIR   Bald               
+ 4 HAIR  Bald                ALIGN  Bad Characters     
+ 5 ALIGN Bad Characters      ALIVE  Deceased Characters
+ 6 ALIVE Deceased Characters &lt;NA&gt;   &lt;NA&gt;               
+ 7 ID    No Info             SEX    Male Characters    
+ 8 SEX   Male Characters     EYE    Yellow Eyes        
+ 9 EYE   Yellow Eyes         HAIR   No Info            
+10 HAIR  No Info             ALIGN  Bad Characters     
+# ... with 110 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">(</span>
+<span id="cb19-2">  p1 <span class="ot" style="color: #003B4F;">&lt;-</span> df_ex <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb19-3">  <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> x,</span>
+<span id="cb19-4">             <span class="at" style="color: #657422;">next_x =</span> next_x,</span>
+<span id="cb19-5">             <span class="at" style="color: #657422;">node =</span> node,</span>
+<span id="cb19-6">             <span class="at" style="color: #657422;">next_node =</span> next_node,</span>
+<span id="cb19-7">             <span class="at" style="color: #657422;">fill =</span> <span class="fu" style="color: #4758AB;">factor</span>(node),</span>
+<span id="cb19-8">             <span class="at" style="color: #657422;">label =</span> node)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb19-9">  <span class="fu" style="color: #4758AB;">geom_sankey</span>(<span class="at" style="color: #657422;">flow.alpha =</span> .<span class="dv" style="color: #AD0000;">5</span>, <span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">"black"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb19-10">  <span class="fu" style="color: #4758AB;">geom_sankey_label</span>(<span class="at" style="color: #657422;">size =</span> <span class="fl" style="color: #AD0000;">3.5</span>, <span class="at" style="color: #657422;">color =</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"white"</span>,<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Segoe UI"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb19-11">  viridis<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">scale_fill_viridis</span>(<span class="at" style="color: #657422;">option =</span> <span class="st" style="color: #20794D;">"A"</span>,<span class="at" style="color: #657422;">discrete =</span> <span class="cn" style="color: #8f5902;">TRUE</span>) <span class="sc" style="color: #5E5E5E;">+</span> </span>
+<span id="cb19-12">  <span class="fu" style="color: #4758AB;">theme_void</span>() <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb19-13">  <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">title =</span><span class="st" style="color: #20794D;">"Marvel movie characters"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb19-14">  <span class="fu" style="color: #4758AB;">theme</span>(</span>
+<span id="cb19-15">    <span class="at" style="color: #657422;">legend.position =</span> <span class="st" style="color: #20794D;">"none"</span>,</span>
+<span id="cb19-16">    <span class="at" style="color: #657422;">plot.background =</span> <span class="fu" style="color: #4758AB;">element_rect</span>(<span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"#e8e6d1"</span>,<span class="at" style="color: #657422;">linewidth =</span> <span class="dv" style="color: #AD0000;">0</span>),</span>
+<span id="cb19-17">    <span class="at" style="color: #657422;">panel.background =</span> <span class="fu" style="color: #4758AB;">element_rect</span>(<span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"#e8e6d1"</span>,<span class="at" style="color: #657422;">linewidth =</span> <span class="dv" style="color: #AD0000;">0</span>,<span class="at" style="color: #657422;">linetype =</span> <span class="st" style="color: #20794D;">"blank"</span>),</span>
+<span id="cb19-18">    <span class="at" style="color: #657422;">text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Segoe UI"</span>),</span>
+<span id="cb19-19">    <span class="at" style="color: #657422;">plot.title =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Segoe UI"</span>,<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">30</span>,<span class="at" style="color: #657422;">hjust =</span> .<span class="dv" style="color: #AD0000;">5</span>))</span>
+<span id="cb19-20">  )</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day01/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="fu" style="color: #4758AB;">ggdraw</span>(p1) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb20-2">  <span class="fu" style="color: #4758AB;">draw_label</span>(<span class="at" style="color: #657422;">label =</span> <span class="st" style="color: #20794D;">"@marceelrf"</span>,<span class="at" style="color: #657422;">x =</span> .<span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">y =</span> <span class="fl" style="color: #AD0000;">0.05</span>,<span class="at" style="color: #657422;">fontfamily =</span> <span class="st" style="color: #20794D;">"Segoe UI"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb20-3">  <span class="fu" style="color: #4758AB;">draw_image</span>(<span class="at" style="color: #657422;">image =</span> <span class="st" style="color: #20794D;">"Marvel_Logo.svg"</span>,<span class="at" style="color: #657422;">x =</span> .<span class="dv" style="color: #AD0000;">85</span>,<span class="at" style="color: #657422;">y =</span> .<span class="dv" style="color: #AD0000;">01</span>,<span class="at" style="color: #657422;">width =</span> <span class="fl" style="color: #AD0000;">0.13</span>, <span class="at" style="color: #657422;">height =</span> <span class="fl" style="color: #AD0000;">0.2</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): métrica da
+fonte desconhecida para caractere 0x4d</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x67</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x6a</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x70</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x71</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x79</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x51</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day01/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="final-plot" class="level2">
+<h2 class="anchored" data-anchor-id="final-plot">Final plot</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">(plot_final <span class="ot" style="color: #003B4F;">&lt;-</span> </span>
+<span id="cb28-2">    data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb28-3">    <span class="fu" style="color: #4758AB;">mutate</span>(<span class="fu" style="color: #4758AB;">across</span>(<span class="fu" style="color: #4758AB;">where</span>(is.character),<span class="at" style="color: #657422;">.f =</span> \(x) <span class="fu" style="color: #4758AB;">replace_na</span>(x,<span class="st" style="color: #20794D;">"No Info"</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb28-4">    <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">HAIR =</span> <span class="fu" style="color: #4758AB;">fct_lump_prop</span>(HAIR, <span class="fl" style="color: #AD0000;">0.05</span>),</span>
+<span id="cb28-5">           <span class="at" style="color: #657422;">EYE =</span> <span class="fu" style="color: #4758AB;">fct_lump_prop</span>(EYE, <span class="fl" style="color: #AD0000;">0.05</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb28-6">  <span class="fu" style="color: #4758AB;">make_long</span>(<span class="st" style="color: #20794D;">"ID"</span>,<span class="st" style="color: #20794D;">"SEX"</span>,<span class="st" style="color: #20794D;">"EYE"</span>,<span class="st" style="color: #20794D;">"HAIR"</span>,<span class="st" style="color: #20794D;">"ALIGN"</span>,<span class="st" style="color: #20794D;">"ALIVE"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb28-7">    <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> x,</span>
+<span id="cb28-8">             <span class="at" style="color: #657422;">next_x =</span> next_x,</span>
+<span id="cb28-9">             <span class="at" style="color: #657422;">node =</span> node,</span>
+<span id="cb28-10">             <span class="at" style="color: #657422;">next_node =</span> next_node,</span>
+<span id="cb28-11">             <span class="at" style="color: #657422;">fill =</span> <span class="fu" style="color: #4758AB;">factor</span>(node),</span>
+<span id="cb28-12">             <span class="at" style="color: #657422;">label =</span> node)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb28-13">  <span class="fu" style="color: #4758AB;">geom_sankey</span>(<span class="at" style="color: #657422;">flow.alpha =</span> .<span class="dv" style="color: #AD0000;">5</span>, <span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">"black"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb28-14">  <span class="fu" style="color: #4758AB;">geom_sankey_label</span>(<span class="at" style="color: #657422;">size =</span> <span class="fl" style="color: #AD0000;">3.5</span>, <span class="at" style="color: #657422;">color =</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"white"</span>,<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Segoe UI"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb28-15">  viridis<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">scale_fill_viridis</span>(<span class="at" style="color: #657422;">option =</span> <span class="st" style="color: #20794D;">"A"</span>,<span class="at" style="color: #657422;">discrete =</span> <span class="cn" style="color: #8f5902;">TRUE</span>) <span class="sc" style="color: #5E5E5E;">+</span> </span>
+<span id="cb28-16">  <span class="fu" style="color: #4758AB;">theme_void</span>() <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb28-17">  <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">title =</span> <span class="st" style="color: #20794D;">"Marvel movie characters"</span>,</span>
+<span id="cb28-18">       <span class="at" style="color: #657422;">subtitle =</span> <span class="st" style="color: #20794D;">"Source: https://www.kaggle.com/datasets/syedasimalishah/marvel-chracters"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb28-19">  <span class="fu" style="color: #4758AB;">theme</span>(</span>
+<span id="cb28-20">    <span class="at" style="color: #657422;">legend.position =</span> <span class="st" style="color: #20794D;">"none"</span>,</span>
+<span id="cb28-21">    <span class="at" style="color: #657422;">plot.background =</span> <span class="fu" style="color: #4758AB;">element_rect</span>(<span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"#e8e6d1"</span>,<span class="at" style="color: #657422;">linewidth =</span> <span class="dv" style="color: #AD0000;">0</span>),</span>
+<span id="cb28-22">    <span class="at" style="color: #657422;">panel.background =</span> <span class="fu" style="color: #4758AB;">element_rect</span>(<span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"#e8e6d1"</span>,<span class="at" style="color: #657422;">linewidth =</span> <span class="dv" style="color: #AD0000;">0</span>,<span class="at" style="color: #657422;">linetype =</span> <span class="st" style="color: #20794D;">"blank"</span>), <span class="at" style="color: #657422;">plot.subtitle =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Segoe UI"</span>,<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"italic"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">8</span>,<span class="at" style="color: #657422;">hjust =</span> .<span class="dv" style="color: #AD0000;">1</span>),</span>
+<span id="cb28-23">    <span class="at" style="color: #657422;">text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Segoe UI"</span>),</span>
+<span id="cb28-24">    <span class="at" style="color: #657422;">plot.title =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Segoe UI"</span>,<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">30</span>,<span class="at" style="color: #657422;">hjust =</span> .<span class="dv" style="color: #AD0000;">5</span>))</span>
+<span id="cb28-25">  )</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: attributes are not identical across measure variables; they will be
+dropped</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day01/index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;">ggdraw</span>(plot_final) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb30-2">  <span class="fu" style="color: #4758AB;">draw_label</span>(<span class="at" style="color: #657422;">label =</span> <span class="st" style="color: #20794D;">"@marceelrf"</span>,<span class="at" style="color: #657422;">x =</span> .<span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">y =</span> <span class="fl" style="color: #AD0000;">0.025</span>,<span class="at" style="color: #657422;">fontfamily =</span> <span class="st" style="color: #20794D;">"Segoe UI"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb30-3">  <span class="fu" style="color: #4758AB;">draw_image</span>(<span class="at" style="color: #657422;">image =</span> <span class="st" style="color: #20794D;">"Marvel_Logo.svg"</span>,<span class="at" style="color: #657422;">x =</span> .<span class="dv" style="color: #AD0000;">85</span>,<span class="at" style="color: #657422;">y =</span> <span class="fl" style="color: #AD0000;">0.00001</span>,</span>
+<span id="cb30-4">             <span class="at" style="color: #657422;">width =</span> <span class="fl" style="color: #AD0000;">0.13</span>, <span class="at" style="color: #657422;">height =</span> <span class="fl" style="color: #AD0000;">0.2</span>,<span class="at" style="color: #657422;">vjust =</span> .<span class="dv" style="color: #AD0000;">25</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): métrica da
+fonte desconhecida para caractere 0x4d</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x67</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x6a</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x70</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x71</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x79</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): fonte com
+largura desconhecida para caractere 0x51</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day01/index_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><span class="fu" style="color: #4758AB;">ggsave</span>(<span class="at" style="color: #657422;">filename =</span> <span class="st" style="color: #20794D;">"day01_finalplot.png"</span>,<span class="at" style="color: #657422;">width =</span> <span class="dv" style="color: #AD0000;">10</span>,<span class="at" style="color: #657422;">height =</span> <span class="dv" style="color: #AD0000;">7</span>,<span class="at" style="color: #657422;">dpi =</span> <span class="dv" style="color: #AD0000;">600</span>)</span></code></pre></div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Dataviz</category>
+  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day01/index.html</guid>
+  <pubDate>Invalid Date</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day01/blackboard-gf94387624_1280.png" medium="image" type="image/png"/>
+</item>
 <item>
   <title>Operations with vectors</title>
   <dc:creator>Marcel Ferreira</dc:creator>
@@ -53,9 +379,9 @@
 <caption>Math operations</caption>
 <colgroup>
 <col style="width: 18%">
-<col style="width: 34%">
+<col style="width: 33%">
 <col style="width: 18%">
-<col style="width: 28%">
+<col style="width: 27%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -291,7 +617,7 @@ objeto menor</code></pre>
   <category>R</category>
   <category>base</category>
   <guid>https://quartodomarcel.netlify.app/posts/Operations-with-vector/index.html</guid>
-  <pubDate>Mon, 05 Sep 2022 04:00:00 GMT</pubDate>
+  <pubDate>Mon, 05 Sep 2022 03:00:00 GMT</pubDate>
   <media:content url="https://quartodomarcel.netlify.app/posts/Operations-with-vector/blackboard-gf94387624_1280.png" medium="image" type="image/png" height="103" width="144"/>
 </item>
 <item>
@@ -456,7 +782,7 @@ $element3
   <category>R</category>
   <category>base</category>
   <guid>https://quartodomarcel.netlify.app/posts/R-objects-3/index.html</guid>
-  <pubDate>Sun, 28 Aug 2022 04:00:00 GMT</pubDate>
+  <pubDate>Sun, 28 Aug 2022 03:00:00 GMT</pubDate>
   <media:content url="https://quartodomarcel.netlify.app/posts/R-objects-3/checklist-gf5b297ead_1920.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -632,7 +958,7 @@ Row2    2    3</code></pre>
   <category>R</category>
   <category>base</category>
   <guid>https://quartodomarcel.netlify.app/posts/R-objects-2/index.html</guid>
-  <pubDate>Wed, 24 Aug 2022 04:00:00 GMT</pubDate>
+  <pubDate>Wed, 24 Aug 2022 03:00:00 GMT</pubDate>
   <media:content url="https://quartodomarcel.netlify.app/posts/R-objects-2/matrix-2502954_1280.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -795,7 +1121,7 @@ Row2    2    3</code></pre>
   <category>R</category>
   <category>base</category>
   <guid>https://quartodomarcel.netlify.app/posts/R-objects/index.html</guid>
-  <pubDate>Fri, 12 Aug 2022 04:00:00 GMT</pubDate>
+  <pubDate>Fri, 12 Aug 2022 03:00:00 GMT</pubDate>
   <media:content url="https://quartodomarcel.netlify.app/posts/R-objects/cubes-g23e20f481_1920.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -826,7 +1152,7 @@ Row2    2    3</code></pre>
   <category>FTIR</category>
   <category>biomaterials</category>
   <guid>https://quartodomarcel.netlify.app/posts/post-with-code/index.html</guid>
-  <pubDate>Thu, 11 Aug 2022 04:00:00 GMT</pubDate>
+  <pubDate>Thu, 11 Aug 2022 03:00:00 GMT</pubDate>
   <media:content url="https://quartodomarcel.netlify.app/posts/post-with-code/tidyspec_prov.png" medium="image" type="image/png" height="165" width="144"/>
 </item>
 <item>
@@ -851,7 +1177,7 @@ Row2    2    3</code></pre>
  ]]></description>
   <category>news</category>
   <guid>https://quartodomarcel.netlify.app/posts/welcome/index.html</guid>
-  <pubDate>Wed, 10 Aug 2022 04:00:00 GMT</pubDate>
+  <pubDate>Wed, 10 Aug 2022 03:00:00 GMT</pubDate>
   <media:content url="https://quartodomarcel.netlify.app/posts/welcome/images/dreamMarcel.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>

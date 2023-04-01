@@ -1,0 +1,131 @@
+---
+title: "30 days chart challenge - day 01"
+description: "part to whole"
+author: "Marcel Ferreira"
+date: "`r Sys.Date()`"
+categories: [R, Dataviz]
+image: "blackboard-gf94387624_1280.png"
+---
+
+## Data
+
+The data that I choose to this challenge was the **Marvel Chracters** (https://www.kaggle.com/datasets/syedasimalishah/marvel-chracters).
+
+```{r}
+library(tidyverse)
+library(ggsankey)
+library(extrafont)
+library(cowplot)
+```
+
+```{r}
+data <- read_csv(file = "Marvel Movies.csv")
+```
+
+Check the NA's
+
+```{r}
+data %>% 
+  mutate(
+    across(everything(),is.na)
+    ) %>%
+  summarise(
+    across(everything(),sum)
+    )
+```
+
+```{r}
+data %>%
+  map(.f = \(x) length(unique(x)))
+```
+
+```{r}
+data %>% 
+  group_by(HAIR) %>%
+  count(sort = TRUE) %>%
+  mutate(prop = 100*n/nrow(data))
+```
+
+```{r}
+data %>% 
+    group_by(EYE) %>%
+  count(sort = TRUE) %>%
+  mutate(prop = 100*n/nrow(data))
+```
+
+\
+
+```{r}
+(df_ex <- data %>%
+  slice_sample(n = 20) %>%
+    mutate(across(where(is.character),.f = \(x) replace_na(x,"No Info"))) %>%
+  make_long("ID","SEX","EYE","HAIR","ALIGN","ALIVE"))
+```
+
+```{r}
+(
+  p1 <- df_ex %>%
+  ggplot(aes(x = x,
+             next_x = next_x,
+             node = node,
+             next_node = next_node,
+             fill = factor(node),
+             label = node)) +
+  geom_sankey(flow.alpha = .5, color = "black") +
+  geom_sankey_label(size = 3.5, color = 1, fill = "white",family = "Segoe UI") +
+  viridis::scale_fill_viridis(option = "A",discrete = TRUE) + 
+  theme_void() +
+  labs(title ="Marvel movie characters") +
+  theme(
+    legend.position = "none",
+    plot.background = element_rect(fill = "#e8e6d1",linewidth = 0),
+    panel.background = element_rect(fill = "#e8e6d1",linewidth = 0,linetype = "blank"),
+    text = element_text(family = "Segoe UI"),
+    plot.title = element_text(family = "Segoe UI",face = "bold",size = 30,hjust = .5))
+  )
+```
+
+```{r}
+ggdraw(p1) +
+  draw_label(label = "@marceelrf",x = .1, y = 0.05,fontfamily = "Segoe UI") +
+  draw_image(image = "Marvel_Logo.svg",x = .85,y = .01,width = 0.13, height = 0.2)
+```
+
+## Final plot
+
+```{r}
+(plot_final <- 
+    data %>%
+    mutate(across(where(is.character),.f = \(x) replace_na(x,"No Info"))) %>%
+    mutate(HAIR = fct_lump_prop(HAIR, 0.05),
+           EYE = fct_lump_prop(EYE, 0.05)) %>%
+  make_long("ID","SEX","EYE","HAIR","ALIGN","ALIVE") %>%
+    ggplot(aes(x = x,
+             next_x = next_x,
+             node = node,
+             next_node = next_node,
+             fill = factor(node),
+             label = node)) +
+  geom_sankey(flow.alpha = .5, color = "black") +
+  geom_sankey_label(size = 3.5, color = 1, fill = "white",family = "Segoe UI") +
+  viridis::scale_fill_viridis(option = "A",discrete = TRUE) + 
+  theme_void() +
+  labs(title = "Marvel movie characters",
+       subtitle = "Source: https://www.kaggle.com/datasets/syedasimalishah/marvel-chracters") +
+  theme(
+    legend.position = "none",
+    plot.background = element_rect(fill = "#e8e6d1",linewidth = 0),
+    panel.background = element_rect(fill = "#e8e6d1",linewidth = 0,linetype = "blank"), plot.subtitle = element_text(family = "Segoe UI",face = "italic",size = 8,hjust = .1),
+    text = element_text(family = "Segoe UI"),
+    plot.title = element_text(family = "Segoe UI",face = "bold",size = 30,hjust = .5))
+  )
+
+ggdraw(plot_final) +
+  draw_label(label = "@marceelrf",x = .1, y = 0.025,fontfamily = "Segoe UI") +
+  draw_image(image = "Marvel_Logo.svg",x = .85,y = 0.00001,
+             width = 0.13, height = 0.2,vjust = .25)
+```
+
+```{r}
+ggsave(filename = "day01_finalplot.png",width = 10,height = 7,dpi = 600)
+```
