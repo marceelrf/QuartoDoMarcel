@@ -4,7 +4,7 @@ description: "part to whole"
 author: "Marcel Ferreira"
 date: "`r Sys.Date()`"
 categories: [R, Dataviz]
-image: "blackboard-gf94387624_1280.png"
+image: "Marvel_Logo.svg"
 ---
 
 ## Data
