@@ -1,0 +1,103 @@
+---
+title: "30 days chart challenge - day 02"
+description: "waffles plot"
+author: "Marcel Ferreira"
+date: "2023-04-02"
+categories: [R, Dataviz]
+image: "waffles-1044180_1920.png"
+---
+
+```{r}
+library(tidyverse)
+library(waffle)
+library(cowplot)
+library(extrafont)
+```
+
+## Data
+
+```{r}
+data <- read_csv("player_stats.csv")
+```
+
+```{r}
+glimpse(data)
+```
+
+### Check NA's
+
+```{r}
+data %>%
+  mutate(across(everything(), is.na)) %>% 
+  summarise(across(everything(),sum))
+```
+
+```{r}
+data %>%
+  filter(is.na(Nation))
+```
+
+### Check unique values
+
+```{r}
+data %>%
+  map_df(.f = \(x) length(unique(x)))
+```
+
+```{r}
+data %>%
+  group_by(Nation) %>%
+  count(sort = TRUE) %>%
+  mutate(prop = 100*n/nrow(data))
+```
+
+## Plot Nation per league
+
+```{r}
+data %>%
+  select(Nation,"League" = Compition) %>%
+  group_by(Nation,League) %>%
+  count(sort = TRUE) %>%
+  filter(n > 20) %>%
+  ggplot(aes(fill = Nation, values = n)) +
+  geom_waffle(
+    aes(colour = Nation),
+    n_rows = 10, 
+    size = .5, colour = "grey50", 
+    flip = TRUE,
+    make_proportional = TRUE
+    ) +
+  facet_wrap(~League, ncol = 5,strip.position = "bottom") +
+  #expand_limits(x=c(0,0), y=c(0,0)) +
+  labs(
+    title = "2022-2023 Top 5 Football Leagues Nationalities",
+    subtitle = "Source: https://www.kaggle.com/datasets/joyshil0599/2022-2023-top-5-football-leagues-player-stats",
+    caption = "Only countries with more than 20 player in each league", 
+    fill = NULL,
+    colour = NULL) +
+  scale_fill_manual(values = c("ALG" = "#006331",
+                               "ARG" = "#70a7d8",
+                               "AUT" =  "#e62837",
+                               "BRA" = "#f6d900",
+                               "ENG" = "white",
+                               "ESP" = "#c00b1d",
+                               "FRA" = "#002551",
+                               "GER" = "black",
+                               "ITA" = "#0b8dcd",
+                               "NED" = "orange",
+                               "POR" = "#e52011")) + 
+  theme_enhance_waffle() +
+  theme_void() +
+  theme(
+    text = element_text(family = "Segoe UI"),
+    strip.text.x =  element_text(family = "Segoe UI",face = "italic",size = 10),
+    strip.background = element_rect(fill = "grey99",
+                                    linetype = "blank"),
+    plot.title = element_text(family = "Segoe UI",hjust = .5,size = 25),
+    plot.subtitle = element_text(family = "Segoe UI",hjust = .5,size = 6)
+  )
+```
+
+```{r}
+ggsave(filename = "plot_day02.png",bg = "white",dpi = 400,width = 10)
+```
