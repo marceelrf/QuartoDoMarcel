@@ -1,0 +1,92 @@
+---
+title: "30 days chart challenge - day 04"
+description: "historical"
+author: "Marcel Ferreira"
+date: "2023-04-04"
+categories: [R, Dataviz]
+image: "blue-81847_1920.jpg"
+---
+
+```{r}
+library(tidyverse)
+library(extrafont)
+```
+
+## Data
+
+```{r}
+data <- read_csv("athlete_events.csv")
+```
+
+```{r}
+glimpse(data)
+```
+
+```{r}
+(
+  Brazil_summary <- data %>% 
+    filter(Team == "Brazil") %>% filter(Season == "Summer") %>%
+    distinct(Season, Year, Event, Medal) %>%
+    select(Year,Medal) %>%
+    group_by(Year) %>%
+    count(Medal) %>%
+    pivot_wider(names_from = Medal,values_from = n,values_fill = 0) %>%
+    select(-"NA") %>%
+    pivot_longer(cols = -Year,
+                 names_to = "Medal",
+                 values_to = "n")
+  )
+```
+
+```{r}
+#Data
+Brazil_summary %>%
+  mutate(Medal = factor(Medal,levels = c("Gold","Silver","Bronze"))) %>%
+  #Aesthetics + Geometries
+  ggplot(aes(x = Year, y = n, col = Medal, group = Medal)) +
+  geom_point(size = 4) + 
+  geom_line(size = 2) +
+  #Scales customizations
+  scale_x_continuous(breaks = seq(from = 1896,
+                                  to = 2016,
+                                  by = 8)) +
+  scale_y_continuous(breaks = 0:11) +
+  scale_color_manual(values = c("#FFD700",
+                                "#C0C0C0",
+                                "#cd7f32")) + 
+  #Annotations 1
+  annotate(geom = "text",
+           label = "No athletes\nin the first games",
+           x = 1918,y = 6,
+           size = 9,
+           family = "Berlin Sans FB") +
+  annotate(geom = "curve",
+           x = 1905,xend = 1896,
+           y = 6, yend = .5,
+           arrow = arrow()) +
+  annotate(geom = "rect",
+           xmin = 2014,xmax = 2018,
+           ymin = 0,ymax = 9,
+           fill = "green",alpha = .2
+           ) +
+  annotate(geom = "text",
+           label = "Rio\n2016",
+           x = 2016,y = 1.5,
+           family = "Berlin Sans FB",col = "navy",
+           size = 5) +
+  #Labels
+  labs(title = "Brazil's medals in the Olympics (1896-2016)",
+       subtitle = "Source: https://www.kaggle.com/code/celiomatos/brazil-score-in-olympics/input?select=athlete_events.csv",
+       y = "Total of medals") +
+  #Theme
+  theme(text = element_text(family = "Berlin Sans FB"),
+        plot.title = element_text(size = 26,hjust = .5,family = "Berlin Sans FB"),
+        plot.subtitle = element_text(size = 9,family = "Berlin Sans FB"),
+        panel.background = element_rect(fill = "white"),
+        axis.text =  element_text(size = 15),
+        axis.title =  element_text(size = 20))
+```
+
+```{r}
+ggsave(filename = "plot_final_day04.png",width = 12,dpi = 600,bg = "white")
+```

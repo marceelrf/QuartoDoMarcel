@@ -1,0 +1,32 @@
+---
+title: "30 days chart challenge - day 03"
+description: "fauna/flora"
+author: "Marcel Ferreira"
+date: "2023-04-03"
+categories: [R, Dataviz]
+image: "brooklyn-nyc-skyline-pav-maxine.jpg"
+---
+
+```{r}
+library(tidyverse)
+```
+
+## Data
+
+```{r}
+data <- read_csv("NYC_dogs_clean.csv")
+```
+
+```{r}
+glimpse(data)
+```
+
+```{r}
+data %>%
+  group_by(Borough) %>%
+  count(AnimalName,sort = TRUE)
+```
+
+```{r}
+nyc_squirrels <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-29/nyc_squirrels.csv")
+```
