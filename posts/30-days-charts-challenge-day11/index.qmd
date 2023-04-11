@@ -1,0 +1,123 @@
+---
+title: "30 days chart challenge - day 11"
+description: "circle"
+author: "Marcel Ferreira"
+date: "2023-04-11"
+categories: [R, Dataviz]
+image: "square social logo 400 x 400_0.png"
+---
+
+```{r}
+library(tidyverse)
+library(cowplot)
+```
+
+## Data
+
+```{r}
+data_titles <- read_csv(file = "titles.csv")
+```
+
+```{r}
+glimpse(data_titles)
+```
+
+## Analysis
+
+```{r}
+df <- data_titles %>%
+  filter(type == "MOVIE") %>%
+  mutate(genres = str_remove_all(genres, "\\[|\\]")) %>%
+  mutate(genres = str_remove_all(genres,"\'")) %>%
+  separate_longer_delim(genres,",") %>%
+  mutate(decade = case_when(
+    release_year < 1910 ~ 1910,
+    release_year < 1920 ~ 1920,
+    release_year < 1930 ~ 1930,
+    release_year < 1940 ~ 1940,
+    release_year < 1950 ~ 1950,
+    release_year < 1960 ~ 1960,
+    release_year < 1970 ~ 1970,
+    release_year < 1980 ~ 1980,
+    release_year < 1990 ~ 1990,
+    release_year < 2000 ~ 2000,
+    release_year < 2010 ~ 2010,
+    release_year < 2020 ~ 2020,
+    release_year < 2030 ~ 2030,
+  )) %>%
+  select(genres, decade)
+```
+
+```{r}
+df %>%
+  mutate(genres = factor(genres)) %>%
+  mutate(genres = fct_lump_min(genres,10,other_level = "other")) %>%
+  group_by(genres, decade) %>%
+  count(sort = TRUE)
+  # ggplot(aes(x = genres, y = n)) +
+  # geom_col() +
+  # facet_wrap(~decade) +
+  # coord_polar() +
+  # theme_void()
+  
+  
+```
+
+```{r}
+pdata <- data_titles %>%
+  filter(type == "MOVIE") %>%
+  mutate(genres = str_remove_all(genres, "\\[|\\]")) %>%
+  mutate(genres = str_remove_all(genres,"\'")) %>%
+  mutate(genres = str_remove_all(genres, " ")) %>%
+  separate_longer_delim(genres,",") %>%
+  mutate(genres = factor(genres)) %>%
+  mutate(genres = fct_lump_n(genres,10,other_level = "other")) %>% 
+  filter(genres != "other") %>%
+  mutate(genres = fct_drop(genres,"other")) %>%
+  mutate(genres = fct_infreq(genres,ordered = NA)) %>%
+  mutate(genres = fct_rev(genres)) %>%
+  group_by(genres) %>%
+  count()
+```
+
+```{r}
+ gg <- pdata %>%
+  ggplot(aes(x = genres, y = n, fill = genres)) +
+  geom_col(alpha = .75) +
+  geom_text(aes(label = n), family = "serif",
+            fontface = "bold",nudge_y = 25,nudge_x = .1) +
+  scale_y_continuous(limits = c(0,2194)) +
+  coord_polar(theta = "y",clip = "off") +
+  scale_fill_manual(values = c("#10154c",
+                        "#2b2684",
+                        "#3c56b7",
+                        "#7587d9",
+                        "#bf9ee3",
+                        "#a569cb",
+                        "#a8278b",
+                        "#90309b",
+                        "#663795",
+                        "#4f1f5b")) +
+  labs(title = "Top 10 movie genres available on HBOmax",
+       subtitle = "source: https://www.kaggle.com/datasets/dgoenrique/hbo-max-movies-and-tv-shows",
+       caption = "@marceelrf") +
+  theme_void() +
+  theme(text = element_text(family = "serif"),
+        plot.title = element_text(face = "bold",size = 25,hjust = .5),
+        plot.subtitle = element_text(face = "italic",size = 10),
+        plot.caption = element_text(face = "bold.italic",size = 15),
+       plot.background = element_rect(fill = "#e8e6d1",linewidth = 0),
+       panel.background = element_rect(fill = "#e8e6d1",linewidth = 0,linetype = "blank"))
+```
+
+```{r}
+ggdraw(gg) +
+  draw_image(image = "square social logo 400 x 400_0.png",
+             x = .00,y = .25,
+             width = .4,
+             height = .4)
+```
+
+```{r}
+ggsave(filename = "day11_finalplot.png",dpi = 600,bg = "#e8e6d1",width = 10)
+```
