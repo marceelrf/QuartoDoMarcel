@@ -4,7 +4,7 @@ description: "circle"
 author: "Marcel Ferreira"
 date: "2023-04-11"
 categories: [R, Dataviz]
-image: "square social logo 400 x 400_0.png"
+image: "squaresociallogo400x400_0.png"
 ---
 
 ```{r}
@@ -112,7 +112,7 @@ pdata <- data_titles %>%
 
 ```{r}
 ggdraw(gg) +
-  draw_image(image = "square social logo 400 x 400_0.png",
+  draw_image(image = "squaresociallogo400x400_0.png",
              x = .00,y = .25,
              width = .4,
              height = .4)

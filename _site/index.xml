@@ -10,7 +10,204 @@
 <atom:link href="https://quartodomarcel.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.2.335</generator>
-<lastBuildDate>Tue, 04 Apr 2023 03:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 11 Apr 2023 03:00:00 GMT</lastBuildDate>
+<item>
+  <title>30 days chart challenge - day 11</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day11/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+v dplyr     1.1.0     v readr     2.1.4
+v forcats   1.0.0     v stringr   1.5.0
+v ggplot2   3.4.1     v tibble    3.1.8
+v lubridate 1.9.2     v tidyr     1.3.0
+v purrr     1.0.1     
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(cowplot)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'cowplot'
+
+The following object is masked from 'package:lubridate':
+
+    stamp</code></pre>
+</div>
+</div>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">data_titles <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">read_csv</span>(<span class="at" style="color: #657422;">file =</span> <span class="st" style="color: #20794D;">"titles.csv"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 3030 Columns: 15
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (8): id, title, type, description, age_certification, genres, production...
+dbl (7): release_year, runtime, seasons, imdb_score, imdb_votes, tmdb_popula...
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;">glimpse</span>(data_titles)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 3,030
+Columns: 15
+$ id                   &lt;chr&gt; "tm77588", "tm155702", "tm83648", "tm3175", "ts22~
+$ title                &lt;chr&gt; "Casablanca", "The Wizard of Oz", "Citizen Kane",~
+$ type                 &lt;chr&gt; "MOVIE", "MOVIE", "MOVIE", "MOVIE", "SHOW", "MOVI~
+$ description          &lt;chr&gt; "In Casablanca, Morocco in December 1941, a cynic~
+$ release_year         &lt;dbl&gt; 1943, 1939, 1941, 1945, 1940, 1940, 1946, 1934, 1~
+$ age_certification    &lt;chr&gt; "PG", "G", "PG", NA, NA, "G", NA, NA, NA, "PG-13"~
+$ runtime              &lt;dbl&gt; 102, 102, 119, 113, 8, 238, 114, 93, 111, 109, 12~
+$ genres               &lt;chr&gt; "['drama', 'romance', 'war']", "['fantasy', 'fami~
+$ production_countries &lt;chr&gt; "['US']", "['US']", "['US']", "['US']", "['US']",~
+$ seasons              &lt;dbl&gt; NA, NA, NA, NA, 16, NA, NA, NA, NA, NA, NA, NA, N~
+$ imdb_id              &lt;chr&gt; "tt0034583", "tt0032138", "tt0033467", "tt0037059~
+$ imdb_score           &lt;dbl&gt; 8.5, 8.1, 8.3, 7.5, 7.7, 8.2, 7.9, 7.9, 7.9, 8.3,~
+$ imdb_votes           &lt;dbl&gt; 577842, 406105, 446627, 25589, 859, 319463, 87289~
+$ tmdb_popularity      &lt;dbl&gt; 22.005, 56.631, 19.900, 8.311, 1.400, 27.535, 11.~
+$ tmdb_score           &lt;dbl&gt; 8.167, 7.583, 8.022, 7.000, 10.000, 8.000, 7.700,~</code></pre>
+</div>
+</div>
+</section>
+<section id="analysis" class="level2">
+<h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">df <span class="ot" style="color: #003B4F;">&lt;-</span> data_titles <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-2">  <span class="fu" style="color: #4758AB;">filter</span>(type <span class="sc" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">"MOVIE"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-3">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">str_remove_all</span>(genres, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">[|</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">]"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-4">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">str_remove_all</span>(genres,<span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\'</span><span class="st" style="color: #20794D;">"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-5">  <span class="fu" style="color: #4758AB;">separate_longer_delim</span>(genres,<span class="st" style="color: #20794D;">","</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-6">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">decade =</span> <span class="fu" style="color: #4758AB;">case_when</span>(</span>
+<span id="cb9-7">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">1910</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1910</span>,</span>
+<span id="cb9-8">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">1920</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1920</span>,</span>
+<span id="cb9-9">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">1930</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1930</span>,</span>
+<span id="cb9-10">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">1940</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1940</span>,</span>
+<span id="cb9-11">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">1950</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1950</span>,</span>
+<span id="cb9-12">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">1960</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1960</span>,</span>
+<span id="cb9-13">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">1970</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1970</span>,</span>
+<span id="cb9-14">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">1980</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1980</span>,</span>
+<span id="cb9-15">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">1990</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1990</span>,</span>
+<span id="cb9-16">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">2000</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">2000</span>,</span>
+<span id="cb9-17">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">2010</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">2010</span>,</span>
+<span id="cb9-18">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">2020</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">2020</span>,</span>
+<span id="cb9-19">    release_year <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">2030</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">2030</span>,</span>
+<span id="cb9-20">  )) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-21">  <span class="fu" style="color: #4758AB;">select</span>(genres, decade)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">df <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb10-2">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">factor</span>(genres)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb10-3">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">fct_lump_min</span>(genres,<span class="dv" style="color: #AD0000;">10</span>,<span class="at" style="color: #657422;">other_level =</span> <span class="st" style="color: #20794D;">"other"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb10-4">  <span class="fu" style="color: #4758AB;">group_by</span>(genres, decade) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb10-5">  <span class="fu" style="color: #4758AB;">count</span>(<span class="at" style="color: #657422;">sort =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 340 x 3
+# Groups:   genres, decade [340]
+   genres          decade     n
+   &lt;fct&gt;            &lt;dbl&gt; &lt;int&gt;
+ 1 "documentation"   2020   212
+ 2 "drama"           2020   153
+ 3 "documentation"   2030   125
+ 4 " drama"          2020   117
+ 5 "comedy"          2020   107
+ 6 "comedy"          2010   104
+ 7 "drama"           2010   100
+ 8 " thriller"       2020    99
+ 9 " action"         2020    96
+10 "drama"           2000    86
+# ... with 330 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">  <span class="co" style="color: #5E5E5E;"># ggplot(aes(x = genres, y = n)) +</span></span>
+<span id="cb12-2">  <span class="co" style="color: #5E5E5E;"># geom_col() +</span></span>
+<span id="cb12-3">  <span class="co" style="color: #5E5E5E;"># facet_wrap(~decade) +</span></span>
+<span id="cb12-4">  <span class="co" style="color: #5E5E5E;"># coord_polar() +</span></span>
+<span id="cb12-5">  <span class="co" style="color: #5E5E5E;"># theme_void()</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">pdata <span class="ot" style="color: #003B4F;">&lt;-</span> data_titles <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-2">  <span class="fu" style="color: #4758AB;">filter</span>(type <span class="sc" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">"MOVIE"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-3">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">str_remove_all</span>(genres, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">[|</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">]"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-4">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">str_remove_all</span>(genres,<span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\'</span><span class="st" style="color: #20794D;">"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-5">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">str_remove_all</span>(genres, <span class="st" style="color: #20794D;">" "</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-6">  <span class="fu" style="color: #4758AB;">separate_longer_delim</span>(genres,<span class="st" style="color: #20794D;">","</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-7">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">factor</span>(genres)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-8">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">fct_lump_n</span>(genres,<span class="dv" style="color: #AD0000;">10</span>,<span class="at" style="color: #657422;">other_level =</span> <span class="st" style="color: #20794D;">"other"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb13-9">  <span class="fu" style="color: #4758AB;">filter</span>(genres <span class="sc" style="color: #5E5E5E;">!=</span> <span class="st" style="color: #20794D;">"other"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-10">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">fct_drop</span>(genres,<span class="st" style="color: #20794D;">"other"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-11">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">fct_infreq</span>(genres,<span class="at" style="color: #657422;">ordered =</span> <span class="cn" style="color: #8f5902;">NA</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-12">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">genres =</span> <span class="fu" style="color: #4758AB;">fct_rev</span>(genres)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-13">  <span class="fu" style="color: #4758AB;">group_by</span>(genres) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-14">  <span class="fu" style="color: #4758AB;">count</span>()</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"> gg <span class="ot" style="color: #003B4F;">&lt;-</span> pdata <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb14-2">  <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> genres, <span class="at" style="color: #657422;">y =</span> n, <span class="at" style="color: #657422;">fill =</span> genres)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-3">  <span class="fu" style="color: #4758AB;">geom_col</span>(<span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">75</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-4">  <span class="fu" style="color: #4758AB;">geom_text</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">label =</span> n), <span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"serif"</span>,</span>
+<span id="cb14-5">            <span class="at" style="color: #657422;">fontface =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">nudge_y =</span> <span class="dv" style="color: #AD0000;">25</span>,<span class="at" style="color: #657422;">nudge_x =</span> .<span class="dv" style="color: #AD0000;">1</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-6">  <span class="fu" style="color: #4758AB;">scale_y_continuous</span>(<span class="at" style="color: #657422;">limits =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">2194</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-7">  <span class="fu" style="color: #4758AB;">coord_polar</span>(<span class="at" style="color: #657422;">theta =</span> <span class="st" style="color: #20794D;">"y"</span>,<span class="at" style="color: #657422;">clip =</span> <span class="st" style="color: #20794D;">"off"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-8">  <span class="fu" style="color: #4758AB;">scale_fill_manual</span>(<span class="at" style="color: #657422;">values =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"#10154c"</span>,</span>
+<span id="cb14-9">                        <span class="st" style="color: #20794D;">"#2b2684"</span>,</span>
+<span id="cb14-10">                        <span class="st" style="color: #20794D;">"#3c56b7"</span>,</span>
+<span id="cb14-11">                        <span class="st" style="color: #20794D;">"#7587d9"</span>,</span>
+<span id="cb14-12">                        <span class="st" style="color: #20794D;">"#bf9ee3"</span>,</span>
+<span id="cb14-13">                        <span class="st" style="color: #20794D;">"#a569cb"</span>,</span>
+<span id="cb14-14">                        <span class="st" style="color: #20794D;">"#a8278b"</span>,</span>
+<span id="cb14-15">                        <span class="st" style="color: #20794D;">"#90309b"</span>,</span>
+<span id="cb14-16">                        <span class="st" style="color: #20794D;">"#663795"</span>,</span>
+<span id="cb14-17">                        <span class="st" style="color: #20794D;">"#4f1f5b"</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-18">  <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">title =</span> <span class="st" style="color: #20794D;">"Top 10 movie genres available on HBOmax"</span>,</span>
+<span id="cb14-19">       <span class="at" style="color: #657422;">subtitle =</span> <span class="st" style="color: #20794D;">"source: https://www.kaggle.com/datasets/dgoenrique/hbo-max-movies-and-tv-shows"</span>,</span>
+<span id="cb14-20">       <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">"@marceelrf"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-21">  <span class="fu" style="color: #4758AB;">theme_void</span>() <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-22">  <span class="fu" style="color: #4758AB;">theme</span>(<span class="at" style="color: #657422;">text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"serif"</span>),</span>
+<span id="cb14-23">        <span class="at" style="color: #657422;">plot.title =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">25</span>,<span class="at" style="color: #657422;">hjust =</span> .<span class="dv" style="color: #AD0000;">5</span>),</span>
+<span id="cb14-24">        <span class="at" style="color: #657422;">plot.subtitle =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"italic"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">10</span>),</span>
+<span id="cb14-25">        <span class="at" style="color: #657422;">plot.caption =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold.italic"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">15</span>),</span>
+<span id="cb14-26">       <span class="at" style="color: #657422;">plot.background =</span> <span class="fu" style="color: #4758AB;">element_rect</span>(<span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"#e8e6d1"</span>,<span class="at" style="color: #657422;">linewidth =</span> <span class="dv" style="color: #AD0000;">0</span>),</span>
+<span id="cb14-27">       <span class="at" style="color: #657422;">panel.background =</span> <span class="fu" style="color: #4758AB;">element_rect</span>(<span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"#e8e6d1"</span>,<span class="at" style="color: #657422;">linewidth =</span> <span class="dv" style="color: #AD0000;">0</span>,<span class="at" style="color: #657422;">linetype =</span> <span class="st" style="color: #20794D;">"blank"</span>))</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;">ggdraw</span>(gg) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb15-2">  <span class="fu" style="color: #4758AB;">draw_image</span>(<span class="at" style="color: #657422;">image =</span> <span class="st" style="color: #20794D;">"squaresociallogo400x400_0.png"</span>,</span>
+<span id="cb15-3">             <span class="at" style="color: #657422;">x =</span> .<span class="dv" style="color: #AD0000;">00</span>,<span class="at" style="color: #657422;">y =</span> .<span class="dv" style="color: #AD0000;">25</span>,</span>
+<span id="cb15-4">             <span class="at" style="color: #657422;">width =</span> .<span class="dv" style="color: #AD0000;">4</span>,</span>
+<span id="cb15-5">             <span class="at" style="color: #657422;">height =</span> .<span class="dv" style="color: #AD0000;">4</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day11/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;">ggsave</span>(<span class="at" style="color: #657422;">filename =</span> <span class="st" style="color: #20794D;">"day11_finalplot.png"</span>,<span class="at" style="color: #657422;">dpi =</span> <span class="dv" style="color: #AD0000;">600</span>,<span class="at" style="color: #657422;">bg =</span> <span class="st" style="color: #20794D;">"#e8e6d1"</span>,<span class="at" style="color: #657422;">width =</span> <span class="dv" style="color: #AD0000;">10</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 10 x 5 in image</code></pre>
+</div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Dataviz</category>
+  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day11/index.html</guid>
+  <pubDate>Tue, 11 Apr 2023 03:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day11/squaresociallogo400x400_0.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>30 days chart challenge - day 04</title>
   <dc:creator>Marcel Ferreira</dc:creator>
