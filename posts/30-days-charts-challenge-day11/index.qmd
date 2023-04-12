@@ -81,12 +81,13 @@ pdata <- data_titles %>%
 ```
 
 ```{r}
- gg <- pdata %>%
+( gg <- pdata %>%
   ggplot(aes(x = genres, y = n, fill = genres)) +
-  geom_col(alpha = .75) +
+  geom_col(alpha = .75,width = 1) +
   geom_text(aes(label = n), family = "serif",
             fontface = "bold",nudge_y = 25,nudge_x = .1) +
   scale_y_continuous(limits = c(0,2194)) +
+    #geom_line(aes(y = -100)) +
   coord_polar(theta = "y",clip = "off") +
   scale_fill_manual(values = c("#10154c",
                         "#2b2684",
@@ -107,7 +108,7 @@ pdata <- data_titles %>%
         plot.subtitle = element_text(face = "italic",size = 10),
         plot.caption = element_text(face = "bold.italic",size = 15),
        plot.background = element_rect(fill = "#e8e6d1",linewidth = 0),
-       panel.background = element_rect(fill = "#e8e6d1",linewidth = 0,linetype = "blank"))
+       panel.background = element_rect(fill = "#e8e6d1",linewidth = 0,linetype = "blank")))
 ```
 
 ```{r}

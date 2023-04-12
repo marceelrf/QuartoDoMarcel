@@ -1,0 +1,65 @@
+---
+title: "30 days chart challenge - day 12"
+description: "theme:BBC News"
+author: "Marcel Ferreira"
+date: "2023-04-12"
+categories: [R, Dataviz]
+image: "BBC_News_2019.svg.png"
+---
+
+```{r}
+library(tidyverse)
+library(quantmod)
+```
+
+## Data
+
+```{r}
+getSymbols(Symbols = "TUP",
+                  src = 'yahoo',
+                  from = "2018-05-01",
+                  to = "2023-04-12")
+```
+
+```{r}
+data.frame(TUP$TUP.Adjusted) %>%
+  rownames_to_column("Date") %>%
+  rename("Price" = TUP.Adjusted) %>%
+  mutate(Date = as.Date(Date)) %>%
+  ggplot(aes(x = Date, y = Price)) +
+  geom_line(col = "#237795") +
+  geom_area(fill = "#237795",alpha = .5) +
+  scale_y_continuous(labels = scales::dollar_format(),
+                     expand = c(0,0)) +
+  labs(title = "Tupperware shares at an all-time low",
+       subtitle = "Share price in US dollar",
+       y = "",
+       x = "",
+       caption = "Source: yahoo finance via {quantmod}") +
+  annotate(geom = "point",
+           x = as.Date("2023-04-11"),
+           y = 1.3,
+           col = "#237795",
+           size = 2) + 
+  annotate(geom = "text",label = "11 Apr\n$1.30",
+           x = as.Date("2023-07-15"),
+           y = 3,
+           col = "#237795",
+           family = "serif", fontface = "bold",
+           size = 5) +
+  theme(panel.background = element_rect(fill = "white"),
+        panel.grid.major.y = element_line(colour = "grey50"),
+        panel.grid.major.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line.x = element_line(linewidth = 1),
+        text = element_text(family = "serif"),
+        axis.text = element_text(size = 15),
+        plot.title = element_text(face = "bold",
+                                  family = "serif",size = 25),
+        plot.subtitle = element_text(family = "serif",size = 15),
+        plot.caption = element_text(hjust = 0,family = "serif",size = 13))
+```
+
+```{r}
+ggsave(filename = "day12_finalplot.png",dpi = 300,bg = "white",width = 10)
+```
