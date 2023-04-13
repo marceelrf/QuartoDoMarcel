@@ -1,0 +1,70 @@
+---
+title: "30 days chart challenge - day 13"
+description: "pop culture"
+author: "Marcel Ferreira"
+date: "2023-04-13"
+categories: [R, Dataviz]
+image: "shoes-2804823_1920.jpg"
+---
+
+```{r}
+library(tidyverse)
+```
+
+## Data
+
+```{r}
+musics <- read_csv("Spotify_Youtube.csv")
+```
+
+## Count NA's
+
+```{r}
+musics %>% 
+  mutate(across(everything(), is.na)) %>%
+  summary(across(everything(), sum))
+```
+
+```{r}
+mrf_songs <- musics %>%
+  filter(str_detect(Artist, "Kings of Leon|The Killers|M83|Dua Lipa|Fleetwood Mac"))
+```
+
+```{r}
+mrf_songs %>%
+  select(Artist,Track,Danceability:Duration_ms) %>%
+  pivot_longer(cols = Danceability:Duration_ms,
+               names_to = "Params",
+               values_to = "Vals") %>%
+  ggplot(aes(x = Artist, y = Vals, col = Artist)) +
+  geom_jitter(size = 3, alpha = .8) +
+  facet_wrap(~Params,scales = "free") +
+  labs(title = "Spotify statistic about the top 10 songs of my top 5 favorite artists.",
+       subtitle = "Source: https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube",
+       x = "",
+       y = "") +
+  #scale_y_continuous(expand = c(0,0)) +
+  scale_color_manual(values = c("#e187a8",
+                                "#efd893",
+                                "#749e97",
+                                "#2880bc",
+                                "#ab4841")) +
+  theme(text = element_text(family = "serif"),
+        plot.title = element_text(family = "serif",face = "bold",size = 18,hjust = .5),
+        plot.subtitle = element_text(family = "serif",face = "italic",size = 8),
+        plot.background = element_rect(fill = "white"),
+        panel.background = element_rect(fill = "white"),
+        strip.text = element_text(face = "bold",size = 12),
+        panel.grid.major.y = element_line(colour = "grey85"),
+        panel.grid.major.x = element_blank(),
+        axis.text.y = element_text(size = 10,colour = "black"),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.position = "bottom",
+        legend.title = element_text(face = "bold",size = 12),
+        legend.text = element_text(face = "italic",size = 10))
+```
+
+```{r}
+ggsave(filename = "day13_finalplot.png",dpi = 600,bg = "white",width = 10)
+```
