@@ -323,74 +323,435 @@ The following object is masked from 'package:readr':
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> final_table <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">(C</span><span class="sc">\\</span><span class="st">)"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">(R</span><span class="sc">\\</span><span class="st">)"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">[c</span><span class="sc">\\</span><span class="st">]"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace_all</span>(Team, <span class="st">" "</span>,<span class="st">"_"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">fix_names</span>(Team))) <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">select</span>(Pos,Team)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="at">.f =</span> bind_rows) <span class="sc">%&gt;%</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Fix teams names</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"América_Mineiro_"</span>,<span class="st">"América_Mineiro"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Athletico_Paranaense| </span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="st">Atlético_Paranaense"</span>,<span class="st">"Athletico PR"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Atlético_Goianiense_"</span>,<span class="st">"Atlético_Goianiense"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Atlético_Mineiro_"</span>,<span class="st">"Atlético_Mineiro"</span>)) <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(final_table) <span class="ot">&lt;-</span> <span class="dv">2006</span><span class="sc">:</span><span class="dv">2022</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>(tab <span class="ot">&lt;-</span> final_table <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">(C</span><span class="sc">\\</span><span class="st">)"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">(R</span><span class="sc">\\</span><span class="st">)"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">[c</span><span class="sc">\\</span><span class="st">]"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace_all</span>(Team, <span class="st">" "</span>,<span class="st">"_"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">fix_names</span>(Team))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">select</span>(Team,GD)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_df</span>(<span class="sc">~</span><span class="fu">as.data.frame</span>(.x),<span class="at">.id =</span> <span class="st">"id"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Fix teams names</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"América_Mineiro_"</span>,<span class="st">"América_Mineiro"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Athletico_Paranaense|</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="st">Atlético_Paranaense"</span>,<span class="st">"Athletico PR"</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Atlético_Goianiense_"</span>,<span class="st">"Atlético_Goianiense"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Avaí_"</span>,<span class="st">"Avaí"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Bahia_"</span>,<span class="st">"Bahia"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Botafogo_"</span>,<span class="st">"Botafogo"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"CSA_"</span>,<span class="st">"CSA"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Ceará_"</span>,<span class="st">"Ceará"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Chapecoense_"</span>,<span class="st">"Chapecoense"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Corinthians_"</span>,<span class="st">"Corinthians"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Coritiba_"</span>,<span class="st">"Coritiba"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Vasco_da_Gama_"</span>,<span class="st">"Vasco"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Vasco_da_Gama"</span>,<span class="st">"Vasco"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Sport_do_Recife"</span>,<span class="st">"Sport"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Sport_Recife"</span>,<span class="st">"Sport"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"_$"</span>,<span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace_all</span>(Team, <span class="st">"_"</span>,<span class="st">" "</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Atlético_Mineiro_"</span>,<span class="st">"Atlético_Mineiro"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Atlético_Goianiense_"</span>,<span class="st">"Atlético_Goianiense"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Avaí_"</span>,<span class="st">"Avaí"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Bahia_"</span>,<span class="st">"Bahia"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Botafogo_"</span>,<span class="st">"Botafogo"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"CSA_"</span>,<span class="st">"CSA"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Ceará_"</span>,<span class="st">"Ceará"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Chapecoense_"</span>,<span class="st">"Chapecoense"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Corinthians_"</span>,<span class="st">"Corinthians"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Coritiba_"</span>,<span class="st">"Coritiba"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Vasco_da_Gama_"</span>,<span class="st">"Vasco"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Vasco_da_Gama"</span>,<span class="st">"Vasco"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Sport_do_Recife"</span>,<span class="st">"Sport"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team,<span class="st">"Sport_Recife"</span>,<span class="st">"Sport"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"_$"</span>,<span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace_all</span>(Team, <span class="st">"_"</span>,<span class="st">" "</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GD =</span> <span class="fu">str_replace</span>(GD, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">+"</span>,<span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GD =</span> <span class="fu">str_replace</span>(GD,</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>                          <span class="at">pattern =</span> <span class="fu">regex</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">D+"</span>,<span class="at">negate =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>                          <span class="at">replacement =</span> <span class="st">"-"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">GD =</span> <span class="fu">as.numeric</span>(GD))</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+i In argument: `GD = str_replace(GD, pattern = regex("\\D+", negate = TRUE),
+  replacement = "-")`.
+Caused by warning in `stri_opts_regex()`:
+! Unknown option to `stri_opts_regex`.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      id                Team  GD
+1   2006           São Paulo  34
+2   2006       Internacional  16
+3   2006              Grêmio  19
+4   2006              Santos  21
+5   2006              Paraná   7
+6   2006               Vasco   7
+7   2006         Figueirense  13
+8   2006               Goiás  14
+9   2006         Corinthians  -5
+10  2006            Cruzeiro   7
+11  2006            Flamengo  -4
+12  2006            Botafogo   2
+13  2006        Athletico PR  -1
+14  2006           Juventude -10
+15  2006          Fluminense -10
+16  2006           Palmeiras -12
+17  2006         Ponte Preta -20
+18  2006           Fortaleza -23
+19  2006         São Caetano -16
+20  2006          Santa Cruz -34
+21  2007           São Paulo  36
+22  2007              Santos  10
+23  2007            Flamengo   6
+24  2007          Fluminense  18
+25  2007            Cruzeiro  14
+26  2007              Grêmio   1
+27  2007           Palmeiras   1
+28  2007    Atlético Mineiro  12
+29  2007            Botafogo   4
+30  2007               Vasco  11
+31  2007       Internacional   5
+32  2007 Atlético Paranaense   1
+33  2007         Figueirense   1
+34  2007               Sport  -1
+35  2007             Náutico   3
+36  2007               Goiás -13
+37  2007         Corinthians -10
+38  2007              Paraná -22
+39  2007           Juventude -22
+40  2007          América RN -56
+41  2008           São Paulo  30
+42  2008              Grêmio  24
+43  2008            Cruzeiro  15
+44  2008           Palmeiras  10
+45  2008            Flamengo  19
+46  2008       Internacional   1
+47  2008            Botafogo   7
+48  2008               Goiás  10
+49  2008            Coritiba   7
+50  2008             Vitória   4
+51  2008               Sport   3
+52  2008    Atlético Mineiro -11
+53  2008 Atlético Paranaense  -9
+54  2008          Fluminense   1
+55  2008              Santos  -9
+56  2008             Náutico -10
+57  2008         Figueirense -23
+58  2008               Vasco -16
+59  2008          Portuguesa -22
+60  2008            Ipatinga -29
+61  2009            Flamengo  14
+62  2009       Internacional  21
+63  2009           São Paulo  15
+64  2009            Cruzeiro   5
+65  2009           Palmeiras  13
+66  2009                Avaí   9
+67  2009    Atlético Mineiro  -1
+68  2009              Grêmio  21
+69  2009               Goiás  -1
+70  2009         Corinthians  -4
+71  2009             Barueri   7
+72  2009              Santos   0
+73  2009             Vitória  -6
+74  2009 Atlético Paranaense  -7
+75  2009            Botafogo  -6
+76  2009          Fluminense  -7
+77  2009            Coritiba -12
+78  2009         Santo André -15
+79  2009             Náutico -23
+80  2009               Sport -23
+81  2010          Fluminense  26
+82  2010            Cruzeiro  15
+83  2010         Corinthians  24
+84  2010              Grêmio  25
+85  2010 Atlético Paranaense  -2
+86  2010            Botafogo  12
+87  2010       Internacional   7
+88  2010              Santos  13
+89  2010           São Paulo   0
+90  2010           Palmeiras  -1
+91  2010               Vasco  -2
+92  2010               Ceará  -9
+93  2010    Atlético Mineiro -12
+94  2010            Flamengo  -3
+95  2010                Avaí  -9
+96  2010 Atlético Goianiense  -6
+97  2010             Vitória  -6
+98  2010             Guarani -20
+99  2010               Goiás -27
+100 2010             Barueri -25
+101 2011         Corinthians  17
+102 2011               Vasco  17
+103 2011          Fluminense   9
+104 2011            Flamengo  12
+105 2011       Internacional  14
+106 2011           São Paulo  11
+107 2011         Figueirense   1
+108 2011            Coritiba  16
+109 2011            Botafogo   3
+110 2011              Santos   0
+111 2011           Palmeiras   4
+112 2011              Grêmio  -8
+113 2011 Atlético Goianiense   5
+114 2011               Bahia  -6
+115 2011    Atlético Mineiro -10
+116 2011            Cruzeiro  -3
+117 2011 Atlético Paranaense -17
+118 2011               Ceará -17
+119 2011     América Mineiro -18
+120 2011                Avaí -30
+121 2012          Fluminense  28
+122 2012    Atlético Mineiro  27
+123 2012              Grêmio  23
+124 2012           São Paulo  22
+125 2012               Vasco   1
+126 2012         Corinthians  12
+127 2012            Botafogo  10
+128 2012              Santos   6
+129 2012            Cruzeiro  -4
+130 2012       Internacional   4
+131 2012            Flamengo  -7
+132 2012             Náutico  -7
+133 2012            Coritiba  -7
+134 2012         Ponte Preta  -7
+135 2012               Bahia  -4
+136 2012          Portuguesa  -2
+137 2012               Sport -17
+138 2012           Palmeiras -15
+139 2012 Atlético Goianiense -30
+140 2012         Figueirense -33
+141 2013            Cruzeiro  40
+142 2013              Grêmio   7
+143 2013 Atlético Paranaense  16
+144 2013            Botafogo  14
+145 2013             Vitória   6
+146 2013               Goiás   4
+147 2013              Santos  13
+148 2013    Atlético Mineiro  11
+149 2013           São Paulo  -1
+150 2013         Corinthians   5
+151 2013            Coritiba  -3
+152 2013               Bahia  -8
+153 2013       Internacional  -1
+154 2013            Criciúma -14
+155 2013          Fluminense  -4
+156 2013            Flamengo  -3
+157 2013          Portuguesa   4
+158 2013               Vasco -11
+159 2013         Ponte Preta -18
+160 2013             Náutico -57
+161 2014            Cruzeiro  29
+162 2014           São Paulo  19
+163 2014       Internacional  12
+164 2014         Corinthians  18
+165 2014    Atlético Mineiro  13
+166 2014          Fluminense  19
+167 2014              Grêmio  12
+168 2014 Atlético Paranaense   1
+169 2014              Santos   7
+170 2014            Flamengo  -1
+171 2014               Sport -10
+172 2014               Goiás  -2
+173 2014         Figueirense -10
+174 2014            Coritiba  -3
+175 2014         Chapecoense  -5
+176 2014           Palmeiras -25
+177 2014             Vitória -17
+178 2014               Bahia -12
+179 2014            Botafogo -17
+180 2014            Criciúma -28
+181 2015         Corinthians  40
+182 2015    Atlético Mineiro  18
+183 2015              Grêmio  20
+184 2015           São Paulo   6
+185 2015       Internacional   1
+186 2015               Sport  15
+187 2015              Santos  18
+188 2015            Cruzeiro   9
+189 2015           Palmeiras   9
+190 2015 Atlético Paranaense  -5
+191 2015         Ponte Preta   1
+192 2015            Flamengo  -8
+193 2015          Fluminense  -9
+194 2015         Chapecoense -10
+195 2015            Coritiba -11
+196 2015         Figueirense -14
+197 2015                Avaí -22
+198 2015               Vasco -26
+199 2015               Goiás -10
+200 2015           Joinville -22
+201 2016           Palmeiras  30
+202 2016              Santos  24
+203 2016            Flamengo  17
+204 2016    Atlético Mineiro   8
+205 2016            Botafogo   4
+206 2016 Atlético Paranaense   6
+207 2016         Corinthians   6
+208 2016         Ponte Preta  -4
+209 2016              Grêmio  -3
+210 2016           São Paulo   8
+211 2016         Chapecoense  -7
+212 2016            Cruzeiro  -1
+213 2016          Fluminense   0
+214 2016               Sport  -6
+215 2016            Coritiba  -1
+216 2016             Vitória  -2
+217 2016       Internacional  -6
+218 2016         Figueirense -20
+219 2016          Santa Cruz -24
+220 2016     América Mineiro -35
+221 2017         Corinthians  20
+222 2017           Palmeiras  16
+223 2017              Santos  10
+224 2017              Grêmio  19
+225 2017            Cruzeiro   8
+226 2017            Flamengo  11
+227 2017               Vasco  -7
+228 2017         Chapecoense  -2
+229 2017    Atlético Mineiro   3
+230 2017            Botafogo   3
+231 2017 Atlético Paranaense   2
+232 2017               Bahia   2
+233 2017           São Paulo  -1
+234 2017          Fluminense  -3
+235 2017               Sport -12
+236 2017             Vitória  -8
+237 2017            Coritiba  -9
+238 2017                Avaí -19
+239 2017         Ponte Preta -15
+240 2017 Atlético Goianiense -18
+241 2018           Palmeiras  38
+242 2018            Flamengo  30
+243 2018       Internacional  22
+244 2018              Grêmio  21
+245 2018           São Paulo  12
+246 2018    Atlético Mineiro  13
+247 2018 Atlético Paranaense  17
+248 2018            Cruzeiro   0
+249 2018            Botafogo  -8
+250 2018              Santos   6
+251 2018               Bahia  -2
+252 2018          Fluminense -14
+253 2018         Corinthians  -1
+254 2018         Chapecoense -16
+255 2018               Ceará  -6
+256 2018               Vasco  -7
+257 2018     América Mineiro -17
+258 2018               Sport -22
+259 2018             Vitória -27
+260 2018              Paraná -39
+261 2019            Flamengo  49
+262 2019              Santos  27
+263 2019           Palmeiras  29
+264 2019              Grêmio  25
+265 2019        Athletico PR  19
+266 2019           São Paulo   9
+267 2019       Internacional   5
+268 2019         Corinthians   8
+269 2019           Fortaleza   1
+270 2019               Goiás -18
+271 2019               Bahia   1
+272 2019               Vasco  -6
+273 2019    Atlético Mineiro  -4
+274 2019          Fluminense  -8
+275 2019            Botafogo -14
+276 2019               Ceará  -5
+277 2019            Cruzeiro -19
+278 2019                 CSA -34
+279 2019         Chapecoense -21
+280 2019                Avaí -44
+281 2020            Flamengo  20
+282 2020       Internacional  26
+283 2020    Atlético Mineiro  19
+284 2020           São Paulo  18
+285 2020          Fluminense  13
+286 2020              Grêmio  13
+287 2020           Palmeiras  14
+288 2020              Santos   1
+289 2020        Athletico PR   2
+290 2020 Red Bull Bragantino  10
+291 2020               Ceará   3
+292 2020         Corinthians   0
+293 2020 Atlético Goianiense  -5
+294 2020               Bahia -11
+295 2020               Sport -19
+296 2020           Fortaleza -10
+297 2020               Vasco -19
+298 2020               Goiás -22
+299 2020            Coritiba -23
+300 2020            Botafogo -30
+301 2021    Atlético Mineiro  33
+302 2021            Flamengo  33
+303 2021           Palmeiras  15
+304 2021           Fortaleza  -1
+305 2021         Corinthians   4
+306 2021 Red Bull Bragantino   9
+307 2021          Fluminense   0
+308 2021     América Mineiro   4
+309 2021 Atlético Goianiense  -3
+310 2021              Santos  -5
+311 2021               Ceará   1
+312 2021       Internacional   2
+313 2021           São Paulo  -8
+314 2021        Athletico PR  -4
+315 2021              Cuiabá  -3
+316 2021           Juventude  -8
+317 2021              Grêmio  -7
+318 2021               Bahia  -9
+319 2021               Sport -13
+320 2021         Chapecoense -40
+321 2022           Palmeiras  39
+322 2022       Internacional  27
+323 2022          Fluminense  22
+324 2022         Corinthians   8
+325 2022            Flamengo  21
+326 2022        Athletico PR   0
+327 2022    Atlético Mineiro   8
+328 2022           Fortaleza   7
+329 2022           São Paulo  13
+330 2022     América Mineiro   0
+331 2022            Botafogo  -2
+332 2022              Santos   3
+333 2022               Goiás -13
+334 2022 Red Bull Bragantino -10
+335 2022            Coritiba -21
+336 2022              Cuiabá -11
+337 2022               Ceará  -7
+338 2022 Atlético Goianiense -18
+339 2022                Avaí -26
+340 2022           Juventude -40</code></pre>
+</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tab <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Team) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Pos_min =</span> <span class="fu">max</span>(Pos),</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">Pos_max =</span> <span class="fu">min</span>(Pos)) <span class="sc">%&gt;%</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">factor</span>(Team)) <span class="sc">%&gt;%</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Diff =</span> <span class="fu">abs</span>(Pos_max <span class="sc">-</span> Pos_min)) <span class="sc">%&gt;%</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">fct_reorder2</span>(Team, (Diff),(Pos_max))) <span class="sc">%&gt;%</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> (Team))) <span class="sc">+</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_linerange</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> Pos_min, <span class="at">ymax =</span> Pos_max),</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> Pos_min), <span class="at">col =</span> <span class="st">"dodgerblue"</span>,<span class="at">size =</span> <span class="dv">2</span>,<span class="at">alpha =</span> .<span class="dv">75</span>) <span class="sc">+</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> Pos_max), <span class="at">col =</span> <span class="st">"red"</span>,<span class="at">size =</span> <span class="dv">2</span>,<span class="at">alpha =</span> .<span class="dv">75</span>) <span class="sc">+</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_reverse</span>(<span class="at">n.breaks =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>,<span class="at">y=</span> <span class="st">""</span>,</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Range of positions of the teams in the Brazilian Serie A (2006~2022)."</span>,</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Data from wikipedia"</span>) <span class="sc">+</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Book Antiqua"</span>),</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>,<span class="at">size =</span> <span class="dv">10</span>),</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>,<span class="at">size =</span> <span class="dv">22</span>),</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-i Please use `linewidth` instead.</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Team_oreder <span class="ot">&lt;-</span> tab <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Team) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(Team)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>col1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#DE3939"</span>, <span class="st">"#948E8E"</span>, <span class="st">"#0357D6"</span>, <span class="st">"#FEFFE5"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>tab <span class="sc">%&gt;%</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">factor</span>(Team, <span class="at">levels =</span> <span class="fu">rev</span>(Team_oreder)),</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">Class =</span> <span class="fu">case_when</span>(</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>           GD <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"positive"</span>,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>           GD <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"negative"</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>           <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"neutral"</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>         )) <span class="sc">%&gt;%</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mutate(Diff = abs(Pos_max - Pos_min)) %&gt;%</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mutate(Team = fct_reorder2(Team, (Diff),(Pos_max))) %&gt;%</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> (id), <span class="at">y =</span> Team, <span class="at">fill =</span> Class))<span class="sc">+</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">col =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"positive"</span> <span class="ot">=</span> col1[<span class="dv">1</span>],</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"negative"</span> <span class="ot">=</span> col1[<span class="dv">3</span>],</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"neutral"</span> <span class="ot">=</span> col1[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>,<span class="at">y=</span> <span class="st">""</span>,</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Did your team have a positive goal difference?"</span>,</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Gol differences of the teams in the Brazilian Serie A (2006~2022). Data from wikipedia."</span>) <span class="sc">+</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Book Antiqua"</span>),</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>,<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>,<span class="at">size =</span> <span class="dv">22</span>),</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> col1[<span class="dv">4</span>]),</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> col1[<span class="dv">4</span>]),</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"day15_finalplot.png"</span>,<span class="at">dpi =</span> <span class="dv">600</span>,<span class="at">width =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Saving 12 x 5 in image</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"day15_finalplot.png"</span>,<span class="at">dpi =</span> <span class="dv">600</span>,<span class="at">width =</span> <span class="dv">12</span>,<span class="at">height =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

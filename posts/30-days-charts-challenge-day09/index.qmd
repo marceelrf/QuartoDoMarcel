@@ -100,7 +100,7 @@ tab %>%
   theme_bw() +
   theme(text = element_text(family = "Book Antiqua"),
         panel.grid.minor = element_blank(),
-        axis.text = element_text(face = "bold",size = 10),
+        axis.text = element_text(face = "bold",size = 14),
         plot.title = element_text(face = "bold",size = 22),
         panel.grid.major.y = element_blank(),
         axis.ticks = element_blank())
@@ -110,5 +110,5 @@ tab %>%
 ```
 
 ```{r}
-ggsave(filename = "day15_finalplot.png",dpi = 600,width = 12)
+ggsave(filename = "day09_finalplot.png",dpi = 600,width = 12,height = 10)
 ```

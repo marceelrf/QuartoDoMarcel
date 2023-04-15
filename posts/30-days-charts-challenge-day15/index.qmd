@@ -4,7 +4,7 @@ description: "positive/negative"
 author: "Marcel Ferreira"
 date: "2023-04-15"
 categories: [R, Dataviz]
-image: ""
+image: "Campeonato_Brasileiro_Série_A_logo.png"
 ---
 
 ```{r}
@@ -48,17 +48,19 @@ for(i in 1:17){
 ```
 
 ```{r}
-tab <- final_table %>%
+names(final_table) <- 2006:2022
+
+(tab <- final_table %>%
   map(.f = \(x) x %>% mutate(Team = str_replace(Team, "\\(C\\)",""))) %>%
   map(.f = \(x) x %>% mutate(Team = str_replace(Team, "\\(R\\)",""))) %>%
   map(.f = \(x) x %>% mutate(Team = str_replace(Team, "\\[c\\]",""))) %>%
   map(.f = \(x) x %>% mutate(Team = str_replace_all(Team, " ","_"))) %>%
   map(.f = \(x) x %>% mutate(Team = fix_names(Team))) %>%
-  map(.f = \(x) x %>% select(Pos,Team)) %>%
-  reduce(.f = bind_rows) %>%
+  map(.f = \(x) x %>% select(Team,GD)) %>%
+  map_df(~as.data.frame(.x),.id = "id") %>% 
   #Fix teams names
   mutate(Team = str_replace(Team,"América_Mineiro_","América_Mineiro")) %>%
-  mutate(Team = str_replace(Team,"Athletico_Paranaense|	
+  mutate(Team = str_replace(Team,"Athletico_Paranaense|
 Atlético_Paranaense","Athletico PR")) %>%
   mutate(Team = str_replace(Team,"Atlético_Goianiense_","Atlético_Goianiense")) %>%
   mutate(Team = str_replace(Team,"Atlético_Mineiro_","Atlético_Mineiro")) %>%
@@ -76,39 +78,55 @@ Atlético_Paranaense","Athletico PR")) %>%
   mutate(Team = str_replace(Team,"Sport_do_Recife","Sport")) %>%
   mutate(Team = str_replace(Team,"Sport_Recife","Sport")) %>%
   mutate(Team = str_replace(Team, "_$","")) %>%
-  mutate(Team = str_replace_all(Team, "_"," "))
+  mutate(Team = str_replace_all(Team, "_"," ")) %>%
+  mutate(GD = str_replace(GD, pattern = "\\+","")) %>%
+  mutate(GD = str_replace(GD,
+                          pattern = regex("\\D+",negate = TRUE),
+                          replacement = "-")) %>%
+    mutate(GD = as.numeric(GD))
+  )
 ```
 
 ```{r}
-tab %>%
+Team_oreder <- tab %>%
   group_by(Team) %>%
-  summarise(Pos_min = max(Pos),
-            Pos_max = min(Pos)) %>%
-  mutate(Team = factor(Team)) %>%
-  mutate(Diff = abs(Pos_max - Pos_min)) %>%
-  mutate(Team = fct_reorder2(Team, (Diff),(Pos_max))) %>%
-  ggplot(aes(x = (Team))) +
-  geom_linerange(aes(ymin = Pos_min, ymax = Pos_max),
-                 size = 2, alpha = 0.25) +
-  geom_point(aes(y = Pos_min), col = "dodgerblue",size = 2,alpha = .75) +
-  geom_point(aes(y = Pos_max), col = "red",size = 2,alpha = .75) +
-  scale_y_reverse(n.breaks = 20) +
+  count(sort = TRUE) %>%
+  pull(Team)
+
+col1 <- c("#DE3939", "#948E8E", "#0357D6", "#FEFFE5")
+
+tab %>%
+  mutate(Team = factor(Team, levels = rev(Team_oreder)),
+         Class = case_when(
+           GD > 0 ~ "positive",
+           GD < 0 ~ "negative",
+           TRUE ~ "neutral"
+         )) %>%
+  # mutate(Diff = abs(Pos_max - Pos_min)) %>%
+  # mutate(Team = fct_reorder2(Team, (Diff),(Pos_max))) %>%
+  ggplot(aes(x = (id), y = Team, fill = Class))+
+  geom_tile(col = "black") +
+  scale_fill_manual(values = c("positive" = col1[1],
+                               "negative" = col1[3],
+                               "neutral" = col1[2])) +
   labs(x = "",y= "",
-       title = "Range of positions of the teams in the Brazilian Serie A (2006~2022).",
-       subtitle = "Data from wikipedia") +
-  coord_flip() +
+       title = "Did your team have a positive goal difference?",
+       subtitle = "Gol differences of the teams in the Brazilian Serie A (2006~2022). Data from wikipedia.") +
   theme_bw() +
   theme(text = element_text(family = "Book Antiqua"),
         panel.grid.minor = element_blank(),
         axis.text = element_text(face = "bold",size = 10),
         plot.title = element_text(face = "bold",size = 22),
-        panel.grid.major.y = element_blank(),
-        axis.ticks = element_blank())
+        panel.grid.major = element_blank(),
+        axis.ticks = element_blank(),
+        plot.background = element_rect(fill = col1[4]),
+        legend.background = element_rect(fill = col1[4]),
+        legend.title = element_blank())
   
 
 
 ```
 
 ```{r}
-ggsave(filename = "day15_finalplot.png",dpi = 600,width = 12)
+ggsave(filename = "day15_finalplot.png",dpi = 600,width = 12,height = 10)
 ```
