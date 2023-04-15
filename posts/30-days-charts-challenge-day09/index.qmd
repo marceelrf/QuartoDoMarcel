@@ -1,0 +1,114 @@
+---
+title: "30 days chart challenge - day 09"
+description: "high/low"
+author: "Marcel Ferreira"
+date: "2023-04-09"
+categories: [R, Dataviz]
+image: "Campeonato_Brasileiro_Série_A_logo.png"
+---
+
+```{r}
+library(tidyverse)
+library(brasileirao)
+library(rvest)
+library(extrafont)
+```
+
+## Data
+
+```{r}
+url <- "https://en.wikipedia.org/wiki/2019_Campeonato_Brasileiro_S%C3%A9rie_A"
+
+
+
+
+url %>% 
+  read_html() %>% 
+  html_node(xpath = '//*[@id="mw-content-text"]/div[1]/table[7]') %>% 
+  html_table(fill = TRUE)
+
+
+final_table <- list()
+tindex <- c(2,2,3,4,4,5,5,
+            6,6,6,9,9,8,7,7,7,7)
+
+for(i in 1:17){
+  j <- 2005 + i
+  url <- glue::glue("https://en.wikipedia.org/wiki/{j}_Campeonato_Brasileiro_S%C3%A9rie_A")
+  p1 <- tindex[i]
+  
+  
+  final_table[[i]] <- url %>% 
+    read_html() %>% 
+    html_node(xpath = glue::glue('//*[@id="mw-content-text"]/div[1]/table[{p1}]')) %>% 
+    html_table(fill = TRUE)
+  
+  print(j)
+}
+```
+
+```{r}
+tab <- final_table %>%
+  map(.f = \(x) x %>% mutate(Team = str_replace(Team, "\\(C\\)",""))) %>%
+  map(.f = \(x) x %>% mutate(Team = str_replace(Team, "\\(R\\)",""))) %>%
+  map(.f = \(x) x %>% mutate(Team = str_replace(Team, "\\[c\\]",""))) %>%
+  map(.f = \(x) x %>% mutate(Team = str_replace_all(Team, " ","_"))) %>%
+  map(.f = \(x) x %>% mutate(Team = fix_names(Team))) %>%
+  map(.f = \(x) x %>% select(Pos,Team)) %>%
+  reduce(.f = bind_rows) %>%
+  #Fix teams names
+  mutate(Team = str_replace(Team,"América_Mineiro_","América_Mineiro")) %>%
+  mutate(Team = str_replace(Team,"Athletico_Paranaense|	
+Atlético_Paranaense","Athletico PR")) %>%
+  mutate(Team = str_replace(Team,"Atlético_Goianiense_","Atlético_Goianiense")) %>%
+  mutate(Team = str_replace(Team,"Atlético_Mineiro_","Atlético_Mineiro")) %>%
+  mutate(Team = str_replace(Team,"Atlético_Goianiense_","Atlético_Goianiense")) %>%
+  mutate(Team = str_replace(Team,"Avaí_","Avaí")) %>%
+  mutate(Team = str_replace(Team,"Bahia_","Bahia")) %>%
+  mutate(Team = str_replace(Team,"Botafogo_","Botafogo")) %>%
+  mutate(Team = str_replace(Team,"CSA_","CSA")) %>%
+  mutate(Team = str_replace(Team,"Ceará_","Ceará")) %>%
+  mutate(Team = str_replace(Team,"Chapecoense_","Chapecoense")) %>%
+  mutate(Team = str_replace(Team,"Corinthians_","Corinthians")) %>%
+  mutate(Team = str_replace(Team,"Coritiba_","Coritiba")) %>%
+  mutate(Team = str_replace(Team,"Vasco_da_Gama_","Vasco")) %>%
+  mutate(Team = str_replace(Team,"Vasco_da_Gama","Vasco")) %>%
+  mutate(Team = str_replace(Team,"Sport_do_Recife","Sport")) %>%
+  mutate(Team = str_replace(Team,"Sport_Recife","Sport")) %>%
+  mutate(Team = str_replace(Team, "_$","")) %>%
+  mutate(Team = str_replace_all(Team, "_"," "))
+```
+
+```{r}
+tab %>%
+  group_by(Team) %>%
+  summarise(Pos_min = max(Pos),
+            Pos_max = min(Pos)) %>%
+  mutate(Team = factor(Team)) %>%
+  mutate(Diff = abs(Pos_max - Pos_min)) %>%
+  mutate(Team = fct_reorder2(Team, (Diff),(Pos_max))) %>%
+  ggplot(aes(x = (Team))) +
+  geom_linerange(aes(ymin = Pos_min, ymax = Pos_max),
+                 size = 2, alpha = 0.25) +
+  geom_point(aes(y = Pos_min), col = "dodgerblue",size = 2,alpha = .75) +
+  geom_point(aes(y = Pos_max), col = "red",size = 2,alpha = .75) +
+  scale_y_reverse(n.breaks = 20) +
+  labs(x = "",y= "",
+       title = "Range of positions of the teams in the Brazilian Serie A (2006~2022).",
+       subtitle = "Data from wikipedia") +
+  coord_flip() +
+  theme_bw() +
+  theme(text = element_text(family = "Book Antiqua"),
+        panel.grid.minor = element_blank(),
+        axis.text = element_text(face = "bold",size = 10),
+        plot.title = element_text(face = "bold",size = 22),
+        panel.grid.major.y = element_blank(),
+        axis.ticks = element_blank())
+  
+
+
+```
+
+```{r}
+ggsave(filename = "day15_finalplot.png",dpi = 600,width = 12)
+```

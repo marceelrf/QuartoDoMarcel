@@ -1,0 +1,16 @@
+---
+title: "30 days chart challenge - day 14"
+description: "new tool"
+author: "Marcel Ferreira"
+date: "2023-04-14"
+categories: [Observable,JavaScript, Dataviz]
+image: "chart.png"
+---
+
+In this day I used [Observablehq](https://observablehq.com/) as a new tool.
+
+Check this link to full code:
+
+<https://observablehq.com/d/587382c0bf1914c0>
+
+See you!
