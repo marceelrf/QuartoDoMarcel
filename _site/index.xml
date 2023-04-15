@@ -10,7 +10,350 @@
 <atom:link href="https://quartodomarcel.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.2.335</generator>
-<lastBuildDate>Thu, 13 Apr 2023 03:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 15 Apr 2023 03:00:00 GMT</lastBuildDate>
+<item>
+  <title>30 days chart challenge - day 15</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day15/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+v dplyr     1.1.0     v readr     2.1.4
+v forcats   1.0.0     v stringr   1.5.0
+v ggplot2   3.4.1     v tibble    3.1.8
+v lubridate 1.9.2     v tidyr     1.3.0
+v purrr     1.0.1     
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(brasileirao)</span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;">library</span>(rvest)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'rvest'
+
+The following object is masked from 'package:readr':
+
+    guess_encoding</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">library</span>(extrafont)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registering fonts with R</code></pre>
+</div>
+</div>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">url <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="st" style="color: #20794D;">"https://en.wikipedia.org/wiki/2019_Campeonato_Brasileiro_S%C3%A9rie_A"</span></span>
+<span id="cb7-2"></span>
+<span id="cb7-3"></span>
+<span id="cb7-4"></span>
+<span id="cb7-5"></span>
+<span id="cb7-6">url <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-7">  <span class="fu" style="color: #4758AB;">read_html</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-8">  <span class="fu" style="color: #4758AB;">html_node</span>(<span class="at" style="color: #657422;">xpath =</span> <span class="st" style="color: #20794D;">'//*[@id="mw-content-text"]/div[1]/table[7]'</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-9">  <span class="fu" style="color: #4758AB;">html_table</span>(<span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20 x 11
+     Pos Team              Pld     W     D     L    GF    GA GD      Pts Quali~1
+   &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;  
+ 1     1 Flamengo (C)       38    28     6     4    86    37 +49      90 "Quali~
+ 2     2 Santos             38    22     8     8    60    33 +27      74 "Quali~
+ 3     3 Palmeiras          38    21    11     6    61    32 +29      74 "Quali~
+ 4     4 Grêmio             38    19     8    11    64    39 +25      65 "Quali~
+ 5     5 Athletico Para~    38    18    10    10    51    32 +19      64 "Quali~
+ 6     6 São Paulo          38    17    12     9    39    30 +9       63 "Quali~
+ 7     7 Internacional      38    16     9    13    44    39 +5       57 "Quali~
+ 8     8 Corinthians        38    14    14    10    42    34 +8       56 "Quali~
+ 9     9 Fortaleza          38    15     8    15    50    49 +1       53 "Quali~
+10    10 Goiás              38    15     7    16    46    64 -18      52 "Quali~
+11    11 Bahia              38    12    13    13    44    43 +1       49 "Quali~
+12    12 Vasco da Gama      38    12    13    13    39    45 -6       49 "Quali~
+13    13 Atlético Minei~    38    13     9    16    45    49 -4       48 "Quali~
+14    14 Fluminense         38    12    10    16    38    46 -8       46 "Quali~
+15    15 Botafogo           38    13     4    21    31    45 -14      43 ""     
+16    16 Ceará              38    10     9    19    36    41 -5       39 ""     
+17    17 Cruzeiro (R)       38     7    15    16    27    46 -19      36 "Releg~
+18    18 CSA (R)            38     8     8    22    24    58 -34      32 "Releg~
+19    19 Chapecoense (R)    38     7    11    20    31    52 -21      32 "Releg~
+20    20 Avaí (R)           38     3    11    24    18    62 -44      20 "Releg~
+# ... with abbreviated variable name 1: `Qualification or relegation`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">final_table <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">list</span>()</span>
+<span id="cb9-2">tindex <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">5</span>,<span class="dv" style="color: #AD0000;">5</span>,</span>
+<span id="cb9-3">            <span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">9</span>,<span class="dv" style="color: #AD0000;">9</span>,<span class="dv" style="color: #AD0000;">8</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>)</span>
+<span id="cb9-4"></span>
+<span id="cb9-5"><span class="cf" style="color: #003B4F;">for</span>(i <span class="cf" style="color: #003B4F;">in</span> <span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">17</span>){</span>
+<span id="cb9-6">  j <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="dv" style="color: #AD0000;">2005</span> <span class="sc" style="color: #5E5E5E;">+</span> i</span>
+<span id="cb9-7">  url <span class="ot" style="color: #003B4F;">&lt;-</span> glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">"https://en.wikipedia.org/wiki/{j}_Campeonato_Brasileiro_S%C3%A9rie_A"</span>)</span>
+<span id="cb9-8">  p1 <span class="ot" style="color: #003B4F;">&lt;-</span> tindex[i]</span>
+<span id="cb9-9">  </span>
+<span id="cb9-10">  </span>
+<span id="cb9-11">  final_table[[i]] <span class="ot" style="color: #003B4F;">&lt;-</span> url <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-12">    <span class="fu" style="color: #4758AB;">read_html</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-13">    <span class="fu" style="color: #4758AB;">html_node</span>(<span class="at" style="color: #657422;">xpath =</span> glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">'//*[@id="mw-content-text"]/div[1]/table[{p1}]'</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-14">    <span class="fu" style="color: #4758AB;">html_table</span>(<span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
+<span id="cb9-15">  </span>
+<span id="cb9-16">  <span class="fu" style="color: #4758AB;">print</span>(j)</span>
+<span id="cb9-17">}</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2006
+[1] 2007
+[1] 2008
+[1] 2009
+[1] 2010
+[1] 2011
+[1] 2012
+[1] 2013
+[1] 2014
+[1] 2015
+[1] 2016
+[1] 2017
+[1] 2018
+[1] 2019
+[1] 2020
+[1] 2021
+[1] 2022</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">tab <span class="ot" style="color: #003B4F;">&lt;-</span> final_table <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-2">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">(C</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">)"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-3">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">(R</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">)"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-4">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">[c</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">]"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-5">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace_all</span>(Team, <span class="st" style="color: #20794D;">" "</span>,<span class="st" style="color: #20794D;">"_"</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-6">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">fix_names</span>(Team))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-7">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">select</span>(Pos,Team)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-8">  <span class="fu" style="color: #4758AB;">reduce</span>(<span class="at" style="color: #657422;">.f =</span> bind_rows) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-9">  <span class="co" style="color: #5E5E5E;">#Fix teams names</span></span>
+<span id="cb11-10">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"América_Mineiro_"</span>,<span class="st" style="color: #20794D;">"América_Mineiro"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-11">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Athletico_Paranaense| </span></span>
+<span id="cb11-12"><span class="st" style="color: #20794D;">Atlético_Paranaense"</span>,<span class="st" style="color: #20794D;">"Athletico PR"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-13">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Atlético_Goianiense_"</span>,<span class="st" style="color: #20794D;">"Atlético_Goianiense"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-14">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Atlético_Mineiro_"</span>,<span class="st" style="color: #20794D;">"Atlético_Mineiro"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-15">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Atlético_Goianiense_"</span>,<span class="st" style="color: #20794D;">"Atlético_Goianiense"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-16">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Avaí_"</span>,<span class="st" style="color: #20794D;">"Avaí"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-17">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Bahia_"</span>,<span class="st" style="color: #20794D;">"Bahia"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-18">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Botafogo_"</span>,<span class="st" style="color: #20794D;">"Botafogo"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-19">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"CSA_"</span>,<span class="st" style="color: #20794D;">"CSA"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-20">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Ceará_"</span>,<span class="st" style="color: #20794D;">"Ceará"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-21">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Chapecoense_"</span>,<span class="st" style="color: #20794D;">"Chapecoense"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-22">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Corinthians_"</span>,<span class="st" style="color: #20794D;">"Corinthians"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-23">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Coritiba_"</span>,<span class="st" style="color: #20794D;">"Coritiba"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-24">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Vasco_da_Gama_"</span>,<span class="st" style="color: #20794D;">"Vasco"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-25">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Vasco_da_Gama"</span>,<span class="st" style="color: #20794D;">"Vasco"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-26">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Sport_do_Recife"</span>,<span class="st" style="color: #20794D;">"Sport"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-27">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Sport_Recife"</span>,<span class="st" style="color: #20794D;">"Sport"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-28">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"_$"</span>,<span class="st" style="color: #20794D;">""</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-29">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace_all</span>(Team, <span class="st" style="color: #20794D;">"_"</span>,<span class="st" style="color: #20794D;">" "</span>))</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">tab <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-2">  <span class="fu" style="color: #4758AB;">group_by</span>(Team) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-3">  <span class="fu" style="color: #4758AB;">summarise</span>(<span class="at" style="color: #657422;">Pos_min =</span> <span class="fu" style="color: #4758AB;">max</span>(Pos),</span>
+<span id="cb12-4">            <span class="at" style="color: #657422;">Pos_max =</span> <span class="fu" style="color: #4758AB;">min</span>(Pos)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-5">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">factor</span>(Team)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-6">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Diff =</span> <span class="fu" style="color: #4758AB;">abs</span>(Pos_max <span class="sc" style="color: #5E5E5E;">-</span> Pos_min)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-7">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">fct_reorder2</span>(Team, (Diff),(Pos_max))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-8">  <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> (Team))) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-9">  <span class="fu" style="color: #4758AB;">geom_linerange</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">ymin =</span> Pos_min, <span class="at" style="color: #657422;">ymax =</span> Pos_max),</span>
+<span id="cb12-10">                 <span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">2</span>, <span class="at" style="color: #657422;">alpha =</span> <span class="fl" style="color: #AD0000;">0.25</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-11">  <span class="fu" style="color: #4758AB;">geom_point</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> Pos_min), <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"dodgerblue"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">2</span>,<span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">75</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-12">  <span class="fu" style="color: #4758AB;">geom_point</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> Pos_max), <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"red"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">2</span>,<span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">75</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-13">  <span class="fu" style="color: #4758AB;">scale_y_reverse</span>(<span class="at" style="color: #657422;">n.breaks =</span> <span class="dv" style="color: #AD0000;">20</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-14">  <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">x =</span> <span class="st" style="color: #20794D;">""</span>,<span class="at" style="color: #657422;">y=</span> <span class="st" style="color: #20794D;">""</span>,</span>
+<span id="cb12-15">       <span class="at" style="color: #657422;">title =</span> <span class="st" style="color: #20794D;">"Range of positions of the teams in the Brazilian Serie A (2006~2022)."</span>,</span>
+<span id="cb12-16">       <span class="at" style="color: #657422;">subtitle =</span> <span class="st" style="color: #20794D;">"Data from wikipedia"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-17">  <span class="fu" style="color: #4758AB;">coord_flip</span>() <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-18">  <span class="fu" style="color: #4758AB;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-19">  <span class="fu" style="color: #4758AB;">theme</span>(<span class="at" style="color: #657422;">text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Book Antiqua"</span>),</span>
+<span id="cb12-20">        <span class="at" style="color: #657422;">panel.grid.minor =</span> <span class="fu" style="color: #4758AB;">element_blank</span>(),</span>
+<span id="cb12-21">        <span class="at" style="color: #657422;">axis.text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">10</span>),</span>
+<span id="cb12-22">        <span class="at" style="color: #657422;">plot.title =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">22</span>),</span>
+<span id="cb12-23">        <span class="at" style="color: #657422;">panel.grid.major.y =</span> <span class="fu" style="color: #4758AB;">element_blank</span>(),</span>
+<span id="cb12-24">        <span class="at" style="color: #657422;">axis.ticks =</span> <span class="fu" style="color: #4758AB;">element_blank</span>())</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+i Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day15/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;">ggsave</span>(<span class="at" style="color: #657422;">filename =</span> <span class="st" style="color: #20794D;">"day15_finalplot.png"</span>,<span class="at" style="color: #657422;">dpi =</span> <span class="dv" style="color: #AD0000;">600</span>,<span class="at" style="color: #657422;">width =</span> <span class="dv" style="color: #AD0000;">12</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 12 x 5 in image</code></pre>
+</div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Dataviz</category>
+  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day15/index.html</guid>
+  <pubDate>Sat, 15 Apr 2023 03:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>30 days chart challenge - day 15</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day15/test.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+v dplyr     1.1.0     v readr     2.1.4
+v forcats   1.0.0     v stringr   1.5.0
+v ggplot2   3.4.1     v tibble    3.1.8
+v lubridate 1.9.2     v tidyr     1.3.0
+v purrr     1.0.1     
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(brasileirao)</span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;">library</span>(rvest)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'rvest'
+
+The following object is masked from 'package:readr':
+
+    guess_encoding</code></pre>
+</div>
+</div>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">url <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="st" style="color: #20794D;">"https://en.wikipedia.org/wiki/2019_Campeonato_Brasileiro_S%C3%A9rie_A"</span></span>
+<span id="cb5-2"></span>
+<span id="cb5-3"></span>
+<span id="cb5-4"></span>
+<span id="cb5-5"></span>
+<span id="cb5-6">url <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb5-7">  <span class="fu" style="color: #4758AB;">read_html</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb5-8">  <span class="fu" style="color: #4758AB;">html_node</span>(<span class="at" style="color: #657422;">xpath =</span> <span class="st" style="color: #20794D;">'//*[@id="mw-content-text"]/div[1]/table[7]'</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb5-9">  <span class="fu" style="color: #4758AB;">html_table</span>(<span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20 x 11
+     Pos Team              Pld     W     D     L    GF    GA GD      Pts Quali~1
+   &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;  
+ 1     1 Flamengo (C)       38    28     6     4    86    37 +49      90 "Quali~
+ 2     2 Santos             38    22     8     8    60    33 +27      74 "Quali~
+ 3     3 Palmeiras          38    21    11     6    61    32 +29      74 "Quali~
+ 4     4 Grêmio             38    19     8    11    64    39 +25      65 "Quali~
+ 5     5 Athletico Para~    38    18    10    10    51    32 +19      64 "Quali~
+ 6     6 São Paulo          38    17    12     9    39    30 +9       63 "Quali~
+ 7     7 Internacional      38    16     9    13    44    39 +5       57 "Quali~
+ 8     8 Corinthians        38    14    14    10    42    34 +8       56 "Quali~
+ 9     9 Fortaleza          38    15     8    15    50    49 +1       53 "Quali~
+10    10 Goiás              38    15     7    16    46    64 -18      52 "Quali~
+11    11 Bahia              38    12    13    13    44    43 +1       49 "Quali~
+12    12 Vasco da Gama      38    12    13    13    39    45 -6       49 "Quali~
+13    13 Atlético Minei~    38    13     9    16    45    49 -4       48 "Quali~
+14    14 Fluminense         38    12    10    16    38    46 -8       46 "Quali~
+15    15 Botafogo           38    13     4    21    31    45 -14      43 ""     
+16    16 Ceará              38    10     9    19    36    41 -5       39 ""     
+17    17 Cruzeiro (R)       38     7    15    16    27    46 -19      36 "Releg~
+18    18 CSA (R)            38     8     8    22    24    58 -34      32 "Releg~
+19    19 Chapecoense (R)    38     7    11    20    31    52 -21      32 "Releg~
+20    20 Avaí (R)           38     3    11    24    18    62 -44      20 "Releg~
+# ... with abbreviated variable name 1: `Qualification or relegation`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">final_table <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">list</span>()</span>
+<span id="cb7-2">tindex <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">5</span>,<span class="dv" style="color: #AD0000;">5</span>,</span>
+<span id="cb7-3">            <span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">9</span>,<span class="dv" style="color: #AD0000;">9</span>,<span class="dv" style="color: #AD0000;">8</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>)</span>
+<span id="cb7-4"></span>
+<span id="cb7-5"><span class="cf" style="color: #003B4F;">for</span>(i <span class="cf" style="color: #003B4F;">in</span> <span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">17</span>){</span>
+<span id="cb7-6">  j <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="dv" style="color: #AD0000;">2005</span> <span class="sc" style="color: #5E5E5E;">+</span> i</span>
+<span id="cb7-7">  url <span class="ot" style="color: #003B4F;">&lt;-</span> glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">"https://en.wikipedia.org/wiki/{j}_Campeonato_Brasileiro_S%C3%A9rie_A"</span>)</span>
+<span id="cb7-8">  p1 <span class="ot" style="color: #003B4F;">&lt;-</span> tindex[i]</span>
+<span id="cb7-9">  </span>
+<span id="cb7-10">  </span>
+<span id="cb7-11">  final_table[[i]] <span class="ot" style="color: #003B4F;">&lt;-</span> url <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-12">    <span class="fu" style="color: #4758AB;">read_html</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-13">    <span class="fu" style="color: #4758AB;">html_node</span>(<span class="at" style="color: #657422;">xpath =</span> glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">'//*[@id="mw-content-text"]/div[1]/table[{p1}]'</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-14">    <span class="fu" style="color: #4758AB;">html_table</span>(<span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
+<span id="cb7-15">  </span>
+<span id="cb7-16">  <span class="fu" style="color: #4758AB;">print</span>(j)</span>
+<span id="cb7-17">}</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2006
+[1] 2007
+[1] 2008
+[1] 2009
+[1] 2010
+[1] 2011
+[1] 2012
+[1] 2013
+[1] 2014
+[1] 2015
+[1] 2016
+[1] 2017
+[1] 2018
+[1] 2019
+[1] 2020
+[1] 2021
+[1] 2022</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">tab <span class="ot" style="color: #003B4F;">&lt;-</span> final_table <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-2">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">(C</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">)"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-3">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">fix_names</span>(Team))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-4">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">select</span>(Pos,Team)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-5">  <span class="fu" style="color: #4758AB;">reduce</span>(<span class="at" style="color: #657422;">.f =</span> bind_rows)</span></code></pre></div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Dataviz</category>
+  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day15/test.html</guid>
+  <pubDate>Sat, 15 Apr 2023 03:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>30 days chart challenge - day 14</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day14/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>In this day I used <a href="https://observablehq.com/">Observablehq</a> as a new tool.</p>
+<p>Check this link to full code:</p>
+<p><a href="https://observablehq.com/d/587382c0bf1914c0" class="uri">https://observablehq.com/d/587382c0bf1914c0</a></p>
+<p>See you!</p>
+
+
+
+ ]]></description>
+  <category>Observable</category>
+  <category>JavaScript</category>
+  <category>Dataviz</category>
+  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day14/index.html</guid>
+  <pubDate>Fri, 14 Apr 2023 03:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day14/chart.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>30 days chart challenge - day 13</title>
   <dc:creator>Marcel Ferreira</dc:creator>
@@ -462,6 +805,200 @@ $ tmdb_score           &lt;dbl&gt; 8.167, 7.583, 8.022, 7.000, 10.000, 8.000, 7.
   <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day11/index.html</guid>
   <pubDate>Tue, 11 Apr 2023 03:00:00 GMT</pubDate>
   <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day11/squaresociallogo400x400_0.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
+<item>
+  <title>30 days chart challenge - day 09</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day09/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+v dplyr     1.1.0     v readr     2.1.4
+v forcats   1.0.0     v stringr   1.5.0
+v ggplot2   3.4.1     v tibble    3.1.8
+v lubridate 1.9.2     v tidyr     1.3.0
+v purrr     1.0.1     
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(brasileirao)</span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;">library</span>(rvest)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'rvest'
+
+The following object is masked from 'package:readr':
+
+    guess_encoding</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">library</span>(extrafont)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registering fonts with R</code></pre>
+</div>
+</div>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">url <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="st" style="color: #20794D;">"https://en.wikipedia.org/wiki/2019_Campeonato_Brasileiro_S%C3%A9rie_A"</span></span>
+<span id="cb7-2"></span>
+<span id="cb7-3"></span>
+<span id="cb7-4"></span>
+<span id="cb7-5"></span>
+<span id="cb7-6">url <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-7">  <span class="fu" style="color: #4758AB;">read_html</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-8">  <span class="fu" style="color: #4758AB;">html_node</span>(<span class="at" style="color: #657422;">xpath =</span> <span class="st" style="color: #20794D;">'//*[@id="mw-content-text"]/div[1]/table[7]'</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-9">  <span class="fu" style="color: #4758AB;">html_table</span>(<span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20 x 11
+     Pos Team              Pld     W     D     L    GF    GA GD      Pts Quali~1
+   &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;  
+ 1     1 Flamengo (C)       38    28     6     4    86    37 +49      90 "Quali~
+ 2     2 Santos             38    22     8     8    60    33 +27      74 "Quali~
+ 3     3 Palmeiras          38    21    11     6    61    32 +29      74 "Quali~
+ 4     4 Grêmio             38    19     8    11    64    39 +25      65 "Quali~
+ 5     5 Athletico Para~    38    18    10    10    51    32 +19      64 "Quali~
+ 6     6 São Paulo          38    17    12     9    39    30 +9       63 "Quali~
+ 7     7 Internacional      38    16     9    13    44    39 +5       57 "Quali~
+ 8     8 Corinthians        38    14    14    10    42    34 +8       56 "Quali~
+ 9     9 Fortaleza          38    15     8    15    50    49 +1       53 "Quali~
+10    10 Goiás              38    15     7    16    46    64 -18      52 "Quali~
+11    11 Bahia              38    12    13    13    44    43 +1       49 "Quali~
+12    12 Vasco da Gama      38    12    13    13    39    45 -6       49 "Quali~
+13    13 Atlético Minei~    38    13     9    16    45    49 -4       48 "Quali~
+14    14 Fluminense         38    12    10    16    38    46 -8       46 "Quali~
+15    15 Botafogo           38    13     4    21    31    45 -14      43 ""     
+16    16 Ceará              38    10     9    19    36    41 -5       39 ""     
+17    17 Cruzeiro (R)       38     7    15    16    27    46 -19      36 "Releg~
+18    18 CSA (R)            38     8     8    22    24    58 -34      32 "Releg~
+19    19 Chapecoense (R)    38     7    11    20    31    52 -21      32 "Releg~
+20    20 Avaí (R)           38     3    11    24    18    62 -44      20 "Releg~
+# ... with abbreviated variable name 1: `Qualification or relegation`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">final_table <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">list</span>()</span>
+<span id="cb9-2">tindex <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">5</span>,<span class="dv" style="color: #AD0000;">5</span>,</span>
+<span id="cb9-3">            <span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">9</span>,<span class="dv" style="color: #AD0000;">9</span>,<span class="dv" style="color: #AD0000;">8</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>)</span>
+<span id="cb9-4"></span>
+<span id="cb9-5"><span class="cf" style="color: #003B4F;">for</span>(i <span class="cf" style="color: #003B4F;">in</span> <span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">17</span>){</span>
+<span id="cb9-6">  j <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="dv" style="color: #AD0000;">2005</span> <span class="sc" style="color: #5E5E5E;">+</span> i</span>
+<span id="cb9-7">  url <span class="ot" style="color: #003B4F;">&lt;-</span> glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">"https://en.wikipedia.org/wiki/{j}_Campeonato_Brasileiro_S%C3%A9rie_A"</span>)</span>
+<span id="cb9-8">  p1 <span class="ot" style="color: #003B4F;">&lt;-</span> tindex[i]</span>
+<span id="cb9-9">  </span>
+<span id="cb9-10">  </span>
+<span id="cb9-11">  final_table[[i]] <span class="ot" style="color: #003B4F;">&lt;-</span> url <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-12">    <span class="fu" style="color: #4758AB;">read_html</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-13">    <span class="fu" style="color: #4758AB;">html_node</span>(<span class="at" style="color: #657422;">xpath =</span> glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">'//*[@id="mw-content-text"]/div[1]/table[{p1}]'</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-14">    <span class="fu" style="color: #4758AB;">html_table</span>(<span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
+<span id="cb9-15">  </span>
+<span id="cb9-16">  <span class="fu" style="color: #4758AB;">print</span>(j)</span>
+<span id="cb9-17">}</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2006
+[1] 2007
+[1] 2008
+[1] 2009
+[1] 2010
+[1] 2011
+[1] 2012
+[1] 2013
+[1] 2014
+[1] 2015
+[1] 2016
+[1] 2017
+[1] 2018
+[1] 2019
+[1] 2020
+[1] 2021
+[1] 2022</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">tab <span class="ot" style="color: #003B4F;">&lt;-</span> final_table <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-2">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">(C</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">)"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-3">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">(R</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">)"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-4">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">[c</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">]"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-5">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace_all</span>(Team, <span class="st" style="color: #20794D;">" "</span>,<span class="st" style="color: #20794D;">"_"</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-6">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">fix_names</span>(Team))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-7">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">select</span>(Pos,Team)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-8">  <span class="fu" style="color: #4758AB;">reduce</span>(<span class="at" style="color: #657422;">.f =</span> bind_rows) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-9">  <span class="co" style="color: #5E5E5E;">#Fix teams names</span></span>
+<span id="cb11-10">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"América_Mineiro_"</span>,<span class="st" style="color: #20794D;">"América_Mineiro"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-11">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Athletico_Paranaense| </span></span>
+<span id="cb11-12"><span class="st" style="color: #20794D;">Atlético_Paranaense"</span>,<span class="st" style="color: #20794D;">"Athletico PR"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-13">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Atlético_Goianiense_"</span>,<span class="st" style="color: #20794D;">"Atlético_Goianiense"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-14">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Atlético_Mineiro_"</span>,<span class="st" style="color: #20794D;">"Atlético_Mineiro"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-15">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Atlético_Goianiense_"</span>,<span class="st" style="color: #20794D;">"Atlético_Goianiense"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-16">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Avaí_"</span>,<span class="st" style="color: #20794D;">"Avaí"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-17">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Bahia_"</span>,<span class="st" style="color: #20794D;">"Bahia"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-18">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Botafogo_"</span>,<span class="st" style="color: #20794D;">"Botafogo"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-19">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"CSA_"</span>,<span class="st" style="color: #20794D;">"CSA"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-20">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Ceará_"</span>,<span class="st" style="color: #20794D;">"Ceará"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-21">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Chapecoense_"</span>,<span class="st" style="color: #20794D;">"Chapecoense"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-22">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Corinthians_"</span>,<span class="st" style="color: #20794D;">"Corinthians"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-23">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Coritiba_"</span>,<span class="st" style="color: #20794D;">"Coritiba"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-24">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Vasco_da_Gama_"</span>,<span class="st" style="color: #20794D;">"Vasco"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-25">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Vasco_da_Gama"</span>,<span class="st" style="color: #20794D;">"Vasco"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-26">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Sport_do_Recife"</span>,<span class="st" style="color: #20794D;">"Sport"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-27">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team,<span class="st" style="color: #20794D;">"Sport_Recife"</span>,<span class="st" style="color: #20794D;">"Sport"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-28">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"_$"</span>,<span class="st" style="color: #20794D;">""</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-29">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace_all</span>(Team, <span class="st" style="color: #20794D;">"_"</span>,<span class="st" style="color: #20794D;">" "</span>))</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">tab <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-2">  <span class="fu" style="color: #4758AB;">group_by</span>(Team) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-3">  <span class="fu" style="color: #4758AB;">summarise</span>(<span class="at" style="color: #657422;">Pos_min =</span> <span class="fu" style="color: #4758AB;">max</span>(Pos),</span>
+<span id="cb12-4">            <span class="at" style="color: #657422;">Pos_max =</span> <span class="fu" style="color: #4758AB;">min</span>(Pos)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-5">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">factor</span>(Team)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-6">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Diff =</span> <span class="fu" style="color: #4758AB;">abs</span>(Pos_max <span class="sc" style="color: #5E5E5E;">-</span> Pos_min)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-7">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">fct_reorder2</span>(Team, (Diff),(Pos_max))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-8">  <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> (Team))) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-9">  <span class="fu" style="color: #4758AB;">geom_linerange</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">ymin =</span> Pos_min, <span class="at" style="color: #657422;">ymax =</span> Pos_max),</span>
+<span id="cb12-10">                 <span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">2</span>, <span class="at" style="color: #657422;">alpha =</span> <span class="fl" style="color: #AD0000;">0.25</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-11">  <span class="fu" style="color: #4758AB;">geom_point</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> Pos_min), <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"dodgerblue"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">2</span>,<span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">75</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-12">  <span class="fu" style="color: #4758AB;">geom_point</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> Pos_max), <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"red"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">2</span>,<span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">75</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-13">  <span class="fu" style="color: #4758AB;">scale_y_reverse</span>(<span class="at" style="color: #657422;">n.breaks =</span> <span class="dv" style="color: #AD0000;">20</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-14">  <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">x =</span> <span class="st" style="color: #20794D;">""</span>,<span class="at" style="color: #657422;">y=</span> <span class="st" style="color: #20794D;">""</span>,</span>
+<span id="cb12-15">       <span class="at" style="color: #657422;">title =</span> <span class="st" style="color: #20794D;">"Range of positions of the teams in the Brazilian Serie A (2006~2022)."</span>,</span>
+<span id="cb12-16">       <span class="at" style="color: #657422;">subtitle =</span> <span class="st" style="color: #20794D;">"Data from wikipedia"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-17">  <span class="fu" style="color: #4758AB;">coord_flip</span>() <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-18">  <span class="fu" style="color: #4758AB;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb12-19">  <span class="fu" style="color: #4758AB;">theme</span>(<span class="at" style="color: #657422;">text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Book Antiqua"</span>),</span>
+<span id="cb12-20">        <span class="at" style="color: #657422;">panel.grid.minor =</span> <span class="fu" style="color: #4758AB;">element_blank</span>(),</span>
+<span id="cb12-21">        <span class="at" style="color: #657422;">axis.text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">10</span>),</span>
+<span id="cb12-22">        <span class="at" style="color: #657422;">plot.title =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">22</span>),</span>
+<span id="cb12-23">        <span class="at" style="color: #657422;">panel.grid.major.y =</span> <span class="fu" style="color: #4758AB;">element_blank</span>(),</span>
+<span id="cb12-24">        <span class="at" style="color: #657422;">axis.ticks =</span> <span class="fu" style="color: #4758AB;">element_blank</span>())</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+i Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day09/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;">ggsave</span>(<span class="at" style="color: #657422;">filename =</span> <span class="st" style="color: #20794D;">"day15_finalplot.png"</span>,<span class="at" style="color: #657422;">dpi =</span> <span class="dv" style="color: #AD0000;">600</span>,<span class="at" style="color: #657422;">width =</span> <span class="dv" style="color: #AD0000;">12</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 12 x 5 in image</code></pre>
+</div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Dataviz</category>
+  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day09/index.html</guid>
+  <pubDate>Sun, 09 Apr 2023 03:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day09/Campeonato_Brasileiro_Série_A_logo.png" medium="image" type="image/png" height="159" width="144"/>
 </item>
 <item>
   <title>30 days chart challenge - day 05</title>
