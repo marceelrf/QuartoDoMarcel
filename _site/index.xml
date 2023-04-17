@@ -10,7 +10,209 @@
 <atom:link href="https://quartodomarcel.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.2.335</generator>
-<lastBuildDate>Sat, 15 Apr 2023 03:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 17 Apr 2023 03:00:00 GMT</lastBuildDate>
+<item>
+  <title>30 days chart challenge - day 17</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day17/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+v dplyr     1.1.0     v readr     2.1.4
+v forcats   1.0.0     v stringr   1.5.0
+v ggplot2   3.4.1     v tibble    3.1.8
+v lubridate 1.9.2     v tidyr     1.3.0
+v purrr     1.0.1     
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(corrr)</span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;">library</span>(arcdiagram)</span></code></pre></div>
+</div>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">read_csv</span>(<span class="at" style="color: #657422;">file =</span> <span class="st" style="color: #20794D;">"Spotify_Youtube.csv"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+Rows: 20718 Columns: 28
+-- Column specification
+-------------------------------------------------------- Delimiter: "," chr
+(10): Artist, Url_spotify, Track, Album, Album_type, Uri, Url_youtube, T... dbl
+(16): ...1, Danceability, Energy, Key, Loudness, Speechiness, Acousticne... lgl
+(2): Licensed, official_video
+i Use `spec()` to retrieve the full column specification for this data. i
+Specify the column types or set `show_col_types = FALSE` to quiet this message.
+* `` -&gt; `...1`</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">mrf_songs2 <span class="ot" style="color: #003B4F;">&lt;-</span> data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-2">  <span class="fu" style="color: #4758AB;">filter</span>(<span class="fu" style="color: #4758AB;">str_detect</span>(Artist, <span class="st" style="color: #20794D;">"Kings of Leon|The Killers|M83|Dua Lipa|Fleetwood Mac|Sia|Daft Punk|U2|Arcade Fire|The Strokes"</span>))</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">(corr_df <span class="ot" style="color: #003B4F;">&lt;-</span>mrf_songs2 <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb7-2">  <span class="fu" style="color: #4758AB;">select</span>(Artist,Danceability<span class="sc" style="color: #5E5E5E;">:</span>Duration_ms) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb7-3">  <span class="fu" style="color: #4758AB;">pivot_longer</span>(<span class="at" style="color: #657422;">cols =</span> Danceability<span class="sc" style="color: #5E5E5E;">:</span>Duration_ms,</span>
+<span id="cb7-4">               <span class="at" style="color: #657422;">names_to =</span> <span class="st" style="color: #20794D;">"Params"</span>,</span>
+<span id="cb7-5">               <span class="at" style="color: #657422;">values_to =</span> <span class="st" style="color: #20794D;">"Vals"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb7-6">  <span class="fu" style="color: #4758AB;">pivot_wider</span>(<span class="at" style="color: #657422;">names_from =</span> Artist,<span class="at" style="color: #657422;">values_from =</span> Vals) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb7-7">  <span class="fu" style="color: #4758AB;">unnest</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb7-8">  <span class="fu" style="color: #4758AB;">select</span>(<span class="sc" style="color: #5E5E5E;">-</span>Params) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb7-9">  <span class="fu" style="color: #4758AB;">correlate</span>(<span class="at" style="color: #657422;">method =</span> <span class="st" style="color: #20794D;">"spearman"</span>,<span class="at" style="color: #657422;">diagonal =</span> <span class="dv" style="color: #AD0000;">0</span>))</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Values from `Vals` are not uniquely identified; output will contain list-cols.
+* Use `values_fn = list` to suppress this warning.
+* Use `values_fn = {summary_fun}` to summarise duplicates.
+* Use the following dplyr code to identify duplicates.
+  {data} %&gt;%
+  dplyr::group_by(Params, Artist) %&gt;%
+  dplyr::summarise(n = dplyr::n(), .groups = "drop") %&gt;%
+  dplyr::filter(n &gt; 1L)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `cols` is now required when using `unnest()`.
+i Please use `cols = c(`Daft Punk`, Sia, `Fleetwood Mac`, U2, `The Strokes`,
+  M83, `The Killers`, `Kings of Leon`, `Arcade Fire`, `Dua Lipa`)`.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Correlation computed with
+* Method: 'spearman'
+* Missing treated using: 'pairwise.complete.obs'</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 x 11
+   term        Daft ~1   Sia Fleet~2    U2 The S~3   M83 The K~4 Kings~5 Arcad~6
+   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+ 1 Daft Punk     0     0.860   0.838 0.798   0.803 0.772   0.886   0.846   0.719
+ 2 Sia           0.860 0       0.883 0.879   0.835 0.717   0.949   0.880   0.789
+ 3 Fleetwood ~   0.838 0.883   0     0.850   0.786 0.667   0.889   0.842   0.790
+ 4 U2            0.798 0.879   0.850 0       0.829 0.718   0.889   0.834   0.837
+ 5 The Strokes   0.803 0.835   0.786 0.829   0     0.741   0.836   0.772   0.761
+ 6 M83           0.772 0.717   0.667 0.718   0.741 0       0.746   0.707   0.662
+ 7 The Killers   0.886 0.949   0.889 0.889   0.836 0.746   0       0.890   0.796
+ 8 Kings of L~   0.846 0.880   0.842 0.834   0.772 0.707   0.890   0       0.766
+ 9 Arcade Fire   0.719 0.789   0.790 0.837   0.761 0.662   0.796   0.766   0    
+10 Dua Lipa      0.886 0.952   0.895 0.895   0.854 0.723   0.967   0.872   0.789
+# ... with 1 more variable: `Dua Lipa` &lt;dbl&gt;, and abbreviated variable names
+#   1: `Daft Punk`, 2: `Fleetwood Mac`, 3: `The Strokes`, 4: `The Killers`,
+#   5: `Kings of Leon`, 6: `Arcade Fire`</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">final_df <span class="ot" style="color: #003B4F;">&lt;-</span> corr_df <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-2">  <span class="fu" style="color: #4758AB;">pivot_longer</span>(<span class="at" style="color: #657422;">cols =</span> <span class="sc" style="color: #5E5E5E;">-</span>term,</span>
+<span id="cb12-3">               <span class="at" style="color: #657422;">names_to =</span> <span class="st" style="color: #20794D;">"term2"</span>,</span>
+<span id="cb12-4">               <span class="at" style="color: #657422;">values_to =</span> <span class="st" style="color: #20794D;">"cor"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-5">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">vertice =</span> <span class="fu" style="color: #4758AB;">case_when</span>(</span>
+<span id="cb12-6">    cor <span class="sc" style="color: #5E5E5E;">&gt;</span> <span class="fl" style="color: #AD0000;">0.85</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1</span>,</span>
+<span id="cb12-7">    <span class="cn" style="color: #8f5902;">TRUE</span><span class="sc" style="color: #5E5E5E;">~</span><span class="dv" style="color: #AD0000;">0</span></span>
+<span id="cb12-8">  ))</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">final_mat <span class="ot" style="color: #003B4F;">&lt;-</span> final_df <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-2">  <span class="fu" style="color: #4758AB;">filter</span>(vertice <span class="sc" style="color: #5E5E5E;">==</span> <span class="dv" style="color: #AD0000;">1</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-3">  <span class="fu" style="color: #4758AB;">select</span>(term,term2) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-4">  <span class="fu" style="color: #4758AB;">as.matrix</span>()</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">cor_vec <span class="ot" style="color: #003B4F;">&lt;-</span>  final_df <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb14-2">  <span class="fu" style="color: #4758AB;">filter</span>(vertice <span class="sc" style="color: #5E5E5E;">==</span> <span class="dv" style="color: #AD0000;">1</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb14-3">  <span class="fu" style="color: #4758AB;">pull</span>(cor)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;">png</span>(<span class="at" style="color: #657422;">filename =</span> <span class="st" style="color: #20794D;">"day17_finalplot.png"</span>,<span class="at" style="color: #657422;">width =</span> <span class="dv" style="color: #AD0000;">3500</span>,<span class="at" style="color: #657422;">height =</span> <span class="dv" style="color: #AD0000;">2500</span>,<span class="at" style="color: #657422;">bg =</span> <span class="st" style="color: #20794D;">"white"</span>,<span class="at" style="color: #657422;">res =</span> <span class="dv" style="color: #AD0000;">600</span>)</span>
+<span id="cb15-2"></span>
+<span id="cb15-3"><span class="fu" style="color: #4758AB;">arcplot</span>(final_mat,</span>
+<span id="cb15-4">        <span class="at" style="color: #657422;">vertices =</span> corr_df<span class="sc" style="color: #5E5E5E;">$</span>term,</span>
+<span id="cb15-5">        <span class="at" style="color: #657422;">col.nodes =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"#d5b76f"</span>,</span>
+<span id="cb15-6">                      <span class="st" style="color: #20794D;">"#fe3bd1"</span>,</span>
+<span id="cb15-7">                      <span class="st" style="color: #20794D;">"#efd893"</span>,</span>
+<span id="cb15-8">                      <span class="st" style="color: #20794D;">"#586a60"</span>,</span>
+<span id="cb15-9">                      <span class="st" style="color: #20794D;">"#30b5e9"</span>,</span>
+<span id="cb15-10">                      <span class="st" style="color: #20794D;">"#2880bc"</span>,</span>
+<span id="cb15-11">                      <span class="st" style="color: #20794D;">"#ab4841"</span>,</span>
+<span id="cb15-12">                      <span class="st" style="color: #20794D;">"#749e97"</span>,</span>
+<span id="cb15-13">                      <span class="st" style="color: #20794D;">"grey10"</span>,</span>
+<span id="cb15-14">                      <span class="st" style="color: #20794D;">"#e187a8"</span>),</span>
+<span id="cb15-15">        <span class="at" style="color: #657422;">col.arcs =</span> <span class="fu" style="color: #4758AB;">hsv</span>(<span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">0</span>, <span class="fl" style="color: #AD0000;">0.2</span>, <span class="fl" style="color: #AD0000;">0.15</span>),</span>
+<span id="cb15-16">        <span class="at" style="color: #657422;">cex.nodes =</span> <span class="fu" style="color: #4758AB;">log</span>(<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">7</span>)<span class="sc" style="color: #5E5E5E;">+</span><span class="dv" style="color: #AD0000;">1</span>)<span class="sc" style="color: #5E5E5E;">+</span>.<span class="dv" style="color: #AD0000;">5</span>,</span>
+<span id="cb15-17">        <span class="at" style="color: #657422;">lwd.arcs =</span> <span class="fu" style="color: #4758AB;">log</span>(cor_vec,<span class="at" style="color: #657422;">base =</span> .<span class="dv" style="color: #AD0000;">99</span>)<span class="sc" style="color: #5E5E5E;">/</span><span class="fl" style="color: #AD0000;">1.5</span>)</span>
+<span id="cb15-18"><span class="fu" style="color: #4758AB;">dev.off</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>png 
+  2 </code></pre>
+</div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Dataviz</category>
+  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day17/index.html</guid>
+  <pubDate>Mon, 17 Apr 2023 03:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day17/SPOTIFY-LOGO.png" medium="image" type="image/png" height="118" width="144"/>
+</item>
+<item>
+  <title>30 days chart challenge - day 16</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day16/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+v dplyr     1.1.0     v readr     2.1.4
+v forcats   1.0.0     v stringr   1.5.0
+v ggplot2   3.4.1     v tibble    3.1.8
+v lubridate 1.9.2     v tidyr     1.3.0
+v purrr     1.0.1     
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(rjson)</span></code></pre></div>
+</div>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fromJSON</span>(<span class="at" style="color: #657422;">file =</span> <span class="st" style="color: #20794D;">"characters.json"</span>)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">data<span class="sc" style="color: #5E5E5E;">$</span>characters <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb5-2">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> names) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb5-3">  <span class="fu" style="color: #4758AB;">unlist</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb5-4">  <span class="fu" style="color: #4758AB;">unique</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "name"      "lastname"  "years"     "parentOf"  "gender"    "parents"  
+ [7] "married"   "alias"     "sicMundus" "firstname" "siblings"  "killedBy" </code></pre>
+</div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Dataviz</category>
+  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day16/index.html</guid>
+  <pubDate>Sun, 16 Apr 2023 03:00:00 GMT</pubDate>
+</item>
 <item>
   <title>30 days chart challenge - day 15</title>
   <dc:creator>Marcel Ferreira</dc:creator>

@@ -1,0 +1,84 @@
+---
+title: "30 days chart challenge - day 17"
+description: "networks"
+author: "Marcel Ferreira"
+date: "2023-04-17"
+categories: [R, Dataviz]
+image: "SPOTIFY-LOGO.png"
+---
+
+```{r}
+library(tidyverse)
+library(corrr)
+library(arcdiagram)
+```
+
+
+## Data
+
+```{r}
+data <- read_csv(file = "Spotify_Youtube.csv")
+```
+
+```{r}
+mrf_songs2 <- data %>%
+  filter(str_detect(Artist, "Kings of Leon|The Killers|M83|Dua Lipa|Fleetwood Mac|Sia|Daft Punk|U2|Arcade Fire|The Strokes"))
+```
+
+```{r}
+(corr_df <-mrf_songs2 %>%
+  select(Artist,Danceability:Duration_ms) %>%
+  pivot_longer(cols = Danceability:Duration_ms,
+               names_to = "Params",
+               values_to = "Vals") %>%
+  pivot_wider(names_from = Artist,values_from = Vals) %>%
+  unnest() %>%
+  select(-Params) %>%
+  correlate(method = "spearman",diagonal = 0))
+```
+
+```{r}
+final_df <- corr_df %>%
+  pivot_longer(cols = -term,
+               names_to = "term2",
+               values_to = "cor") %>%
+  mutate(vertice = case_when(
+    cor > 0.85 ~ 1,
+    TRUE~0
+  ))
+```
+
+```{r}
+final_mat <- final_df %>%
+  filter(vertice == 1) %>%
+  select(term,term2) %>%
+  as.matrix()
+```
+
+```{r}
+cor_vec <-  final_df %>%
+  filter(vertice == 1) %>%
+  pull(cor)
+```
+
+```{r}
+png(filename = "day17_finalplot.png",width = 3500,height = 2500,bg = "white",res = 600)
+
+arcplot(final_mat,
+        vertices = corr_df$term,
+        col.nodes = c("#d5b76f",
+                      "#fe3bd1",
+                      "#efd893",
+                      "#586a60",
+                      "#30b5e9",
+                      "#2880bc",
+                      "#ab4841",
+                      "#749e97",
+                      "grey10",
+                      "#e187a8"),
+        col.arcs = hsv(0, 0, 0.2, 0.15),
+        cex.nodes = log(c(3,6,4,4,1,0,6,3,0,7)+1)+.5,
+        lwd.arcs = log(cor_vec,base = .99)/1.5)
+dev.off()
+```
+
