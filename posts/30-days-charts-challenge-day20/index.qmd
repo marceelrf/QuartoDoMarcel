@@ -1,0 +1,97 @@
+---
+title: "30 days chart challenge - day 20"
+description: "correlation"
+author: "Marcel Ferreira"
+date: "2023-04-20"
+categories: [R, Dataviz]
+image: "pokemon.png"
+---
+
+```{r}
+library(tidyverse)
+library(extrafont)
+#extrafont::font_import()
+```
+
+## Data
+
+```{r}
+pokemon <- read_csv(file = "Pokedex_Ver_SV2.csv")
+```
+
+
+```{r}
+glimpse(pokemon)
+```
+
+
+```{r}
+df <- pokemon %>%
+  filter(str_detect(Name,"Mega",negate = TRUE)) %>%
+  filter(Generation <= 4) %>%
+  mutate(labs = case_when(
+    Height >= 3.5 | Weight >= 300 ~ Name,
+    TRUE ~""
+  )) 
+
+facs <- df %>%
+  filter(labs != "") %>%
+  pull(Type1) %>%
+  unique()
+
+df %>%
+  mutate(Type1 = as.factor(Type1),
+         Type1 = fct_other(Type1,keep = facs),
+         Generation = factor(Generation,labels = c("First",
+                                                   "Second",
+                                                   "Third",
+                                                   "Fourth"))) %>%
+  ggplot(aes(x = Height, y = Weight, col = Type1)) +
+  geom_point(alpha = .5, size = 2) +
+  scale_color_manual(values = c(
+    "Dragon" = "#6f35fc",
+    "Ghost" = "#735797",
+    "Fire" = "#ee8130",
+    "Grass" = "#7ac74c",
+    "Normal" = "#a8a77a",
+    "Psychic" = "#f95587",
+    "Poison" = "#a33ea1",
+    "Rock" = "#b6a136",
+    "Steel" = "#b7b7ce",
+    "Water" = "#6390f0",
+    "Ground" = "#e2bf65",
+    "Other" = "grey50")) +
+  facet_wrap(~Generation,scales = "free") +
+  ggrepel::geom_text_repel(aes(label = labs),
+                           size = 5, 
+                           family = "serif",
+                           fontface = "bold",
+                           show_guide = F) +
+  labs(title = "Relationship between height and weight of Pokemon of the first 4 generations.",
+       subtitle = "Source: https://www.kaggle.com/datasets/takamasakato/pokemon-all-status-data",
+       x = "Height (m)",
+       y = "Weight (kg)",
+       color = "Primary type") +
+  theme(text = element_text(family = "serif"),
+        axis.title = element_text(face = "bold",
+                                  size = 12),
+        panel.background = element_rect(fill = "white",
+                                        colour = "black"),
+        panel.grid = element_blank(),
+        strip.background = element_rect(fill = "white"),
+        legend.title = element_text(face = "bold",
+                                  size = 16),
+        legend.text = element_text(size = 12),
+        plot.title = element_text(face = "bold",
+                                  size = 20),
+        plot.subtitle = element_text(face = "italic",
+                                  size = 12),
+        strip.text = element_text(face = "bold",
+                                  size = 12))
+```
+
+```{r}
+ggsave(filename = "day20_finalplot.png",dpi = 600,width = 10,height = 9)
+```
+
+
