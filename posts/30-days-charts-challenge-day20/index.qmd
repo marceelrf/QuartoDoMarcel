@@ -19,11 +19,9 @@ library(extrafont)
 pokemon <- read_csv(file = "Pokedex_Ver_SV2.csv")
 ```
 
-
 ```{r}
 glimpse(pokemon)
 ```
-
 
 ```{r}
 df <- pokemon %>%
@@ -93,5 +91,3 @@ df %>%
 ```{r}
 ggsave(filename = "day20_finalplot.png",dpi = 600,width = 10,height = 9)
 ```
-
-
