@@ -4,13 +4,15 @@ description: "down/upwards"
 author: "Marcel Ferreira"
 date: "2023-04-21"
 categories: [R, Dataviz]
-image: ""
+image: "sao-paulo-fc_1985.png"
 ---
 
 ```{r}
 library(tidyverse)
 library(ggtext)
 library(rvest)
+library(extrafont)
+
 ```
 
 ## Data
@@ -46,10 +48,106 @@ for(i in 1:17){
 ```
 
 ```{r}
-final_table %>%
+SPFC_pts <- final_table %>%
   map(.f = \(x) x %>% mutate(Team = str_replace(Team, "\\(C\\)",""))) %>%
   map(.f = \(x) x %>% mutate(Team = str_replace(Team, "\\(R\\)",""))) %>%
   map(.f = \(x) x %>% mutate(Team = str_replace(Team, "\\[c\\]",""))) %>%
   map(.f = \(x) x %>% mutate(Team = str_replace_all(Team, " ","_"))) %>%
-  map(.f = \(x) x %>% filter(Team == "São Paulo")) 
+  map(.f = \(x) x %>% filter(Team == "São_Paulo")) %>%
+  map(.f = \(x) x %>% pull((Pts))) %>%
+  map(.f = \(x) x %>% as.numeric) %>%
+  unlist()
+```
+
+```{r}
+SPFC_pts/114
+```
+
+```{r}
+spfc_logo <- "http://www.spfcpedia.com.br/logos/vetores/sao-paulo-fc_1985.png"
+
+(p21 <- tibble(Points = SPFC_pts,
+       Year = 2006:2022) %>%
+  ggplot(aes(x = Year, y = Points, label = Points)) +
+  geom_line(linewidth = 1.15,col = "grey35") +
+  geom_point(color = "#b20d15", size = 3) +
+  geom_hline(yintercept = 57.5, linewidth = .1) +
+  ggrepel::geom_text_repel(family = "College",size = 8,
+                           force = .5) +
+  scale_x_continuous(breaks = 2006:2022) +
+  scale_y_continuous(breaks = seq(45,80,5)) + 
+  labs(title = glue::glue("Sao Paulo FC's final points in the Br championships."),
+       x = "",y = "") + 
+  theme(panel.background = element_rect(fill = "white",
+                                        colour = "#b20d15",
+                                        linewidth = 2),
+        panel.grid = element_blank(),
+        plot.title = element_text(family = "College",face = "bold",size = 20),
+        text = element_text(family = "College"),
+        axis.text = element_text(size = 15)) +
+  annotate(geom = "rect",
+           xmin = 2005,xmax = 2009,
+           ymin = 72,ymax = 79.8,col = "#b20d15",
+           alpha = .02, fill = "red") +
+  annotate(geom = "text",label = "3x Champion",
+           x = 2014,y = 76, family = "College", fontface = "bold",size = 8)+
+  annotate(geom="text",label = "50%",
+           x = 2006,y = 58, family = "serif", fontface = "bold",size = 3)
+  ) 
+```
+
+```{r}
+library(cowplot)
+
+ggdraw(p21) +
+  draw_image(image = "sao-paulo-fc_1985.png",
+              x = .91, y = .85, hjust = 1, vjust = 1, width = 0.13, height = 0.2)
+```
+
+```{r}
+ggsave(filename = "v1.png",dpi = 600,width = 10)
+```
+
+```{r}
+spfc_df <- tibble(Points = SPFC_pts,
+       Year = 2006:2022) %>%
+  mutate(Pct = 100*SPFC_pts/114) %>%
+  mutate(Pct_diff = Pct - 57.5,
+         Pct_diff = round(Pct_diff,digits = 2)) %>% 
+  mutate(Cond = case_when(
+    Pct_diff > 0 ~ "up",
+    Pct_diff < 0 ~ "down",
+    TRUE ~ "Neutral"
+    )
+    ) 
+(p21_final <- spfc_df %>% 
+  ggplot(aes(x = Year, y = Pct_diff, label = Pct_diff)) +
+  geom_col(fill = "#b20d15",alpha = .85) +
+  geom_text(data = filter(spfc_df, Cond == "up"),
+            family = "College",nudge_y = .5,fontface = "bold") +
+  geom_text(data = filter(spfc_df, Cond == "down"),
+            family = "College",nudge_y = -.5,fontface = "bold") +
+  scale_x_continuous(breaks = 2006:2022) +
+  scale_y_continuous(breaks = seq(-10,10,2.5)) +
+  labs(x="", y="",
+       title = "Sao Paulo FC difference of a 50 percent campaign",
+       caption = "@marceelrf - Source: Wikipedia") +
+  theme(panel.background = element_rect(fill = "white",
+                                        colour = "#b20d15",
+                                        linewidth = 2),
+        panel.grid = element_blank(),
+        plot.title = element_text(family = "College",face = "bold",size = 20),
+        text = element_text(family = "College"),
+        axis.text = element_text(size = 15)) +
+  annotate(geom = "text",label = "3x Champion",
+           x = 2007, y = -5,family = "College",fontface = "bold") +
+  annotate("segment", x = 2006, xend = 2008, y = -2.25, yend = -2.25,col = "#b20d15",
+           arrow = arrow(ends = "both", angle = 90, length = unit(.2,"cm"))))
+```
+
+```{r}
+ggdraw(p21_final) +
+  draw_image(image = "sao-paulo-fc_1985.png",
+              x = .91, y = .85, hjust = 1, vjust = 1, width = 0.13, height = 0.2)
+ggsave(filename = "day21_finalplot.png",dpi = 600,width = 10)
 ```

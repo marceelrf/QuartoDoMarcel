@@ -242,19 +242,23 @@ The following object is masked from 'package:readr':
 
     guess_encoding</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(extrafont)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registering fonts with R</code></pre>
+</div>
 </div>
 <section id="data" class="level2">
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://en.wikipedia.org/wiki/2019_Campeonato_Brasileiro_S%C3%A9rie_A"</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>url <span class="sc">%&gt;%</span> </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_html</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_node</span>(<span class="at">xpath =</span> <span class="st">'//*[@id="mw-content-text"]/div[1]/table[7]'</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>(<span class="at">fill =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://en.wikipedia.org/wiki/2019_Campeonato_Brasileiro_S%C3%A9rie_A"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>url <span class="sc">%&gt;%</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_html</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_node</span>(<span class="at">xpath =</span> <span class="st">'//*[@id="mw-content-text"]/div[1]/table[7]'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>(<span class="at">fill =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 20 x 11
      Pos Team              Pld     W     D     L    GF    GA GD      Pts Quali~1
@@ -281,23 +285,23 @@ The following object is masked from 'package:readr':
 20    20 Avaí (R)           38     3    11    24    18    62 -44      20 "Releg~
 # ... with abbreviated variable name 1: `Qualification or relegation`</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>final_table <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>tindex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">5</span>,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>            <span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">9</span>,<span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">7</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">17</span>){</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  j <span class="ot">&lt;-</span> <span class="dv">2005</span> <span class="sc">+</span> i</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"https://en.wikipedia.org/wiki/{j}_Campeonato_Brasileiro_S%C3%A9rie_A"</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  p1 <span class="ot">&lt;-</span> tindex[i]</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  final_table[[i]] <span class="ot">&lt;-</span> url <span class="sc">%&gt;%</span> </span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">read_html</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_node</span>(<span class="at">xpath =</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">'//*[@id="mw-content-text"]/div[1]/table[{p1}]'</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_table</span>(<span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(j)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>final_table <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>tindex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">5</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>            <span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">9</span>,<span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">7</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">17</span>){</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  j <span class="ot">&lt;-</span> <span class="dv">2005</span> <span class="sc">+</span> i</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"https://en.wikipedia.org/wiki/{j}_Campeonato_Brasileiro_S%C3%A9rie_A"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  p1 <span class="ot">&lt;-</span> tindex[i]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  final_table[[i]] <span class="ot">&lt;-</span> url <span class="sc">%&gt;%</span> </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">read_html</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_node</span>(<span class="at">xpath =</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">'//*[@id="mw-content-text"]/div[1]/table[{p1}]'</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_table</span>(<span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(j)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2006
 [1] 2007
@@ -319,114 +323,132 @@ The following object is masked from 'package:readr':
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>final_table <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">(C</span><span class="sc">\\</span><span class="st">)"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">(R</span><span class="sc">\\</span><span class="st">)"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">[c</span><span class="sc">\\</span><span class="st">]"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace_all</span>(Team, <span class="st">" "</span>,<span class="st">"_"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Team <span class="sc">==</span> <span class="st">"São Paulo"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SPFC_pts <span class="ot">&lt;-</span> final_table <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">(C</span><span class="sc">\\</span><span class="st">)"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">(R</span><span class="sc">\\</span><span class="st">)"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace</span>(Team, <span class="st">"</span><span class="sc">\\</span><span class="st">[c</span><span class="sc">\\</span><span class="st">]"</span>,<span class="st">""</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Team =</span> <span class="fu">str_replace_all</span>(Team, <span class="st">" "</span>,<span class="st">"_"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Team <span class="sc">==</span> <span class="st">"São_Paulo"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> <span class="fu">pull</span>((Pts))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="at">.f =</span> \(x) x <span class="sc">%&gt;%</span> as.numeric) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SPFC_pts<span class="sc">/</span><span class="dv">114</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[[1]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
+<pre><code> [1] 0.6842105 0.6754386 0.6578947 0.5701754 0.4824561 0.5175439 0.5789474
+ [8] 0.4385965 0.6140351 0.5438596 0.4561404 0.4385965 0.5526316 0.5526316
+[15] 0.5789474 0.4210526 0.4736842</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>spfc_logo <span class="ot">&lt;-</span> <span class="st">"http://www.spfcpedia.com.br/logos/vetores/sao-paulo-fc_1985.png"</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>(p21 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Points =</span> SPFC_pts,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">Year =</span> <span class="dv">2006</span><span class="sc">:</span><span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Points, <span class="at">label =</span> Points)) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.15</span>,<span class="at">col =</span> <span class="st">"grey35"</span>) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#b20d15"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">57.5</span>, <span class="at">linewidth =</span> .<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_text_repel</span>(<span class="at">family =</span> <span class="st">"College"</span>,<span class="at">size =</span> <span class="dv">8</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">force =</span> .<span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">2006</span><span class="sc">:</span><span class="dv">2022</span>) <span class="sc">+</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">45</span>,<span class="dv">80</span>,<span class="dv">5</span>)) <span class="sc">+</span> </span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Sao Paulo FC's final points in the Br championships."</span>),</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">""</span>,<span class="at">y =</span> <span class="st">""</span>) <span class="sc">+</span> </span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">colour =</span> <span class="st">"#b20d15"</span>,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">linewidth =</span> <span class="dv">2</span>),</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"College"</span>,<span class="at">face =</span> <span class="st">"bold"</span>,<span class="at">size =</span> <span class="dv">20</span>),</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"College"</span>),</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>)) <span class="sc">+</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"rect"</span>,</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>           <span class="at">xmin =</span> <span class="dv">2005</span>,<span class="at">xmax =</span> <span class="dv">2009</span>,</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>           <span class="at">ymin =</span> <span class="dv">72</span>,<span class="at">ymax =</span> <span class="fl">79.8</span>,<span class="at">col =</span> <span class="st">"#b20d15"</span>,</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>           <span class="at">alpha =</span> .<span class="dv">02</span>, <span class="at">fill =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>,<span class="at">label =</span> <span class="st">"3x Champion"</span>,</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="dv">2014</span>,<span class="at">y =</span> <span class="dv">76</span>, <span class="at">family =</span> <span class="st">"College"</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>,<span class="at">size =</span> <span class="dv">8</span>)<span class="sc">+</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom=</span><span class="st">"text"</span>,<span class="at">label =</span> <span class="st">"50%"</span>,</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="dv">2006</span>,<span class="at">y =</span> <span class="dv">58</span>, <span class="at">family =</span> <span class="st">"serif"</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>,<span class="at">size =</span> <span class="dv">3</span>)</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'cowplot'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:lubridate':
 
-[[2]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[3]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[4]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[5]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;chr&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[6]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[7]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[8]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;chr&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[9]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[10]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[11]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;chr&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[12]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[13]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[14]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[15]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[16]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[17]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;</code></pre>
+    stamp</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>(p21) <span class="sc">+</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="at">image =</span> <span class="st">"sao-paulo-fc_1985.png"</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">x =</span> .<span class="dv">91</span>, <span class="at">y =</span> .<span class="dv">85</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">width =</span> <span class="fl">0.13</span>, <span class="at">height =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"v1.png"</span>,<span class="at">dpi =</span> <span class="dv">600</span>,<span class="at">width =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 10 x 5 in image</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>spfc_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Points =</span> SPFC_pts,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">Year =</span> <span class="dv">2006</span><span class="sc">:</span><span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pct =</span> <span class="dv">100</span><span class="sc">*</span>SPFC_pts<span class="sc">/</span><span class="dv">114</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pct_diff =</span> Pct <span class="sc">-</span> <span class="fl">57.5</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Pct_diff =</span> <span class="fu">round</span>(Pct_diff,<span class="at">digits =</span> <span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Cond =</span> <span class="fu">case_when</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    Pct_diff <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"up"</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    Pct_diff <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"down"</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Neutral"</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    ) </span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>(p21_final <span class="ot">&lt;-</span> spfc_df <span class="sc">%&gt;%</span> </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Pct_diff, <span class="at">label =</span> Pct_diff)) <span class="sc">+</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#b20d15"</span>,<span class="at">alpha =</span> .<span class="dv">85</span>) <span class="sc">+</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">filter</span>(spfc_df, Cond <span class="sc">==</span> <span class="st">"up"</span>),</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">family =</span> <span class="st">"College"</span>,<span class="at">nudge_y =</span> .<span class="dv">5</span>,<span class="at">fontface =</span> <span class="st">"bold"</span>) <span class="sc">+</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">filter</span>(spfc_df, Cond <span class="sc">==</span> <span class="st">"down"</span>),</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">family =</span> <span class="st">"College"</span>,<span class="at">nudge_y =</span> <span class="sc">-</span>.<span class="dv">5</span>,<span class="at">fontface =</span> <span class="st">"bold"</span>) <span class="sc">+</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">2006</span><span class="sc">:</span><span class="dv">2022</span>) <span class="sc">+</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">10</span>,<span class="dv">10</span>,<span class="fl">2.5</span>)) <span class="sc">+</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">""</span>, <span class="at">y=</span><span class="st">""</span>,</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Sao Paulo FC difference of a 50 percent campaign"</span>,</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"@marceelrf - Source: Wikipedia"</span>) <span class="sc">+</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>,</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">colour =</span> <span class="st">"#b20d15"</span>,</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">linewidth =</span> <span class="dv">2</span>),</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"College"</span>,<span class="at">face =</span> <span class="st">"bold"</span>,<span class="at">size =</span> <span class="dv">20</span>),</span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"College"</span>),</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>)) <span class="sc">+</span></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>,<span class="at">label =</span> <span class="st">"3x Champion"</span>,</span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="dv">2007</span>, <span class="at">y =</span> <span class="sc">-</span><span class="dv">5</span>,<span class="at">family =</span> <span class="st">"College"</span>,<span class="at">fontface =</span> <span class="st">"bold"</span>) <span class="sc">+</span></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"segment"</span>, <span class="at">x =</span> <span class="dv">2006</span>, <span class="at">xend =</span> <span class="dv">2008</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">2.25</span>, <span class="at">yend =</span> <span class="sc">-</span><span class="fl">2.25</span>,<span class="at">col =</span> <span class="st">"#b20d15"</span>,</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>           <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">ends =</span> <span class="st">"both"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">length =</span> <span class="fu">unit</span>(.<span class="dv">2</span>,<span class="st">"cm"</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>(p21_final) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="at">image =</span> <span class="st">"sao-paulo-fc_1985.png"</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">x =</span> .<span class="dv">91</span>, <span class="at">y =</span> .<span class="dv">85</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">width =</span> <span class="fl">0.13</span>, <span class="at">height =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"day21_finalplot.png"</span>,<span class="at">dpi =</span> <span class="dv">600</span>,<span class="at">width =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 10 x 5 in image</code></pre>
 </div>
 </div>
 
