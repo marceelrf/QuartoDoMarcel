@@ -10,7 +10,214 @@
 <atom:link href="https://quartodomarcel.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.2.335</generator>
-<lastBuildDate>Fri, 21 Apr 2023 03:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 22 Apr 2023 03:00:00 GMT</lastBuildDate>
+<item>
+  <title>30 days chart challenge - day 22</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day22/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+v dplyr     1.1.0     v readr     2.1.4
+v forcats   1.0.0     v stringr   1.5.0
+v ggplot2   3.4.1     v tibble    3.1.8
+v lubridate 1.9.2     v tidyr     1.3.0
+v purrr     1.0.1     
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(extrafont)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registering fonts with R</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">library</span>(cowplot)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'cowplot'
+
+The following object is masked from 'package:lubridate':
+
+    stamp</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;">library</span>(patchwork)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'patchwork'
+
+The following object is masked from 'package:cowplot':
+
+    align_plots</code></pre>
+</div>
+</div>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">data_ACR <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">read_csv</span>(<span class="st" style="color: #20794D;">"annual-change-renewables.csv"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 5499 Columns: 4
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (2): Entity, Code
+dbl (2): Year, Renewables (TWh growth - equivalent)
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">data_PCR <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">read_csv</span>(<span class="st" style="color: #20794D;">"per-capita-renewables.csv"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 4862 Columns: 4
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (2): Entity, Code
+dbl (2): Year, Renewables per capita (kWh - equivalent)
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">data_PCR_filt <span class="ot" style="color: #003B4F;">&lt;-</span> data_PCR <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-2">  <span class="fu" style="color: #4758AB;">filter</span>(<span class="fu" style="color: #4758AB;">str_detect</span>(<span class="at" style="color: #657422;">string =</span> Entity,</span>
+<span id="cb13-3">           <span class="at" style="color: #657422;">pattern =</span> <span class="st" style="color: #20794D;">"Brazil|World|Europe|South America|Africa|Asia|North America|Oceania"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-4">  <span class="fu" style="color: #4758AB;">filter</span>(<span class="fu" style="color: #4758AB;">str_detect</span>(Entity,<span class="st" style="color: #20794D;">"South Africa|European"</span>,<span class="at" style="color: #657422;">negate =</span> <span class="cn" style="color: #8f5902;">TRUE</span>))</span>
+<span id="cb13-5"></span>
+<span id="cb13-6">(</span>
+<span id="cb13-7">  data_PCR_filt_text <span class="ot" style="color: #003B4F;">&lt;-</span> data_PCR_filt <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-8">  <span class="fu" style="color: #4758AB;">filter</span>(Year <span class="sc" style="color: #5E5E5E;">==</span> <span class="dv" style="color: #AD0000;">2018</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb13-9">  <span class="fu" style="color: #4758AB;">arrange</span>(<span class="fu" style="color: #4758AB;">desc</span>(<span class="st" style="color: #20794D;">`</span><span class="at" style="color: #657422;">Renewables per capita (kWh - equivalent)</span><span class="st" style="color: #20794D;">`</span>))</span>
+<span id="cb13-10">  )</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 x 4
+  Entity        Code      Year `Renewables per capita (kWh - equivalent)`
+  &lt;chr&gt;         &lt;chr&gt;    &lt;dbl&gt;                                      &lt;dbl&gt;
+1 Brazil        BRA       2018                                      7493.
+2 North America &lt;NA&gt;      2018                                      5654.
+3 Europe        &lt;NA&gt;      2018                                      5452.
+4 Oceania       &lt;NA&gt;      2018                                      5435.
+5 South America &lt;NA&gt;      2018                                      5211.
+6 World         OWID_WRL  2018                                      2472.
+7 Asia          &lt;NA&gt;      2018                                      1648.
+8 Africa        &lt;NA&gt;      2018                                       343.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">(p22_1 <span class="ot" style="color: #003B4F;">&lt;-</span> data_PCR_filt <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb15-2">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Entity =</span> <span class="fu" style="color: #4758AB;">factor</span>(Entity,<span class="at" style="color: #657422;">levels =</span> <span class="fu" style="color: #4758AB;">rev</span>(data_PCR_filt_text<span class="sc" style="color: #5E5E5E;">$</span>Entity))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb15-3">  <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> Year,<span class="at" style="color: #657422;">y =</span> <span class="st" style="color: #20794D;">`</span><span class="at" style="color: #657422;">Renewables per capita (kWh - equivalent)</span><span class="st" style="color: #20794D;">`</span>,</span>
+<span id="cb15-4">             <span class="at" style="color: #657422;">fill =</span> Entity)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb15-5">  <span class="fu" style="color: #4758AB;">geom_area</span>(<span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">"grey99"</span>,<span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">75</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb15-6">  <span class="co" style="color: #5E5E5E;"># geom_text(data = data_PCR_filt_text,</span></span>
+<span id="cb15-7">  <span class="co" style="color: #5E5E5E;">#           aes(x = 2022,</span></span>
+<span id="cb15-8">  <span class="co" style="color: #5E5E5E;">#               y=`Renewables per capita (kWh - equivalent)`,</span></span>
+<span id="cb15-9">  <span class="co" style="color: #5E5E5E;">#               label = Entity),show_guide = FALSE) +</span></span>
+<span id="cb15-10">  <span class="fu" style="color: #4758AB;">scale_x_continuous</span>(<span class="at" style="color: #657422;">breaks =</span> <span class="fu" style="color: #4758AB;">seq</span>(<span class="dv" style="color: #AD0000;">1966</span>,<span class="dv" style="color: #AD0000;">2022</span>,<span class="dv" style="color: #AD0000;">4</span>),</span>
+<span id="cb15-11">                     <span class="at" style="color: #657422;">limits =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1966</span>,<span class="dv" style="color: #AD0000;">2021</span>),</span>
+<span id="cb15-12">                     <span class="at" style="color: #657422;">expand =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb15-13">  <span class="fu" style="color: #4758AB;">scale_y_continuous</span>(<span class="at" style="color: #657422;">breaks =</span> <span class="fu" style="color: #4758AB;">seq</span>(<span class="dv" style="color: #AD0000;">5000</span>,<span class="dv" style="color: #AD0000;">40000</span>,<span class="dv" style="color: #AD0000;">5000</span>),</span>
+<span id="cb15-14">                     <span class="at" style="color: #657422;">expand =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb15-15">  <span class="fu" style="color: #4758AB;">scale_fill_manual</span>(<span class="at" style="color: #657422;">values =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Africa"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"black"</span>,</span>
+<span id="cb15-16">                                <span class="st" style="color: #20794D;">"Europe"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"navy"</span>,</span>
+<span id="cb15-17">                                <span class="st" style="color: #20794D;">"Asia"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"#f9b549"</span>,</span>
+<span id="cb15-18">                                <span class="st" style="color: #20794D;">"Oceania"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"darkgreen"</span>,</span>
+<span id="cb15-19">                                <span class="st" style="color: #20794D;">"World"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"grey"</span>,</span>
+<span id="cb15-20">                                <span class="st" style="color: #20794D;">"North America"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"firebrick4"</span>,</span>
+<span id="cb15-21">                                <span class="st" style="color: #20794D;">"South America"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"firebrick1"</span>,</span>
+<span id="cb15-22">                                <span class="st" style="color: #20794D;">"Brazil"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"#ffdf00"</span>))<span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb15-23">  <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">title =</span> <span class="st" style="color: #20794D;">""</span>,</span>
+<span id="cb15-24">       <span class="at" style="color: #657422;">subtitle =</span> <span class="st" style="color: #20794D;">"Renewables per capita (kWh - equivalent)"</span>,</span>
+<span id="cb15-25">       <span class="at" style="color: #657422;">y =</span> <span class="st" style="color: #20794D;">""</span>,</span>
+<span id="cb15-26">       <span class="at" style="color: #657422;">x =</span> <span class="st" style="color: #20794D;">""</span>,<span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">""</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb15-27">  <span class="fu" style="color: #4758AB;">theme</span>(<span class="at" style="color: #657422;">plot.title =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Open Sans"</span>,<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>),</span>
+<span id="cb15-28">        <span class="at" style="color: #657422;">text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Open Sans"</span>),</span>
+<span id="cb15-29">        <span class="at" style="color: #657422;">panel.grid =</span> <span class="fu" style="color: #4758AB;">element_blank</span>(),</span>
+<span id="cb15-30">        <span class="at" style="color: #657422;">panel.background =</span> <span class="fu" style="color: #4758AB;">element_rect</span>(<span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">"grey15"</span>,</span>
+<span id="cb15-31">                                        <span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"grey95"</span>)))</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 8 rows containing non-finite values (`stat_align()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day22/index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">(p22_2 <span class="ot" style="color: #003B4F;">&lt;-</span> data_ACR <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb17-2">  <span class="fu" style="color: #4758AB;">filter</span>(Entity <span class="sc" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">"Brazil"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb17-3">  <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> Year, <span class="at" style="color: #657422;">y =</span><span class="st" style="color: #20794D;">`</span><span class="at" style="color: #657422;">Renewables (TWh growth - equivalent)</span><span class="st" style="color: #20794D;">`</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb17-4">  <span class="fu" style="color: #4758AB;">geom_col</span>(<span class="at" style="color: #657422;">fill=</span><span class="st" style="color: #20794D;">"#ffdf00"</span>,<span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"#009c3b"</span>)<span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb17-5">  <span class="fu" style="color: #4758AB;">scale_x_continuous</span>(<span class="at" style="color: #657422;">breaks =</span> <span class="fu" style="color: #4758AB;">seq</span>(<span class="dv" style="color: #AD0000;">1966</span>,<span class="dv" style="color: #AD0000;">2022</span>,<span class="dv" style="color: #AD0000;">4</span>),</span>
+<span id="cb17-6">                     <span class="at" style="color: #657422;">limits =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1966</span>,<span class="dv" style="color: #AD0000;">2022</span>),</span>
+<span id="cb17-7">                     <span class="at" style="color: #657422;">expand =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb17-8">  <span class="fu" style="color: #4758AB;">scale_y_continuous</span>(<span class="at" style="color: #657422;">breaks =</span> <span class="fu" style="color: #4758AB;">seq</span>(<span class="sc" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">105</span>,<span class="dv" style="color: #AD0000;">105</span>,<span class="dv" style="color: #AD0000;">15</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb17-9">  <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">title =</span> <span class="st" style="color: #20794D;">""</span>,</span>
+<span id="cb17-10">      <span class="at" style="color: #657422;">subtitle =</span> <span class="st" style="color: #20794D;">"Brazil - Renewables (TWh growth - equivalent)"</span>,</span>
+<span id="cb17-11">      <span class="at" style="color: #657422;">x =</span> <span class="st" style="color: #20794D;">""</span>,<span class="at" style="color: #657422;">y =</span> <span class="st" style="color: #20794D;">""</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb17-12">  <span class="fu" style="color: #4758AB;">theme</span>(<span class="at" style="color: #657422;">plot.title =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Open Sans"</span>,<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>),</span>
+<span id="cb17-13">        <span class="at" style="color: #657422;">text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Open Sans"</span>),</span>
+<span id="cb17-14">        <span class="at" style="color: #657422;">panel.grid =</span> <span class="fu" style="color: #4758AB;">element_blank</span>(),</span>
+<span id="cb17-15">        <span class="at" style="color: #657422;">panel.background =</span> <span class="fu" style="color: #4758AB;">element_rect</span>(<span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">"grey15"</span>,</span>
+<span id="cb17-16">                                        <span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"grey95"</span>))</span>
+<span id="cb17-17">)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing missing values (`geom_col()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day22/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">(p22_final <span class="ot" style="color: #003B4F;">&lt;-</span> (p22_1 <span class="sc" style="color: #5E5E5E;">+</span> p22_2) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb19-2">   patchwork<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">plot_annotation</span>(</span>
+<span id="cb19-3">     <span class="at" style="color: #657422;">title =</span> <span class="st" style="color: #20794D;">"Is Brazil the country of renewable energy?"</span>,</span>
+<span id="cb19-4">     <span class="at" style="color: #657422;">subtitle =</span> <span class="st" style="color: #20794D;">"Source: Our World in Data"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb19-5">  patchwork<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">plot_layout</span>(<span class="at" style="color: #657422;">ncol =</span> <span class="dv" style="color: #AD0000;">2</span>,<span class="at" style="color: #657422;">guides =</span> <span class="st" style="color: #20794D;">"collect"</span>) <span class="sc" style="color: #5E5E5E;">&amp;</span></span>
+<span id="cb19-6">   <span class="fu" style="color: #4758AB;">theme</span>(<span class="at" style="color: #657422;">legend.position =</span> <span class="st" style="color: #20794D;">"bottom"</span>,</span>
+<span id="cb19-7">         <span class="at" style="color: #657422;">plot.title =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">25</span>,<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"Open Sans"</span>,<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>)))</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 8 rows containing non-finite values (`stat_align()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing missing values (`geom_col()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day22/index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;">ggdraw</span>(p22_final) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb22-2">  <span class="fu" style="color: #4758AB;">draw_image</span>(<span class="at" style="color: #657422;">image =</span> <span class="st" style="color: #20794D;">"brazil.png"</span>,<span class="at" style="color: #657422;">x =</span> .<span class="dv" style="color: #AD0000;">95</span>, <span class="at" style="color: #657422;">y =</span> .<span class="dv" style="color: #AD0000;">95</span>, <span class="at" style="color: #657422;">hjust =</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">vjust =</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">width =</span> <span class="fl" style="color: #AD0000;">0.075</span>, <span class="at" style="color: #657422;">height =</span> <span class="fl" style="color: #AD0000;">0.075</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 8 rows containing non-finite values (`stat_align()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing missing values (`geom_col()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day22/index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="fu" style="color: #4758AB;">ggsave</span>(<span class="at" style="color: #657422;">filename =</span> <span class="st" style="color: #20794D;">"day22_finalplot.png"</span>,<span class="at" style="color: #657422;">dpi =</span> <span class="dv" style="color: #AD0000;">600</span>,<span class="at" style="color: #657422;">width =</span> <span class="dv" style="color: #AD0000;">12</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 12 x 5 in image</code></pre>
+</div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Dataviz</category>
+  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day22/index.html</guid>
+  <pubDate>Sat, 22 Apr 2023 03:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day22/brazil.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>30 days chart challenge - day 21</title>
   <dc:creator>Marcel Ferreira</dc:creator>
@@ -44,19 +251,23 @@ The following object is masked from 'package:readr':
 
     guess_encoding</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">library</span>(extrafont)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registering fonts with R</code></pre>
+</div>
 </div>
 <section id="data" class="level2">
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">url <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="st" style="color: #20794D;">"https://en.wikipedia.org/wiki/2019_Campeonato_Brasileiro_S%C3%A9rie_A"</span></span>
-<span id="cb5-2"></span>
-<span id="cb5-3"></span>
-<span id="cb5-4"></span>
-<span id="cb5-5"></span>
-<span id="cb5-6">url <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb5-7">  <span class="fu" style="color: #4758AB;">read_html</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb5-8">  <span class="fu" style="color: #4758AB;">html_node</span>(<span class="at" style="color: #657422;">xpath =</span> <span class="st" style="color: #20794D;">'//*[@id="mw-content-text"]/div[1]/table[7]'</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb5-9">  <span class="fu" style="color: #4758AB;">html_table</span>(<span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">url <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="st" style="color: #20794D;">"https://en.wikipedia.org/wiki/2019_Campeonato_Brasileiro_S%C3%A9rie_A"</span></span>
+<span id="cb7-2"></span>
+<span id="cb7-3"></span>
+<span id="cb7-4"></span>
+<span id="cb7-5"></span>
+<span id="cb7-6">url <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-7">  <span class="fu" style="color: #4758AB;">read_html</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-8">  <span class="fu" style="color: #4758AB;">html_node</span>(<span class="at" style="color: #657422;">xpath =</span> <span class="st" style="color: #20794D;">'//*[@id="mw-content-text"]/div[1]/table[7]'</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb7-9">  <span class="fu" style="color: #4758AB;">html_table</span>(<span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 20 x 11
      Pos Team              Pld     W     D     L    GF    GA GD      Pts Quali~1
@@ -83,23 +294,23 @@ The following object is masked from 'package:readr':
 20    20 Avaí (R)           38     3    11    24    18    62 -44      20 "Releg~
 # ... with abbreviated variable name 1: `Qualification or relegation`</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">final_table <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">list</span>()</span>
-<span id="cb7-2">tindex <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">5</span>,<span class="dv" style="color: #AD0000;">5</span>,</span>
-<span id="cb7-3">            <span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">9</span>,<span class="dv" style="color: #AD0000;">9</span>,<span class="dv" style="color: #AD0000;">8</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>)</span>
-<span id="cb7-4"></span>
-<span id="cb7-5"><span class="cf" style="color: #003B4F;">for</span>(i <span class="cf" style="color: #003B4F;">in</span> <span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">17</span>){</span>
-<span id="cb7-6">  j <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="dv" style="color: #AD0000;">2005</span> <span class="sc" style="color: #5E5E5E;">+</span> i</span>
-<span id="cb7-7">  url <span class="ot" style="color: #003B4F;">&lt;-</span> glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">"https://en.wikipedia.org/wiki/{j}_Campeonato_Brasileiro_S%C3%A9rie_A"</span>)</span>
-<span id="cb7-8">  p1 <span class="ot" style="color: #003B4F;">&lt;-</span> tindex[i]</span>
-<span id="cb7-9">  </span>
-<span id="cb7-10">  </span>
-<span id="cb7-11">  final_table[[i]] <span class="ot" style="color: #003B4F;">&lt;-</span> url <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb7-12">    <span class="fu" style="color: #4758AB;">read_html</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb7-13">    <span class="fu" style="color: #4758AB;">html_node</span>(<span class="at" style="color: #657422;">xpath =</span> glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">'//*[@id="mw-content-text"]/div[1]/table[{p1}]'</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb7-14">    <span class="fu" style="color: #4758AB;">html_table</span>(<span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
-<span id="cb7-15">  </span>
-<span id="cb7-16">  <span class="fu" style="color: #4758AB;">print</span>(j)</span>
-<span id="cb7-17">}</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">final_table <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">list</span>()</span>
+<span id="cb9-2">tindex <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">5</span>,<span class="dv" style="color: #AD0000;">5</span>,</span>
+<span id="cb9-3">            <span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">6</span>,<span class="dv" style="color: #AD0000;">9</span>,<span class="dv" style="color: #AD0000;">9</span>,<span class="dv" style="color: #AD0000;">8</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>,<span class="dv" style="color: #AD0000;">7</span>)</span>
+<span id="cb9-4"></span>
+<span id="cb9-5"><span class="cf" style="color: #003B4F;">for</span>(i <span class="cf" style="color: #003B4F;">in</span> <span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">17</span>){</span>
+<span id="cb9-6">  j <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="dv" style="color: #AD0000;">2005</span> <span class="sc" style="color: #5E5E5E;">+</span> i</span>
+<span id="cb9-7">  url <span class="ot" style="color: #003B4F;">&lt;-</span> glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">"https://en.wikipedia.org/wiki/{j}_Campeonato_Brasileiro_S%C3%A9rie_A"</span>)</span>
+<span id="cb9-8">  p1 <span class="ot" style="color: #003B4F;">&lt;-</span> tindex[i]</span>
+<span id="cb9-9">  </span>
+<span id="cb9-10">  </span>
+<span id="cb9-11">  final_table[[i]] <span class="ot" style="color: #003B4F;">&lt;-</span> url <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-12">    <span class="fu" style="color: #4758AB;">read_html</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-13">    <span class="fu" style="color: #4758AB;">html_node</span>(<span class="at" style="color: #657422;">xpath =</span> glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">'//*[@id="mw-content-text"]/div[1]/table[{p1}]'</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-14">    <span class="fu" style="color: #4758AB;">html_table</span>(<span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
+<span id="cb9-15">  </span>
+<span id="cb9-16">  <span class="fu" style="color: #4758AB;">print</span>(j)</span>
+<span id="cb9-17">}</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2006
 [1] 2007
@@ -121,114 +332,132 @@ The following object is masked from 'package:readr':
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">final_table <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb9-2">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">(C</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">)"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb9-3">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">(R</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">)"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb9-4">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">[c</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">]"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb9-5">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace_all</span>(Team, <span class="st" style="color: #20794D;">" "</span>,<span class="st" style="color: #20794D;">"_"</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb9-6">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">filter</span>(Team <span class="sc" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">"São Paulo"</span>)) </span></code></pre></div>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">SPFC_pts <span class="ot" style="color: #003B4F;">&lt;-</span> final_table <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-2">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">(C</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">)"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-3">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">(R</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">)"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-4">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Team, <span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">[c</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">]"</span>,<span class="st" style="color: #20794D;">""</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-5">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Team =</span> <span class="fu" style="color: #4758AB;">str_replace_all</span>(Team, <span class="st" style="color: #20794D;">" "</span>,<span class="st" style="color: #20794D;">"_"</span>))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-6">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">filter</span>(Team <span class="sc" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">"São_Paulo"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-7">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="fu" style="color: #4758AB;">pull</span>((Pts))) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-8">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> as.numeric) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-9">  <span class="fu" style="color: #4758AB;">unlist</span>()</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">SPFC_pts<span class="sc" style="color: #5E5E5E;">/</span><span class="dv" style="color: #AD0000;">114</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[[1]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
+<pre><code> [1] 0.6842105 0.6754386 0.6578947 0.5701754 0.4824561 0.5175439 0.5789474
+ [8] 0.4385965 0.6140351 0.5438596 0.4561404 0.4385965 0.5526316 0.5526316
+[15] 0.5789474 0.4210526 0.4736842</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">spfc_logo <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="st" style="color: #20794D;">"http://www.spfcpedia.com.br/logos/vetores/sao-paulo-fc_1985.png"</span></span>
+<span id="cb14-2"></span>
+<span id="cb14-3">(p21 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(<span class="at" style="color: #657422;">Points =</span> SPFC_pts,</span>
+<span id="cb14-4">       <span class="at" style="color: #657422;">Year =</span> <span class="dv" style="color: #AD0000;">2006</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">2022</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb14-5">  <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> Year, <span class="at" style="color: #657422;">y =</span> Points, <span class="at" style="color: #657422;">label =</span> Points)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-6">  <span class="fu" style="color: #4758AB;">geom_line</span>(<span class="at" style="color: #657422;">linewidth =</span> <span class="fl" style="color: #AD0000;">1.15</span>,<span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"grey35"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-7">  <span class="fu" style="color: #4758AB;">geom_point</span>(<span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">"#b20d15"</span>, <span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">3</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-8">  <span class="fu" style="color: #4758AB;">geom_hline</span>(<span class="at" style="color: #657422;">yintercept =</span> <span class="fl" style="color: #AD0000;">57.5</span>, <span class="at" style="color: #657422;">linewidth =</span> .<span class="dv" style="color: #AD0000;">1</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-9">  ggrepel<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">geom_text_repel</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"College"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">8</span>,</span>
+<span id="cb14-10">                           <span class="at" style="color: #657422;">force =</span> .<span class="dv" style="color: #AD0000;">5</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-11">  <span class="fu" style="color: #4758AB;">scale_x_continuous</span>(<span class="at" style="color: #657422;">breaks =</span> <span class="dv" style="color: #AD0000;">2006</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">2022</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-12">  <span class="fu" style="color: #4758AB;">scale_y_continuous</span>(<span class="at" style="color: #657422;">breaks =</span> <span class="fu" style="color: #4758AB;">seq</span>(<span class="dv" style="color: #AD0000;">45</span>,<span class="dv" style="color: #AD0000;">80</span>,<span class="dv" style="color: #AD0000;">5</span>)) <span class="sc" style="color: #5E5E5E;">+</span> </span>
+<span id="cb14-13">  <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">title =</span> glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">"Sao Paulo FC's final points in the Br championships."</span>),</span>
+<span id="cb14-14">       <span class="at" style="color: #657422;">x =</span> <span class="st" style="color: #20794D;">""</span>,<span class="at" style="color: #657422;">y =</span> <span class="st" style="color: #20794D;">""</span>) <span class="sc" style="color: #5E5E5E;">+</span> </span>
+<span id="cb14-15">  <span class="fu" style="color: #4758AB;">theme</span>(<span class="at" style="color: #657422;">panel.background =</span> <span class="fu" style="color: #4758AB;">element_rect</span>(<span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"white"</span>,</span>
+<span id="cb14-16">                                        <span class="at" style="color: #657422;">colour =</span> <span class="st" style="color: #20794D;">"#b20d15"</span>,</span>
+<span id="cb14-17">                                        <span class="at" style="color: #657422;">linewidth =</span> <span class="dv" style="color: #AD0000;">2</span>),</span>
+<span id="cb14-18">        <span class="at" style="color: #657422;">panel.grid =</span> <span class="fu" style="color: #4758AB;">element_blank</span>(),</span>
+<span id="cb14-19">        <span class="at" style="color: #657422;">plot.title =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"College"</span>,<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">20</span>),</span>
+<span id="cb14-20">        <span class="at" style="color: #657422;">text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"College"</span>),</span>
+<span id="cb14-21">        <span class="at" style="color: #657422;">axis.text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">15</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-22">  <span class="fu" style="color: #4758AB;">annotate</span>(<span class="at" style="color: #657422;">geom =</span> <span class="st" style="color: #20794D;">"rect"</span>,</span>
+<span id="cb14-23">           <span class="at" style="color: #657422;">xmin =</span> <span class="dv" style="color: #AD0000;">2005</span>,<span class="at" style="color: #657422;">xmax =</span> <span class="dv" style="color: #AD0000;">2009</span>,</span>
+<span id="cb14-24">           <span class="at" style="color: #657422;">ymin =</span> <span class="dv" style="color: #AD0000;">72</span>,<span class="at" style="color: #657422;">ymax =</span> <span class="fl" style="color: #AD0000;">79.8</span>,<span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"#b20d15"</span>,</span>
+<span id="cb14-25">           <span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">02</span>, <span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"red"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-26">  <span class="fu" style="color: #4758AB;">annotate</span>(<span class="at" style="color: #657422;">geom =</span> <span class="st" style="color: #20794D;">"text"</span>,<span class="at" style="color: #657422;">label =</span> <span class="st" style="color: #20794D;">"3x Champion"</span>,</span>
+<span id="cb14-27">           <span class="at" style="color: #657422;">x =</span> <span class="dv" style="color: #AD0000;">2014</span>,<span class="at" style="color: #657422;">y =</span> <span class="dv" style="color: #AD0000;">76</span>, <span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"College"</span>, <span class="at" style="color: #657422;">fontface =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">8</span>)<span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb14-28">  <span class="fu" style="color: #4758AB;">annotate</span>(<span class="at" style="color: #657422;">geom=</span><span class="st" style="color: #20794D;">"text"</span>,<span class="at" style="color: #657422;">label =</span> <span class="st" style="color: #20794D;">"50%"</span>,</span>
+<span id="cb14-29">           <span class="at" style="color: #657422;">x =</span> <span class="dv" style="color: #AD0000;">2006</span>,<span class="at" style="color: #657422;">y =</span> <span class="dv" style="color: #AD0000;">58</span>, <span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"serif"</span>, <span class="at" style="color: #657422;">fontface =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">3</span>)</span>
+<span id="cb14-30">  ) </span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day21/index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;">library</span>(cowplot)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'cowplot'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:lubridate':
 
-[[2]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[3]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[4]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[5]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;chr&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[6]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[7]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[8]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;chr&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[9]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[10]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[11]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;chr&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[12]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[13]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[14]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[15]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[16]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;
-
-[[17]]
-# A tibble: 0 x 11
-# ... with 11 variables: Pos &lt;int&gt;, Team &lt;chr&gt;, Pld &lt;int&gt;, W &lt;int&gt;, D &lt;int&gt;,
-#   L &lt;int&gt;, GF &lt;int&gt;, GA &lt;int&gt;, GD &lt;chr&gt;, Pts &lt;int&gt;,
-#   Qualification or relegation &lt;chr&gt;</code></pre>
+    stamp</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;">ggdraw</span>(p21) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb18-2">  <span class="fu" style="color: #4758AB;">draw_image</span>(<span class="at" style="color: #657422;">image =</span> <span class="st" style="color: #20794D;">"sao-paulo-fc_1985.png"</span>,</span>
+<span id="cb18-3">              <span class="at" style="color: #657422;">x =</span> .<span class="dv" style="color: #AD0000;">91</span>, <span class="at" style="color: #657422;">y =</span> .<span class="dv" style="color: #AD0000;">85</span>, <span class="at" style="color: #657422;">hjust =</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">vjust =</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">width =</span> <span class="fl" style="color: #AD0000;">0.13</span>, <span class="at" style="color: #657422;">height =</span> <span class="fl" style="color: #AD0000;">0.2</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day21/index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;">ggsave</span>(<span class="at" style="color: #657422;">filename =</span> <span class="st" style="color: #20794D;">"v1.png"</span>,<span class="at" style="color: #657422;">dpi =</span> <span class="dv" style="color: #AD0000;">600</span>,<span class="at" style="color: #657422;">width =</span> <span class="dv" style="color: #AD0000;">10</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 10 x 5 in image</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">spfc_df <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(<span class="at" style="color: #657422;">Points =</span> SPFC_pts,</span>
+<span id="cb21-2">       <span class="at" style="color: #657422;">Year =</span> <span class="dv" style="color: #AD0000;">2006</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">2022</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb21-3">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Pct =</span> <span class="dv" style="color: #AD0000;">100</span><span class="sc" style="color: #5E5E5E;">*</span>SPFC_pts<span class="sc" style="color: #5E5E5E;">/</span><span class="dv" style="color: #AD0000;">114</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb21-4">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Pct_diff =</span> Pct <span class="sc" style="color: #5E5E5E;">-</span> <span class="fl" style="color: #AD0000;">57.5</span>,</span>
+<span id="cb21-5">         <span class="at" style="color: #657422;">Pct_diff =</span> <span class="fu" style="color: #4758AB;">round</span>(Pct_diff,<span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">2</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb21-6">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Cond =</span> <span class="fu" style="color: #4758AB;">case_when</span>(</span>
+<span id="cb21-7">    Pct_diff <span class="sc" style="color: #5E5E5E;">&gt;</span> <span class="dv" style="color: #AD0000;">0</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="st" style="color: #20794D;">"up"</span>,</span>
+<span id="cb21-8">    Pct_diff <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">0</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="st" style="color: #20794D;">"down"</span>,</span>
+<span id="cb21-9">    <span class="cn" style="color: #8f5902;">TRUE</span> <span class="sc" style="color: #5E5E5E;">~</span> <span class="st" style="color: #20794D;">"Neutral"</span></span>
+<span id="cb21-10">    )</span>
+<span id="cb21-11">    ) </span>
+<span id="cb21-12">(p21_final <span class="ot" style="color: #003B4F;">&lt;-</span> spfc_df <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb21-13">  <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> Year, <span class="at" style="color: #657422;">y =</span> Pct_diff, <span class="at" style="color: #657422;">label =</span> Pct_diff)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb21-14">  <span class="fu" style="color: #4758AB;">geom_col</span>(<span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"#b20d15"</span>,<span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">85</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb21-15">  <span class="fu" style="color: #4758AB;">geom_text</span>(<span class="at" style="color: #657422;">data =</span> <span class="fu" style="color: #4758AB;">filter</span>(spfc_df, Cond <span class="sc" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">"up"</span>),</span>
+<span id="cb21-16">            <span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"College"</span>,<span class="at" style="color: #657422;">nudge_y =</span> .<span class="dv" style="color: #AD0000;">5</span>,<span class="at" style="color: #657422;">fontface =</span> <span class="st" style="color: #20794D;">"bold"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb21-17">  <span class="fu" style="color: #4758AB;">geom_text</span>(<span class="at" style="color: #657422;">data =</span> <span class="fu" style="color: #4758AB;">filter</span>(spfc_df, Cond <span class="sc" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">"down"</span>),</span>
+<span id="cb21-18">            <span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"College"</span>,<span class="at" style="color: #657422;">nudge_y =</span> <span class="sc" style="color: #5E5E5E;">-</span>.<span class="dv" style="color: #AD0000;">5</span>,<span class="at" style="color: #657422;">fontface =</span> <span class="st" style="color: #20794D;">"bold"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb21-19">  <span class="fu" style="color: #4758AB;">scale_x_continuous</span>(<span class="at" style="color: #657422;">breaks =</span> <span class="dv" style="color: #AD0000;">2006</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">2022</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb21-20">  <span class="fu" style="color: #4758AB;">scale_y_continuous</span>(<span class="at" style="color: #657422;">breaks =</span> <span class="fu" style="color: #4758AB;">seq</span>(<span class="sc" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">10</span>,<span class="dv" style="color: #AD0000;">10</span>,<span class="fl" style="color: #AD0000;">2.5</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb21-21">  <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">x=</span><span class="st" style="color: #20794D;">""</span>, <span class="at" style="color: #657422;">y=</span><span class="st" style="color: #20794D;">""</span>,</span>
+<span id="cb21-22">       <span class="at" style="color: #657422;">title =</span> <span class="st" style="color: #20794D;">"Sao Paulo FC difference of a 50 percent campaign"</span>,</span>
+<span id="cb21-23">       <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">"@marceelrf - Source: Wikipedia"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb21-24">  <span class="fu" style="color: #4758AB;">theme</span>(<span class="at" style="color: #657422;">panel.background =</span> <span class="fu" style="color: #4758AB;">element_rect</span>(<span class="at" style="color: #657422;">fill =</span> <span class="st" style="color: #20794D;">"white"</span>,</span>
+<span id="cb21-25">                                        <span class="at" style="color: #657422;">colour =</span> <span class="st" style="color: #20794D;">"#b20d15"</span>,</span>
+<span id="cb21-26">                                        <span class="at" style="color: #657422;">linewidth =</span> <span class="dv" style="color: #AD0000;">2</span>),</span>
+<span id="cb21-27">        <span class="at" style="color: #657422;">panel.grid =</span> <span class="fu" style="color: #4758AB;">element_blank</span>(),</span>
+<span id="cb21-28">        <span class="at" style="color: #657422;">plot.title =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"College"</span>,<span class="at" style="color: #657422;">face =</span> <span class="st" style="color: #20794D;">"bold"</span>,<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">20</span>),</span>
+<span id="cb21-29">        <span class="at" style="color: #657422;">text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"College"</span>),</span>
+<span id="cb21-30">        <span class="at" style="color: #657422;">axis.text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">15</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb21-31">  <span class="fu" style="color: #4758AB;">annotate</span>(<span class="at" style="color: #657422;">geom =</span> <span class="st" style="color: #20794D;">"text"</span>,<span class="at" style="color: #657422;">label =</span> <span class="st" style="color: #20794D;">"3x Champion"</span>,</span>
+<span id="cb21-32">           <span class="at" style="color: #657422;">x =</span> <span class="dv" style="color: #AD0000;">2007</span>, <span class="at" style="color: #657422;">y =</span> <span class="sc" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">5</span>,<span class="at" style="color: #657422;">family =</span> <span class="st" style="color: #20794D;">"College"</span>,<span class="at" style="color: #657422;">fontface =</span> <span class="st" style="color: #20794D;">"bold"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb21-33">  <span class="fu" style="color: #4758AB;">annotate</span>(<span class="st" style="color: #20794D;">"segment"</span>, <span class="at" style="color: #657422;">x =</span> <span class="dv" style="color: #AD0000;">2006</span>, <span class="at" style="color: #657422;">xend =</span> <span class="dv" style="color: #AD0000;">2008</span>, <span class="at" style="color: #657422;">y =</span> <span class="sc" style="color: #5E5E5E;">-</span><span class="fl" style="color: #AD0000;">2.25</span>, <span class="at" style="color: #657422;">yend =</span> <span class="sc" style="color: #5E5E5E;">-</span><span class="fl" style="color: #AD0000;">2.25</span>,<span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"#b20d15"</span>,</span>
+<span id="cb21-34">           <span class="at" style="color: #657422;">arrow =</span> <span class="fu" style="color: #4758AB;">arrow</span>(<span class="at" style="color: #657422;">ends =</span> <span class="st" style="color: #20794D;">"both"</span>, <span class="at" style="color: #657422;">angle =</span> <span class="dv" style="color: #AD0000;">90</span>, <span class="at" style="color: #657422;">length =</span> <span class="fu" style="color: #4758AB;">unit</span>(.<span class="dv" style="color: #AD0000;">2</span>,<span class="st" style="color: #20794D;">"cm"</span>))))</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day21/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;">ggdraw</span>(p21_final) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb22-2">  <span class="fu" style="color: #4758AB;">draw_image</span>(<span class="at" style="color: #657422;">image =</span> <span class="st" style="color: #20794D;">"sao-paulo-fc_1985.png"</span>,</span>
+<span id="cb22-3">              <span class="at" style="color: #657422;">x =</span> .<span class="dv" style="color: #AD0000;">91</span>, <span class="at" style="color: #657422;">y =</span> .<span class="dv" style="color: #AD0000;">85</span>, <span class="at" style="color: #657422;">hjust =</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">vjust =</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">width =</span> <span class="fl" style="color: #AD0000;">0.13</span>, <span class="at" style="color: #657422;">height =</span> <span class="fl" style="color: #AD0000;">0.2</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day21/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="fu" style="color: #4758AB;">ggsave</span>(<span class="at" style="color: #657422;">filename =</span> <span class="st" style="color: #20794D;">"day21_finalplot.png"</span>,<span class="at" style="color: #657422;">dpi =</span> <span class="dv" style="color: #AD0000;">600</span>,<span class="at" style="color: #657422;">width =</span> <span class="dv" style="color: #AD0000;">10</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 10 x 5 in image</code></pre>
 </div>
 </div>
 
@@ -240,6 +469,7 @@ The following object is masked from 'package:readr':
   <category>Dataviz</category>
   <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day21/index.html</guid>
   <pubDate>Fri, 21 Apr 2023 03:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day21/sao-paulo-fc_1985.png" medium="image" type="image/png" height="145" width="144"/>
 </item>
 <item>
   <title>30 days chart challenge - day 20</title>
@@ -3540,37 +3770,6 @@ Row2    2    3</code></pre>
   <guid>https://quartodomarcel.netlify.app/posts/R-objects/index.html</guid>
   <pubDate>Fri, 12 Aug 2022 03:00:00 GMT</pubDate>
   <media:content url="https://quartodomarcel.netlify.app/posts/R-objects/cubes-g23e20f481_1920.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>My first R package</title>
-  <dc:creator>Marcel Ferreira</dc:creator>
-  <link>https://quartodomarcel.netlify.app/posts/post-with-code/index.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<p>Hello everybody, I’m really excited to announce that I have finished (or almost) my first R package. The <code>tidyspec</code>: a package to analyze spectroscopy data using tidy-data philosophy.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://quartodomarcel.netlify.app/posts/post-with-code/tidyspec_prov.png" class="img-fluid figure-img" width="400"></p>
-<p></p><figcaption class="figure-caption">preliminar hex</figcaption><p></p>
-</figure>
-</div>
-<p>In the next few weeks I will be writing the function documentation and then finalizing the package. I am very happy because when I started using R to analyze my FTIR (infrared spectroscopy) data I could not apply <code>tidyverse</code> functions to my pipelines. It took me months of wracking my brains to find a model to leverage the existing packages and connect them to the <code>tidyverse</code>.</p>
-<p>You can check the <a href="https://github.com/marceelrf/tidyspec">github repository</a>.</p>
-<p>Enjoy!</p>
-
-
-
- ]]></description>
-  <category>news</category>
-  <category>R</category>
-  <category>FTIR</category>
-  <category>biomaterials</category>
-  <guid>https://quartodomarcel.netlify.app/posts/post-with-code/index.html</guid>
-  <pubDate>Thu, 11 Aug 2022 03:00:00 GMT</pubDate>
-  <media:content url="https://quartodomarcel.netlify.app/posts/post-with-code/tidyspec_prov.png" medium="image" type="image/png" height="165" width="144"/>
 </item>
 </channel>
 </rss>

@@ -1,0 +1,107 @@
+---
+title: "30 days chart challenge - day 22"
+description: "green energy"
+author: "Marcel Ferreira"
+date: "2023-04-22"
+categories: [R, Dataviz]
+image: "brazil.png"
+---
+
+```{r}
+library(tidyverse)
+library(extrafont)
+library(cowplot)
+library(patchwork)
+```
+
+## Data
+
+```{r}
+data_ACR <- read_csv("annual-change-renewables.csv")
+data_PCR <- read_csv("per-capita-renewables.csv")
+```
+
+```{r}
+data_PCR_filt <- data_PCR %>%
+  filter(str_detect(string = Entity,
+           pattern = "Brazil|World|Europe|South America|Africa|Asia|North America|Oceania")) %>%
+  filter(str_detect(Entity,"South Africa|European",negate = TRUE))
+
+(
+  data_PCR_filt_text <- data_PCR_filt %>%
+  filter(Year == 2018) %>%
+  arrange(desc(`Renewables per capita (kWh - equivalent)`))
+  )
+
+
+
+(p22_1 <- data_PCR_filt %>% 
+  mutate(Entity = factor(Entity,levels = rev(data_PCR_filt_text$Entity))) %>%
+  ggplot(aes(x = Year,y = `Renewables per capita (kWh - equivalent)`,
+             fill = Entity)) +
+  geom_area(color = "grey99",alpha = .75) +
+  # geom_text(data = data_PCR_filt_text,
+  #           aes(x = 2022,
+  #               y=`Renewables per capita (kWh - equivalent)`,
+  #               label = Entity),show_guide = FALSE) +
+  scale_x_continuous(breaks = seq(1966,2022,4),
+                     limits = c(1966,2021),
+                     expand = c(0,0)) +
+  scale_y_continuous(breaks = seq(5000,40000,5000),
+                     expand = c(0,0)) +
+  scale_fill_manual(values = c("Africa" = "black",
+                                "Europe" = "navy",
+                                "Asia" = "#f9b549",
+                                "Oceania" = "darkgreen",
+                                "World" = "grey",
+                                "North America" = "firebrick4",
+                                "South America" = "firebrick1",
+                                "Brazil" = "#ffdf00"))+
+  labs(title = "",
+       subtitle = "Renewables per capita (kWh - equivalent)",
+       y = "",
+       x = "",fill = "") +
+  theme(plot.title = element_text(family = "Open Sans",face = "bold"),
+        text = element_text(family = "Open Sans"),
+        panel.grid = element_blank(),
+        panel.background = element_rect(color = "grey15",
+                                        fill = "grey95")))
+```
+
+```{r}
+(p22_2 <- data_ACR %>%
+  filter(Entity == "Brazil") %>%
+  ggplot(aes(x = Year, y =`Renewables (TWh growth - equivalent)`)) +
+  geom_col(fill="#ffdf00",col = "#009c3b")+
+  scale_x_continuous(breaks = seq(1966,2022,4),
+                     limits = c(1966,2022),
+                     expand = c(0,0)) +
+  scale_y_continuous(breaks = seq(-105,105,15)) +
+  labs(title = "",
+      subtitle = "Brazil - Renewables (TWh growth - equivalent)",
+      x = "",y = "") +
+  theme(plot.title = element_text(family = "Open Sans",face = "bold"),
+        text = element_text(family = "Open Sans"),
+        panel.grid = element_blank(),
+        panel.background = element_rect(color = "grey15",
+                                        fill = "grey95"))
+)
+```
+```{r}
+(p22_final <- (p22_1 + p22_2) +
+   patchwork::plot_annotation(
+     title = "Is Brazil the country of renewable energy?",
+     subtitle = "Source: Our World in Data") +
+  patchwork::plot_layout(ncol = 2,guides = "collect") &
+   theme(legend.position = "bottom",
+         plot.title = element_text(size = 25,family = "Open Sans",face = "bold")))
+```
+```{r}
+ggdraw(p22_final) +
+  draw_image(image = "brazil.png",x = .95, y = .95, hjust = 1, vjust = 1, width = 0.075, height = 0.075)
+```
+
+```{r}
+ggsave(filename = "day22_finalplot.png",dpi = 600,width = 12)
+```
+
