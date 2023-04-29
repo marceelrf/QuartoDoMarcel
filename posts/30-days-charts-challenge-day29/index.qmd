@@ -1,0 +1,71 @@
+---
+title: "30 days chart challenge - day 29"
+description: "monochrome"
+author: "Marcel Ferreira"
+date: "2023-04-29"
+categories: [R, Dataviz, Bioinformatics]
+image: "Bioconductor.png"
+---
+
+```{r}
+library(tidyverse)
+library(BiocPkgTools)
+library(extrafont)
+library(ggtext)
+```
+## Data
+
+
+```{r}
+data <- biocDownloadStats(pkgType = "software")
+```
+
+```{r}
+DEp <- data %>%
+  filter(Package %in% c("limma","DESeq2","edgeR")) %>% 
+  select(Package,Year,Month,Nb_of_downloads)
+```
+
+```{r}
+DEp <- DEp %>%
+  mutate(BaseDate = glue::glue("{Month} 01 {Year}")) %>% 
+  mutate(BaseDate = mdy(BaseDate)) %>% 
+  rename("ND" = Nb_of_downloads)
+
+```
+
+``` {r}
+DEp %>% 
+  filter(BaseDate < "2023-05-01") %>% 
+  ggplot(aes(x = BaseDate, y = ND, col = Package)) +
+  geom_line() +
+  geom_point() +
+  scale_x_date(
+    date_breaks = "year",
+    date_labels = "%Y") +
+  scale_y_log10() +
+  scale_color_manual(values = c("DESeq2" = "#006b76",
+                       "edgeR" = "#008fa9",
+                       "limma" = "#80f3ff")) +
+  labs(x= "",
+       y = "Number of monthly downloads <span font-face = 'bold'>(log scale)</span>",
+       title = "<span style = 'color:#87b13f;'>Bioconductor</span> <span style = 'color:#006b76;'>differential expression packages</span>",
+       subtitle = "source:{BiocPkgTools}") +
+  theme(text = element_text(family = "Modern No. 20"),
+        plot.title = element_markdown(family = "Modern No. 20",size = 25),
+        plot.subtitle = element_markdown(family = "Modern No. 20",size = 15),
+        axis.title.y = element_markdown(size = 16),
+        axis.text = element_markdown(size = 10),
+        panel.background = element_rect(fill = "#f2f2f2",colour = "black"),
+        panel.grid = element_blank(),
+        plot.background = element_rect(fill = "#f2f2f2"),
+        legend.background = element_rect(fill = "#f2f2f2"),
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 12))
+```
+
+```{r}
+ggsave(filename = "day29_finalplot.png",
+       dpi = 600,width = 11)
+```
+
