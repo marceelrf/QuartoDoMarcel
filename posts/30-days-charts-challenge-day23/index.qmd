@@ -1,0 +1,38 @@
+---
+title: "30 days chart challenge - day 23"
+description: "tiles"
+author: "Marcel Ferreira"
+date: "2023-04-23"
+categories: [R, Dataviz]
+image: "brazil.png"
+---
+
+```{r}
+library(tidyverse)
+library(extrafont)
+```
+
+
+## Data
+
+```{r}
+data_alcohol <- read_csv("total-alcohol-consumption-per-capita-litres-of-pure-alcohol.csv")
+```
+
+```{r}
+data_alcohol <- data_alcohol %>%
+  filter(str_detect(string = Entity,
+           pattern = "Brazil|Europe|South America|Africa|Asia|North America|Oceania|World")) %>%
+  filter(str_detect(Entity,"South Africa|European",negate = TRUE)) %>%
+  rename("Total" = `Total alcohol consumption per capita (liters of pure alcohol, projected estimates, 15+ years of age)`)
+```
+
+```{r}
+data_alcohol %>% 
+  mutate(Total = round(Total,2)) %>% 
+  ggplot(aes(x = factor(Year), y = Entity, fill = Total, label = Total)) +
+  geom_tile(col = "white") +
+  geom_text() + 
+  viridis::scale_fill_viridis()
+```
+
