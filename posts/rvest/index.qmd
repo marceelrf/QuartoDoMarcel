@@ -1,0 +1,105 @@
+---
+title: "Using Rvest and Tidyverse to scrape the samples names from 1000 genomes"
+description: ""
+author: "Marcel Ferreira"
+date: "2023-06-22"
+categories: [R, Bioinformatics, Webscrapping]
+image: "1000genomes.jpg"
+bibliography: references.bib
+---
+
+Currently in my postdoc project I am downloading sequencing files using Oxford Nanopore Technologies (**ONT**) from the 1000 genomes database (https://www.internationalgenome.org/). But after I started the downloads I noticed that the name of the downloaded file **did not** contain any sample code.
+
+![Files from 1000 genomes](Imagem1.png)
+
+So at first I despaired and figured that I would have to manually collect information from almost 40 samples (in this step) and several more in future steps. A process highly susceptible to human error (not to mention laziness, right?).
+
+Taking all this into account I thought "why not use R and try to scrape this information straight from the website?". And the result was pretty cool! I hope it helps you in similar projects!
+
+![Files webpage structure](Imagem2.png)
+
+## Libraries
+
+In this work I used the `rvest`[@rvest] library to scrape the data and, of course, `tidyverse`[@tidyverse] to handle the data.
+
+```{r}
+library(tidyverse)
+library(rvest)
+```
+
+## The FTP site for data download
+
+The site for downloading the data in my project was as follows:
+
+http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/HGSVC3/working/20211013_ONT_Rebasecalled/
+
+I used the functions `read_html()` and `html_node()`, with the argument `"table"`,to extract as a table the sample structure information on the site.
+
+```{r}
+mil_genomes <- "http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/HGSVC3/working/20211013_ONT_Rebasecalled/"
+
+webpage <- read_html(mil_genomes)
+
+tbls <- html_nodes(webpage, "table")
+```
+
+The `tbls` object is a R `list`, then it is necessary to extract the first element of the list to follow the analysis. The function `html_table()` return a `tibble` object containing the sample table.
+
+```{r}
+tbls[[1]] %>% 
+  html_table()
+```
+
+The table contains unwanted columns and rows, so I used the following strategy to clean up this data:
+
+The `select` function from the `dplyr` [@dplyr] package was used to remove the first column, which had only empty cells. The `filter()` function from `dplyr` combined with the `str_detect()` from `stringr` [@stringr] package was used to filter the lines with the sample names using the pattern "NA" or "HG". Finally, I used the `name` column to create `name_sample` columns, containing the sample code, and `name_dir`, which contained the sample directory path (thinking about the next step). The final object was save to the `samples_names`.
+
+```{r}
+samples_names <- tbls[[1]] %>% 
+  html_table() %>% 
+  select(-1) %>% 
+  filter(str_detect(Name,pattern = "NA|HG")) %>% 
+  mutate(Name_sample = Name,
+         Name_dir = Name) %>% 
+  mutate(Name_sample = str_replace(Name_sample,"\\/","")) %>% 
+  select(Name_sample,Name_dir)
+```
+
+With this step complete, I set about extracting the names of the different files in each sample folder. I used the famous `group_by()` \> `nest()` \> `mutate()` \> `map()` pipeline to speed up the process. Applying the `group_by()`, from `dplyr`, in the `Name_sample` column and then the `nest()`, from `tidyr` [@tidyr], we produce a nested tibble, that means, a table with a list-column! And the `map()` function, from the `purrr` [@purrr], its used to apply functions to all elements in a list. So, this can easily be used inside a `mutate()`, from `dplyr`, and create a new list-column, with the final results. And at the end, we use `unnest()`, from `tidyr`, to transform the list-column to the traditional table format.
+
+So to accomplish this I just needed to write a custom function to be applied on each element and extract the sample files. Again, I used the functions `read_html()`, `html_nodes()` and `html_table()` to extract the tables with the filenames. The `glue()` function, from `glue` [@glue] package, was used to create the access links automatically.The I clean the table with a similar strategy then before, but now I use the pattern "guppy" to filter the rows of interest. I named this function `fn_get_filnames()` and apply in the pipeline.
+
+```{r}
+fn_get_filnames <- function(x) {
+  read_html(glue::glue("{mil_genomes}{x$Name_dir}")) %>% 
+    html_nodes("table") %>% 
+    .[[1]] %>% 
+    html_table() %>%
+    select(-1) %>%
+    filter(str_detect(Name,"guppy")) %>% 
+    select(Filename = Name,
+           Size)
+}
+```
+
+```{r}
+samples_names <- samples_names %>% 
+  group_by(Name_sample) %>% 
+  nest() %>% 
+  mutate(filenames = map(data, fn_get_filnames)) %>% 
+  unnest(data,filenames)
+```
+
+And in the end we had our table!
+
+```{r}
+samples_names
+```
+
+I hope this pipeline will help you!
+
+Hope to see you in the next ones!
+
+Marcel
+
+#### References

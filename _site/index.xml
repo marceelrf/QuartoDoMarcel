@@ -9,8 +9,192 @@
 <link>https://quartodomarcel.netlify.app/index.html</link>
 <atom:link href="https://quartodomarcel.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.2.335</generator>
-<lastBuildDate>Sat, 29 Apr 2023 03:00:00 GMT</lastBuildDate>
+<generator>quarto-1.2.475</generator>
+<lastBuildDate>Thu, 22 Jun 2023 03:00:00 GMT</lastBuildDate>
+<item>
+  <title>Using Rvest and Tidyverse to scrape the samples names from 1000 genomes</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/rvest/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Currently in my postdoc project I am downloading sequencing files using Oxford Nanopore Technologies (<strong>ONT</strong>) from the 1000 genomes database (https://www.internationalgenome.org/). But after I started the downloads I noticed that the name of the downloaded file <strong>did not</strong> contain any sample code.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://quartodomarcel.netlify.app/posts/rvest/Imagem1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Files from 1000 genomes</figcaption><p></p>
+</figure>
+</div>
+<p>So at first I despaired and figured that I would have to manually collect information from almost 40 samples (in this step) and several more in future steps. A process highly susceptible to human error (not to mention laziness, right?).</p>
+<p>Taking all this into account I thought “why not use R and try to scrape this information straight from the website?”. And the result was pretty cool! I hope it helps you in similar projects!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://quartodomarcel.netlify.app/posts/rvest/Imagem2.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Files webpage structure</figcaption><p></p>
+</figure>
+</div>
+<section id="libraries" class="level2">
+<h2 class="anchored" data-anchor-id="libraries">Libraries</h2>
+<p>In this work I used the <code>rvest</code><span class="citation" data-cites="rvest">(Wickham 2022a)</span> library to scrape the data and, of course, <code>tidyverse</code><span class="citation" data-cites="tidyverse">(Wickham et al. 2019)</span> to handle the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+v dplyr     1.1.0     v readr     2.1.4
+v forcats   1.0.0     v stringr   1.5.0
+v ggplot2   3.4.1     v tibble    3.1.8
+v lubridate 1.9.2     v tidyr     1.3.0
+v purrr     1.0.1     
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(rvest)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'rvest'
+
+The following object is masked from 'package:readr':
+
+    guess_encoding</code></pre>
+</div>
+</div>
+</section>
+<section id="the-ftp-site-for-data-download" class="level2">
+<h2 class="anchored" data-anchor-id="the-ftp-site-for-data-download">The FTP site for data download</h2>
+<p>The site for downloading the data in my project was as follows:</p>
+<p>http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/HGSVC3/working/20211013_ONT_Rebasecalled/</p>
+<p>I used the functions <code>read_html()</code> and <code>html_node()</code>, with the argument <code>"table"</code>,to extract as a table the sample structure information on the site.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">mil_genomes <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="st" style="color: #20794D;">"http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/HGSVC3/working/20211013_ONT_Rebasecalled/"</span></span>
+<span id="cb5-2"></span>
+<span id="cb5-3">webpage <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">read_html</span>(mil_genomes)</span>
+<span id="cb5-4"></span>
+<span id="cb5-5">tbls <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">html_nodes</span>(webpage, <span class="st" style="color: #20794D;">"table"</span>)</span></code></pre></div>
+</div>
+<p>The <code>tbls</code> object is a R <code>list</code>, then it is necessary to extract the first element of the list to follow the analysis. The function <code>html_table()</code> return a <code>tibble</code> object containing the sample table.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">tbls[[<span class="dv" style="color: #AD0000;">1</span>]] <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb6-2">  <span class="fu" style="color: #4758AB;">html_table</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 46 x 5
+   ``    Name               `Last modified`    Size  Description
+   &lt;lgl&gt; &lt;chr&gt;              &lt;chr&gt;              &lt;chr&gt; &lt;lgl&gt;      
+ 1 NA    ""                 ""                 ""    NA         
+ 2 NA    "Parent Directory" ""                 "-"   NA         
+ 3 NA    "HG00096/"         "2022-06-01 15:16" "-"   NA         
+ 4 NA    "HG00268/"         "2022-05-31 09:55" "-"   NA         
+ 5 NA    "HG00358/"         "2022-11-07 10:42" "-"   NA         
+ 6 NA    "HG00512/"         "2022-06-01 14:56" "-"   NA         
+ 7 NA    "HG00731/"         "2022-06-01 15:16" "-"   NA         
+ 8 NA    "HG00733/"         "2022-11-07 10:36" "-"   NA         
+ 9 NA    "HG01457/"         "2022-05-31 09:54" "-"   NA         
+10 NA    "HG01505/"         "2022-06-01 15:24" "-"   NA         
+# ... with 36 more rows</code></pre>
+</div>
+</div>
+<p>The table contains unwanted columns and rows, so I used the following strategy to clean up this data:</p>
+<p>The <code>select</code> function from the <code>dplyr</code> <span class="citation" data-cites="dplyr">(Wickham et al. 2023)</span> package was used to remove the first column, which had only empty cells. The <code>filter()</code> function from <code>dplyr</code> combined with the <code>str_detect()</code> from <code>stringr</code> <span class="citation" data-cites="stringr">(Wickham 2022b)</span> package was used to filter the lines with the sample names using the pattern “NA” or “HG”. Finally, I used the <code>name</code> column to create <code>name_sample</code> columns, containing the sample code, and <code>name_dir</code>, which contained the sample directory path (thinking about the next step). The final object was save to the <code>samples_names</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">samples_names <span class="ot" style="color: #003B4F;">&lt;-</span> tbls[[<span class="dv" style="color: #AD0000;">1</span>]] <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb8-2">  <span class="fu" style="color: #4758AB;">html_table</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb8-3">  <span class="fu" style="color: #4758AB;">select</span>(<span class="sc" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb8-4">  <span class="fu" style="color: #4758AB;">filter</span>(<span class="fu" style="color: #4758AB;">str_detect</span>(Name,<span class="at" style="color: #657422;">pattern =</span> <span class="st" style="color: #20794D;">"NA|HG"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb8-5">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Name_sample =</span> Name,</span>
+<span id="cb8-6">         <span class="at" style="color: #657422;">Name_dir =</span> Name) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb8-7">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Name_sample =</span> <span class="fu" style="color: #4758AB;">str_replace</span>(Name_sample,<span class="st" style="color: #20794D;">"</span><span class="sc" style="color: #5E5E5E;">\\</span><span class="st" style="color: #20794D;">/"</span>,<span class="st" style="color: #20794D;">""</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb8-8">  <span class="fu" style="color: #4758AB;">select</span>(Name_sample,Name_dir)</span></code></pre></div>
+</div>
+<p>With this step complete, I set about extracting the names of the different files in each sample folder. I used the famous <code>group_by()</code> &gt; <code>nest()</code> &gt; <code>mutate()</code> &gt; <code>map()</code> pipeline to speed up the process. Applying the <code>group_by()</code>, from <code>dplyr</code>, in the <code>Name_sample</code> column and then the <code>nest()</code>, from <code>tidyr</code> <span class="citation" data-cites="tidyr">(Wickham, Vaughan, and Girlich 2023)</span>, we produce a nested tibble, that means, a table with a list-column! And the <code>map()</code> function, from the <code>purrr</code> <span class="citation" data-cites="purrr">(Wickham and Henry 2023)</span>, its used to apply functions to all elements in a list. So, this can easily be used inside a <code>mutate()</code>, from <code>dplyr</code>, and create a new list-column, with the final results. And at the end, we use <code>unnest()</code>, from <code>tidyr</code>, to transform the list-column to the traditional table format.</p>
+<p>So to accomplish this I just needed to write a custom function to be applied on each element and extract the sample files. Again, I used the functions <code>read_html()</code>, <code>html_nodes()</code> and <code>html_table()</code> to extract the tables with the filenames. The <code>glue()</code> function, from <code>glue</code> <span class="citation" data-cites="glue">(Hester and Bryan 2022)</span> package, was used to create the access links automatically.The I clean the table with a similar strategy then before, but now I use the pattern “guppy” to filter the rows of interest. I named this function <code>fn_get_filnames()</code> and apply in the pipeline.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">fn_get_filnames <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(x) {</span>
+<span id="cb9-2">  <span class="fu" style="color: #4758AB;">read_html</span>(glue<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">"{mil_genomes}{x$Name_dir}"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-3">    <span class="fu" style="color: #4758AB;">html_nodes</span>(<span class="st" style="color: #20794D;">"table"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-4">    .[[<span class="dv" style="color: #AD0000;">1</span>]] <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-5">    <span class="fu" style="color: #4758AB;">html_table</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-6">    <span class="fu" style="color: #4758AB;">select</span>(<span class="sc" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb9-7">    <span class="fu" style="color: #4758AB;">filter</span>(<span class="fu" style="color: #4758AB;">str_detect</span>(Name,<span class="st" style="color: #20794D;">"guppy"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb9-8">    <span class="fu" style="color: #4758AB;">select</span>(<span class="at" style="color: #657422;">Filename =</span> Name,</span>
+<span id="cb9-9">           Size)</span>
+<span id="cb9-10">}</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">samples_names <span class="ot" style="color: #003B4F;">&lt;-</span> samples_names <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb10-2">  <span class="fu" style="color: #4758AB;">group_by</span>(Name_sample) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb10-3">  <span class="fu" style="color: #4758AB;">nest</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb10-4">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">filenames =</span> <span class="fu" style="color: #4758AB;">map</span>(data, fn_get_filnames)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb10-5">  <span class="fu" style="color: #4758AB;">unnest</span>(data,filenames)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `unnest()` has a new interface. See `?unnest` for details.
+i Try `df %&gt;% unnest(c(data, filenames))`, with `mutate()` if needed.</code></pre>
+</div>
+</div>
+<p>And in the end we had our table!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">samples_names</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 94 x 4
+# Groups:   Name_sample [36]
+   Name_sample Name_dir Filename                                           Size 
+   &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;                                              &lt;chr&gt;
+ 1 HG00096     HG00096/ 20220405_220329_21-lee-006_PC24B149_3D_guppy-5.0.~ 30G  
+ 2 HG00096     HG00096/ 20220408_220405_21-lee-006_PC24B149_2D_guppy-5.0.~ 25G  
+ 3 HG00096     HG00096/ 20220412_220407_21-lee-006_PC24B149_2D_guppy-5.0.~ 3.6G 
+ 4 HG00268     HG00268/ 20210903_210825_21-lee-006_PCT0053_2-A1-D1_guppy-~ 69G  
+ 5 HG00268     HG00268/ 20210913_210831_21-lee-006_PCT0053_2-A1-D1_guppy-~ 55G  
+ 6 HG00358     HG00358/ 20220211_220202_21-lee-006_PC24B149_1F_guppy-5.0.~ 54G  
+ 7 HG00358     HG00358/ 20220215_220209_21-lee-006_PC24B149_2E_guppy-5.0.~ 26G  
+ 8 HG00358     HG00358/ 20220315_220308_21-lee-006_PC24B149_3D_guppy-5.0.~ 55G  
+ 9 HG00512     HG00512/ 20220425_220420_21-lee-006_PC24B149_3F_guppy-5.0.~ 55G  
+10 HG00512     HG00512/ 20220503_220427_21-lee-006_PC24B149_3E_guppy-5.0.~ 20G  
+# ... with 84 more rows</code></pre>
+</div>
+</div>
+<p>I hope this pipeline will help you!</p>
+<p>Hope to see you in the next ones!</p>
+<p>Marcel</p>
+<section id="references" class="level4">
+
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-glue" class="csl-entry">
+Hester, Jim, and Jennifer Bryan. 2022. <span>“Glue: Interpreted String Literals.”</span> <a href="https://CRAN.R-project.org/package=glue">https://CRAN.R-project.org/package=glue</a>.
+</div>
+<div id="ref-rvest" class="csl-entry">
+Wickham, Hadley. 2022a. <span>“Rvest: Easily Harvest (Scrape) Web Pages.”</span> <a href="https://CRAN.R-project.org/package=rvest">https://CRAN.R-project.org/package=rvest</a>.
+</div>
+<div id="ref-stringr" class="csl-entry">
+———. 2022b. <span>“Stringr: Simple, Consistent Wrappers for Common String Operations.”</span> <a href="https://CRAN.R-project.org/package=stringr">https://CRAN.R-project.org/package=stringr</a>.
+</div>
+<div id="ref-tidyverse" class="csl-entry">
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. <span>“Welcome to the <span></span>Tidyverse<span></span>”</span> 4: 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
+</div>
+<div id="ref-dplyr" class="csl-entry">
+Wickham, Hadley, Romain François, Lionel Henry, Kirill Müller, and Davis Vaughan. 2023. <span>“Dplyr: A Grammar of Data Manipulation.”</span> <a href="https://CRAN.R-project.org/package=dplyr">https://CRAN.R-project.org/package=dplyr</a>.
+</div>
+<div id="ref-purrr" class="csl-entry">
+Wickham, Hadley, and Lionel Henry. 2023. <span>“Purrr: Functional Programming Tools.”</span> <a href="https://CRAN.R-project.org/package=purrr">https://CRAN.R-project.org/package=purrr</a>.
+</div>
+<div id="ref-tidyr" class="csl-entry">
+Wickham, Hadley, Davis Vaughan, and Maximilian Girlich. 2023. <span>“Tidyr: Tidy Messy Data.”</span> <a href="https://CRAN.R-project.org/package=tidyr">https://CRAN.R-project.org/package=tidyr</a>.
+</div>
+</div></section></div> ]]></description>
+  <category>R</category>
+  <category>Bioinformatics</category>
+  <category>Webscrapping</category>
+  <guid>https://quartodomarcel.netlify.app/posts/rvest/index.html</guid>
+  <pubDate>Thu, 22 Jun 2023 03:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/rvest/1000genomes.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>30 days chart challenge - day 29</title>
   <dc:creator>Marcel Ferreira</dc:creator>
@@ -3539,182 +3723,6 @@ $element3
   <guid>https://quartodomarcel.netlify.app/posts/R-objects-3/index.html</guid>
   <pubDate>Sun, 28 Aug 2022 03:00:00 GMT</pubDate>
   <media:content url="https://quartodomarcel.netlify.app/posts/R-objects-3/checklist-gf5b297ead_1920.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>R objects 2</title>
-  <dc:creator>Marcel Ferreira</dc:creator>
-  <link>https://quartodomarcel.netlify.app/posts/R-objects-2/index.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9124147692602552" crossorigin="anonymous"></script>
-<p>In the last post (<a href="https://quartodomarcel.netlify.app/posts/r-objects/"><strong>R objects</strong></a>) we have seen the <code>atomic</code> classes and <code>vectors</code>, which are one-dimensional arrangements of these classes. But, as you can imagine, it’s not always possible to represent our data using one-dimensional object. When talking about two-dimensional objects tables are something extremely common in our daily lives. R has two types of objects for representing tables (2D objects): <code>matrix</code> and <code>data.frames</code>, very similar objects, but with one <strong>very important difference</strong>: <code>matrix</code> only accept <strong>ONE</strong> <code>atomic</code> class, while <code>data.frames</code> accept <strong>ONE</strong> per column.</p>
-<section id="matrix" class="level2">
-<h2 class="anchored" data-anchor-id="matrix">Matrix</h2>
-<p>To create a <code>matrix</code> we need a <code>vector</code> (Yes, a <code>vector</code>) and the function <code>matrix()</code>. This function takes the <code>vector</code> and arrange in a object containing the number of rows and columns that we specify in the arguments <code>nrow</code> and <code>ncol</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">v1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>)</span>
-<span id="cb1-2"></span>
-<span id="cb1-3">Mat1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">matrix</span>(<span class="at" style="color: #657422;">data =</span> v1,</span>
-<span id="cb1-4">               <span class="at" style="color: #657422;">nrow =</span> <span class="dv" style="color: #AD0000;">2</span>,</span>
-<span id="cb1-5">               <span class="at" style="color: #657422;">ncol =</span> <span class="dv" style="color: #AD0000;">3</span>)</span>
-<span id="cb1-6">Mat1</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]    1    3    2
-[2,]    2    1    3</code></pre>
-</div>
-</div>
-<p>It’s possible to control the order of the elements in the <code>matrix</code> using the argument <code>byrow</code>, which controls whether the elements will be filled by rows or columns (<strong><em>default</em></strong>).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">matrix</span>(<span class="at" style="color: #657422;">data =</span> v1,</span>
-<span id="cb3-2">       <span class="at" style="color: #657422;">nrow =</span> <span class="dv" style="color: #AD0000;">2</span>,</span>
-<span id="cb3-3">       <span class="at" style="color: #657422;">ncol =</span> <span class="dv" style="color: #AD0000;">3</span>,</span>
-<span id="cb3-4">       <span class="at" style="color: #657422;">byrow =</span> T)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]    1    2    3
-[2,]    1    2    3</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">matrix</span>(<span class="at" style="color: #657422;">data =</span> v1,</span>
-<span id="cb5-2">       <span class="at" style="color: #657422;">nrow =</span> <span class="dv" style="color: #AD0000;">2</span>,</span>
-<span id="cb5-3">       <span class="at" style="color: #657422;">ncol =</span> <span class="dv" style="color: #AD0000;">3</span>,</span>
-<span id="cb5-4">       <span class="at" style="color: #657422;">byrow =</span> F)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]    1    3    2
-[2,]    2    1    3</code></pre>
-</div>
-</div>
-<p>The last argument, <code>dimnames</code>, allows us to choose names for the dimensions (rows and columns), but for this argument we need to use <code>lists</code>, and since we haven’t talked about this object class yet, I will show you how to achieve the same results using functions. The functions <code>rownames()</code> and <code>colnames()</code> are used to extract the row and column names, respectively. We can use an <code>vector</code> of <code>characters</code>, equal in length to the number of rows or columns, to choose their names.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="co" style="color: #5E5E5E;">#Columns</span></span>
-<span id="cb7-2"><span class="fu" style="color: #4758AB;">colnames</span>(Mat1)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>NULL</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;">colnames</span>(Mat1) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Col1"</span>,<span class="st" style="color: #20794D;">"Col2"</span>,<span class="st" style="color: #20794D;">"Col3"</span>)</span>
-<span id="cb9-2"><span class="fu" style="color: #4758AB;">colnames</span>(Mat1)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Col1" "Col2" "Col3"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="co" style="color: #5E5E5E;">#Rows</span></span>
-<span id="cb11-2"><span class="fu" style="color: #4758AB;">rownames</span>(Mat1)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>NULL</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;">rownames</span>(Mat1) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Row1"</span>,<span class="st" style="color: #20794D;">"Row2"</span>)</span>
-<span id="cb13-2"><span class="fu" style="color: #4758AB;">rownames</span>(Mat1)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Row1" "Row2"</code></pre>
-</div>
-</div>
-<p>Similar to <code>vectors</code>, we can extract the elements using squarebrackets, but now we have to pass the indices to rows and columns.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="co" style="color: #5E5E5E;">#Extract the 2nd row</span></span>
-<span id="cb15-2">Mat1[<span class="dv" style="color: #AD0000;">2</span>,]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Col1 Col2 Col3 
-   2    1    3 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="co" style="color: #5E5E5E;">#Extract the 1st and 3rd columns</span></span>
-<span id="cb17-2">Mat1[,<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">3</span>)]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     Col1 Col3
-Row1    1    2
-Row2    2    3</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="co" style="color: #5E5E5E;">#Extract the element row = 2 column = 2</span></span>
-<span id="cb19-2">Mat1[<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1</code></pre>
-</div>
-</div>
-</section>
-<section id="data-frames" class="level2">
-<h2 class="anchored" data-anchor-id="data-frames">Data frames</h2>
-<p><code>Data frames</code> are objects design to store data tables in R. Similar to <code>matrix</code>, <code>data frames</code> are 2D objects but as said before, different columns can have different classes. In practice we can think of each column as being a different <code>vector</code>, and the <code>$</code> operator allows us to extract this <code>vector</code>. Thinking about data analysis, in a <code>data frame</code> each column is a variable and each row is an observation.</p>
-<p>We build <code>data.frames</code> with the function <code>data.frame</code></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">df1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">var1 =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">4</span>),</span>
-<span id="cb21-2">                  <span class="at" style="color: #657422;">var2 =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"a"</span>,<span class="st" style="color: #20794D;">"b"</span>,<span class="st" style="color: #20794D;">"c"</span>,<span class="st" style="color: #20794D;">"d"</span>),</span>
-<span id="cb21-3">                  <span class="at" style="color: #657422;">var3 =</span> <span class="fu" style="color: #4758AB;">c</span>(T,T,T,F))</span>
-<span id="cb21-4">df1</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  var1 var2  var3
-1    1    a  TRUE
-2    2    b  TRUE
-3    3    c  TRUE
-4    4    d FALSE</code></pre>
-</div>
-</div>
-<p>Extracting vectors</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">df1<span class="sc" style="color: #5E5E5E;">$</span>var1</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1 2 3 4</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">df1<span class="sc" style="color: #5E5E5E;">$</span>var2</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "a" "b" "c" "d"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">df1<span class="sc" style="color: #5E5E5E;">$</span>var3</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1]  TRUE  TRUE  TRUE FALSE</code></pre>
-</div>
-</div>
-<p>As for <code>matrix</code>, we can use squartebrackets to extract elements (although I recommend extracting using the <code>$</code> operator first).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="co" style="color: #5E5E5E;">#Using squarebrackets</span></span>
-<span id="cb29-2">df1[<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "b"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="co" style="color: #5E5E5E;">#Using the $</span></span>
-<span id="cb31-2">df1<span class="sc" style="color: #5E5E5E;">$</span>var2[<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "b"</code></pre>
-</div>
-</div>
-<p>The names of columns (or variable) can be used in the squarebracket to extract the column.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1">df1[,<span class="st" style="color: #20794D;">"var1"</span>]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1 2 3 4</code></pre>
-</div>
-</div>
-<p>For <code>matrix</code> and for <code>data.frames</code> we can find the sizes of the dimensions with the functions <code>nrow()</code>, <code>ncol()</code>, and <code>dim()</code>, which return the number of rows, columns, and both, respectively.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="co" style="color: #5E5E5E;">#number of rows</span></span>
-<span id="cb35-2"><span class="fu" style="color: #4758AB;">nrow</span>(df1)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><span class="co" style="color: #5E5E5E;">#number of columns</span></span>
-<span id="cb37-2"><span class="fu" style="color: #4758AB;">ncol</span>(df1)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><span class="co" style="color: #5E5E5E;">#length of dimensions</span></span>
-<span id="cb39-2"><span class="fu" style="color: #4758AB;">dim</span>(df1)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 4 3</code></pre>
-</div>
-</div>
-<p>So far, so good. In the next post I will deal with that <code>list</code> I talked about here, and we will see how powerful they are.</p>
-<p>I’ll be waiting for you!</p>
-
-
-</section>
-
- ]]></description>
-  <category>R</category>
-  <category>base</category>
-  <guid>https://quartodomarcel.netlify.app/posts/R-objects-2/index.html</guid>
-  <pubDate>Wed, 24 Aug 2022 03:00:00 GMT</pubDate>
-  <media:content url="https://quartodomarcel.netlify.app/posts/R-objects-2/matrix-2502954_1280.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
