@@ -20,7 +20,7 @@ Taking all this into account I thought "why not use R and try to scrape this inf
 
 ## Libraries
 
-In this work I used the `rvest`[@rvest] library to scrape the data and, of course, `tidyverse`[@tidyverse] to handle the data.
+In this work I used the `{rvest}`[@rvest] library to scrape the data and, of course, `{tidyverse}` [@tidyverse] to handle the data.
 
 ```{r}
 library(tidyverse)
@@ -52,7 +52,7 @@ tbls[[1]] %>%
 
 The table contains unwanted columns and rows, so I used the following strategy to clean up this data:
 
-The `select` function from the `dplyr` [@dplyr] package was used to remove the first column, which had only empty cells. The `filter()` function from `dplyr` combined with the `str_detect()` from `stringr` [@stringr] package was used to filter the lines with the sample names using the pattern "NA" or "HG". Finally, I used the `name` column to create `name_sample` columns, containing the sample code, and `name_dir`, which contained the sample directory path (thinking about the next step). The final object was save to the `samples_names`.
+The `select()` function from the `{dplyr}` [@dplyr] package was used to remove the first column, which had only empty cells. The `filter()` function from `{dplyr}` combined with the `str_detect()` from `{stringr}` [@stringr] package was used to filter the lines with the sample names using the pattern "NA" or "HG". Finally, I used the `Name` column to create `Name_sample` columns, containing the sample code, and `Name_dir`, which contained the sample directory path (thinking about the next step). The final object was save to the `samples_names`.
 
 ```{r}
 samples_names <- tbls[[1]] %>% 
@@ -65,9 +65,9 @@ samples_names <- tbls[[1]] %>%
   select(Name_sample,Name_dir)
 ```
 
-With this step complete, I set about extracting the names of the different files in each sample folder. I used the famous `group_by()` \> `nest()` \> `mutate()` \> `map()` pipeline to speed up the process. Applying the `group_by()`, from `dplyr`, in the `Name_sample` column and then the `nest()`, from `tidyr` [@tidyr], we produce a nested tibble, that means, a table with a list-column! And the `map()` function, from the `purrr` [@purrr], its used to apply functions to all elements in a list. So, this can easily be used inside a `mutate()`, from `dplyr`, and create a new list-column, with the final results. And at the end, we use `unnest()`, from `tidyr`, to transform the list-column to the traditional table format.
+With this step complete, I set about extracting the names of the different files in each sample folder. I used the famous `group_by()` \> `nest()` \> `mutate()` \> `map()` pipeline to speed up the process. Applying the `group_by()`, from `dplyr`, in the `Name_sample` column and then the `nest()`, from `{tidyr}` [@tidyr], we produce a nested tibble, that means, a table with a list-column! And the `map()` function, from the `{purrr}` [@purrr], its used to apply functions to all elements in a list. So, this can easily be used inside a `mutate()`, from `{dplyr}`, and create a new list-column, with the final results. And at the end, we use `unnest()`, from `{tidyr}`, to transform the list-column to the traditional table format.
 
-So to accomplish this I just needed to write a custom function to be applied on each element and extract the sample files. Again, I used the functions `read_html()`, `html_nodes()` and `html_table()` to extract the tables with the filenames. The `glue()` function, from `glue` [@glue] package, was used to create the access links automatically.The I clean the table with a similar strategy then before, but now I use the pattern "guppy" to filter the rows of interest. I named this function `fn_get_filnames()` and apply in the pipeline.
+So to accomplish this I just needed to write a custom function to be applied on each element and extract the sample files. Again, I used the functions `read_html()`, `html_nodes()` and `html_table()` to extract the tables with the filenames. The `glue()` function, from `{glue}` [@glue] package, was used to create the access links automatically.The I clean the table with a similar strategy then before, but now I use the pattern "guppy" to filter the rows of interest. I named this function `fn_get_filnames()` and apply in the pipeline.
 
 ```{r}
 fn_get_filnames <- function(x) {
