@@ -5,6 +5,7 @@ author: "Marcel Ferreira"
 date: "2023-06-22"
 categories: [R, Bioinformatics, Webscrapping]
 image: "1000genomes.jpg"
+include-in-header: "../../asScript.js"
 bibliography: references.bib
 ---
 
