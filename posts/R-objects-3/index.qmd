@@ -5,6 +5,7 @@ author: "Marcel Ferreira"
 date: "2022-08-28"
 categories: [R, base]
 image: "checklist-gf5b297ead_1920.jpg"
+include-in-header: "../../asScript.js"
 ---
 
 

@@ -5,6 +5,7 @@ author: "Marcel Ferreira"
 date: "2022-09-05"
 categories: [R, base]
 image: "blackboard-gf94387624_1280.png"
+include-in-header: "../../asScript.js"
 ---
 
 ```{=html}

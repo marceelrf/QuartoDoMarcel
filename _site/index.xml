@@ -1094,56 +1094,6 @@ i Please use `cols = c(`Daft Punk`, Sia, `Fleetwood Mac`, U2, `The Strokes`,
   <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day17/SPOTIFY-LOGO.png" medium="image" type="image/png" height="118" width="144"/>
 </item>
 <item>
-  <title>30 days chart challenge - day 16</title>
-  <dc:creator>Marcel Ferreira</dc:creator>
-  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day16/index.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
-v dplyr     1.1.0     v readr     2.1.4
-v forcats   1.0.0     v stringr   1.5.0
-v ggplot2   3.4.1     v tibble    3.1.8
-v lubridate 1.9.2     v tidyr     1.3.0
-v purrr     1.0.1     
--- Conflicts ------------------------------------------ tidyverse_conflicts() --
-x dplyr::filter() masks stats::filter()
-x dplyr::lag()    masks stats::lag()
-i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(rjson)</span></code></pre></div>
-</div>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fromJSON</span>(<span class="at" style="color: #657422;">file =</span> <span class="st" style="color: #20794D;">"characters.json"</span>)</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">data<span class="sc" style="color: #5E5E5E;">$</span>characters <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb5-2">  <span class="fu" style="color: #4758AB;">map</span>(<span class="at" style="color: #657422;">.f =</span> \(x) x <span class="sc" style="color: #5E5E5E;">%&gt;%</span> names) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb5-3">  <span class="fu" style="color: #4758AB;">unlist</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb5-4">  <span class="fu" style="color: #4758AB;">unique</span>()</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "name"      "lastname"  "years"     "parentOf"  "gender"    "parents"  
- [7] "married"   "alias"     "sicMundus" "firstname" "siblings"  "killedBy" </code></pre>
-</div>
-</div>
-
-
-</section>
-
- ]]></description>
-  <category>R</category>
-  <category>Dataviz</category>
-  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day16/index.html</guid>
-  <pubDate>Sun, 16 Apr 2023 03:00:00 GMT</pubDate>
-</item>
-<item>
   <title>30 days chart challenge - day 15</title>
   <dc:creator>Marcel Ferreira</dc:creator>
   <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day15/index.html</link>
@@ -2366,76 +2316,6 @@ i Please use `linewidth` instead.</code></pre>
   <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day09/Campeonato_Brasileiro_Série_A_logo.png" medium="image" type="image/png" height="159" width="144"/>
 </item>
 <item>
-  <title>30 days chart challenge - day 05</title>
-  <dc:creator>Marcel Ferreira</dc:creator>
-  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day05/index.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
-v dplyr     1.1.0     v readr     2.1.4
-v forcats   1.0.0     v stringr   1.5.0
-v ggplot2   3.4.1     v tibble    3.1.8
-v lubridate 1.9.2     v tidyr     1.3.0
-v purrr     1.0.1     
--- Conflicts ------------------------------------------ tidyverse_conflicts() --
-x dplyr::filter() masks stats::filter()
-x dplyr::lag()    masks stats::lag()
-i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-</div>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">read_csv</span>(<span class="st" style="color: #20794D;">"gdp.csv"</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 266 Columns: 12
--- Column specification --------------------------------------------------------
-Delimiter: ","
-chr (12): Country Name, Country Code, 2012, 2013, 2014, 2015, 2016, 2017, 20...
-
-i Use `spec()` to retrieve the full column specification for this data.
-i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb5-2">  <span class="fu" style="color: #4758AB;">pivot_longer</span>(<span class="at" style="color: #657422;">cols =</span> <span class="st" style="color: #20794D;">`</span><span class="at" style="color: #657422;">2012</span><span class="st" style="color: #20794D;">`</span><span class="sc" style="color: #5E5E5E;">:</span><span class="st" style="color: #20794D;">`</span><span class="at" style="color: #657422;">2021</span><span class="st" style="color: #20794D;">`</span>,</span>
-<span id="cb5-3">               <span class="at" style="color: #657422;">names_to =</span> <span class="st" style="color: #20794D;">"Year"</span>,<span class="at" style="color: #657422;">values_to =</span> <span class="st" style="color: #20794D;">"GDP"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb5-4">   <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Year =</span> <span class="fu" style="color: #4758AB;">as.numeric</span>(Year),</span>
-<span id="cb5-5">          <span class="at" style="color: #657422;">GDP =</span> <span class="fu" style="color: #4758AB;">as.numeric</span>(GDP)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb5-6">  <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> Year, <span class="at" style="color: #657422;">y =</span> GDP)) <span class="sc" style="color: #5E5E5E;">+</span></span>
-<span id="cb5-7">  <span class="fu" style="color: #4758AB;">geom_point</span>()</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: There was 1 warning in `mutate()`.
-i In argument: `GDP = as.numeric(GDP)`.
-Caused by warning:
-! NAs introduzidos por coerção</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 132 rows containing missing values (`geom_point()`).</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day05/index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-
-
-</section>
-
- ]]></description>
-  <category>R</category>
-  <category>Dataviz</category>
-  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day05/index.html</guid>
-  <pubDate>Wed, 05 Apr 2023 03:00:00 GMT</pubDate>
-  <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day05/piglet-3386356_1920.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
   <title>30 days chart challenge - day 04</title>
   <dc:creator>Marcel Ferreira</dc:creator>
   <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day04/index.html</link>
@@ -2603,117 +2483,6 @@ i Please use `linewidth` instead.</code></pre>
   <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day04/index.html</guid>
   <pubDate>Tue, 04 Apr 2023 03:00:00 GMT</pubDate>
   <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day04/blue-81847_1920.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>30 days chart challenge - day 03</title>
-  <dc:creator>Marcel Ferreira</dc:creator>
-  <link>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day03/index.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
-v dplyr     1.1.0     v readr     2.1.4
-v forcats   1.0.0     v stringr   1.5.0
-v ggplot2   3.4.1     v tibble    3.1.8
-v lubridate 1.9.2     v tidyr     1.3.0
-v purrr     1.0.1     
--- Conflicts ------------------------------------------ tidyverse_conflicts() --
-x dplyr::filter() masks stats::filter()
-x dplyr::lag()    masks stats::lag()
-i Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-</div>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">read_csv</span>(<span class="st" style="color: #20794D;">"NYC_dogs_clean.csv"</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>New names:
-Rows: 121862 Columns: 17
--- Column specification
--------------------------------------------------------- Delimiter: "," chr
-(9): AnimalName, AnimalGender, AnimalBirthMonth, BreedName, Borough, Cen... dbl
-(8): ...1, X, RowNumber, ZipCode, CommunityDistrict, CityCouncilDistrict...
-i Use `spec()` to retrieve the full column specification for this data. i
-Specify the column types or set `show_col_types = FALSE` to quiet this message.
-* `` -&gt; `...1`</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">glimpse</span>(data)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 121,862
-Columns: 17
-$ ...1                    &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,~
-$ X                       &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,~
-$ RowNumber               &lt;dbl&gt; 1753, 2415, 3328, 7537, 8487, 10503, 11682, 12~
-$ AnimalName              &lt;chr&gt; "SHADOW", "ROCCO", "LUIGI", "PETUNIA", "ROMEO"~
-$ AnimalGender            &lt;chr&gt; "M", "M", "M", "F", "M", "M", "M", "F", "F", "~
-$ AnimalBirthMonth        &lt;chr&gt; "01/01/2000 12:00:00 AM", "10/01/2011 12:00:00~
-$ BreedName               &lt;chr&gt; "Beagle", "Boxer", "Maltese", "Pug", "Maltese"~
-$ Borough                 &lt;chr&gt; "Brooklyn", "Brooklyn", "Bronx", "Brooklyn", "~
-$ ZipCode                 &lt;dbl&gt; 11236, 11210, 10464, 11221, 10451, 11225, 1002~
-$ CommunityDistrict       &lt;dbl&gt; 318, 314, 210, 304, 201, 309, 108, 502, 310, 2~
-$ CensusTract2010         &lt;chr&gt; "1014", "756", "516", "419", "65", "800", "124~
-$ NTA                     &lt;chr&gt; "BK50", "BK43", "BX10", "BK78", "BX34", "BK60"~
-$ CityCouncilDistrict     &lt;dbl&gt; 46, 45, 13, 34, 17, 40, 5, 50, 43, 14, 2, 22, ~
-$ CongressionalDistrict   &lt;dbl&gt; 8, 9, 14, 7, 15, 9, 12, 11, 11, 13, 12, 14, 8,~
-$ StateSenatorialDistrict &lt;dbl&gt; 19, 17, 34, 18, 32, 20, 28, 23, 22, 33, 28, 12~
-$ LicenseIssuedDate       &lt;chr&gt; "12/29/2014", "01/07/2015", "01/17/2015", "03/~
-$ LicenseExpiredDate      &lt;chr&gt; "01/30/2016", "01/30/2016", "02/02/2016", "03/~</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb7-2">  <span class="fu" style="color: #4758AB;">group_by</span>(Borough) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb7-3">  <span class="fu" style="color: #4758AB;">count</span>(AnimalName,<span class="at" style="color: #657422;">sort =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 28,872 x 3
-# Groups:   Borough [5]
-   Borough   AnimalName            n
-   &lt;chr&gt;     &lt;chr&gt;             &lt;int&gt;
- 1 Brooklyn  UNKNOWN             944
- 2 Manhattan UNKNOWN             944
- 3 Queens    NAME NOT PROVIDED   649
- 4 Brooklyn  NAME NOT PROVIDED   462
- 5 Manhattan CHARLIE             390
- 6 Manhattan LUCY                358
- 7 Manhattan LOLA                346
- 8 Queens    UNKNOWN             338
- 9 Manhattan NAME NOT PROVIDED   334
-10 Queens    MAX                 334
-# ... with 28,862 more rows</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">nyc_squirrels <span class="ot" style="color: #003B4F;">&lt;-</span> readr<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">read_csv</span>(<span class="st" style="color: #20794D;">"https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-29/nyc_squirrels.csv"</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 3023 Columns: 36
--- Column specification --------------------------------------------------------
-Delimiter: ","
-chr (14): unique_squirrel_id, hectare, shift, age, primary_fur_color, highli...
-dbl  (9): long, lat, date, hectare_squirrel_number, zip_codes, community_dis...
-lgl (13): running, chasing, climbing, eating, foraging, kuks, quaas, moans, ...
-
-i Use `spec()` to retrieve the full column specification for this data.
-i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-</div>
-
-
-</section>
-
- ]]></description>
-  <category>R</category>
-  <category>Dataviz</category>
-  <guid>https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day03/index.html</guid>
-  <pubDate>Mon, 03 Apr 2023 03:00:00 GMT</pubDate>
-  <media:content url="https://quartodomarcel.netlify.app/posts/30-days-charts-challenge-day03/brooklyn-nyc-skyline-pav-maxine.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>30 days chart challenge - day 02</title>
@@ -3723,6 +3492,376 @@ $element3
   <guid>https://quartodomarcel.netlify.app/posts/R-objects-3/index.html</guid>
   <pubDate>Sun, 28 Aug 2022 03:00:00 GMT</pubDate>
   <media:content url="https://quartodomarcel.netlify.app/posts/R-objects-3/checklist-gf5b297ead_1920.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>R objects 2</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/R-objects-2/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9124147692602552" crossorigin="anonymous"></script>
+<p>In the last post (<a href="https://quartodomarcel.netlify.app/posts/r-objects/"><strong>R objects</strong></a>) we have seen the <code>atomic</code> classes and <code>vectors</code>, which are one-dimensional arrangements of these classes. But, as you can imagine, it’s not always possible to represent our data using one-dimensional object. When talking about two-dimensional objects tables are something extremely common in our daily lives. R has two types of objects for representing tables (2D objects): <code>matrix</code> and <code>data.frames</code>, very similar objects, but with one <strong>very important difference</strong>: <code>matrix</code> only accept <strong>ONE</strong> <code>atomic</code> class, while <code>data.frames</code> accept <strong>ONE</strong> per column.</p>
+<section id="matrix" class="level2">
+<h2 class="anchored" data-anchor-id="matrix">Matrix</h2>
+<p>To create a <code>matrix</code> we need a <code>vector</code> (Yes, a <code>vector</code>) and the function <code>matrix()</code>. This function takes the <code>vector</code> and arrange in a object containing the number of rows and columns that we specify in the arguments <code>nrow</code> and <code>ncol</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">v1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>)</span>
+<span id="cb1-2"></span>
+<span id="cb1-3">Mat1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">matrix</span>(<span class="at" style="color: #657422;">data =</span> v1,</span>
+<span id="cb1-4">               <span class="at" style="color: #657422;">nrow =</span> <span class="dv" style="color: #AD0000;">2</span>,</span>
+<span id="cb1-5">               <span class="at" style="color: #657422;">ncol =</span> <span class="dv" style="color: #AD0000;">3</span>)</span>
+<span id="cb1-6">Mat1</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    3    2
+[2,]    2    1    3</code></pre>
+</div>
+</div>
+<p>It’s possible to control the order of the elements in the <code>matrix</code> using the argument <code>byrow</code>, which controls whether the elements will be filled by rows or columns (<strong><em>default</em></strong>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">matrix</span>(<span class="at" style="color: #657422;">data =</span> v1,</span>
+<span id="cb3-2">       <span class="at" style="color: #657422;">nrow =</span> <span class="dv" style="color: #AD0000;">2</span>,</span>
+<span id="cb3-3">       <span class="at" style="color: #657422;">ncol =</span> <span class="dv" style="color: #AD0000;">3</span>,</span>
+<span id="cb3-4">       <span class="at" style="color: #657422;">byrow =</span> T)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    2    3
+[2,]    1    2    3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">matrix</span>(<span class="at" style="color: #657422;">data =</span> v1,</span>
+<span id="cb5-2">       <span class="at" style="color: #657422;">nrow =</span> <span class="dv" style="color: #AD0000;">2</span>,</span>
+<span id="cb5-3">       <span class="at" style="color: #657422;">ncol =</span> <span class="dv" style="color: #AD0000;">3</span>,</span>
+<span id="cb5-4">       <span class="at" style="color: #657422;">byrow =</span> F)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    3    2
+[2,]    2    1    3</code></pre>
+</div>
+</div>
+<p>The last argument, <code>dimnames</code>, allows us to choose names for the dimensions (rows and columns), but for this argument we need to use <code>lists</code>, and since we haven’t talked about this object class yet, I will show you how to achieve the same results using functions. The functions <code>rownames()</code> and <code>colnames()</code> are used to extract the row and column names, respectively. We can use an <code>vector</code> of <code>characters</code>, equal in length to the number of rows or columns, to choose their names.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="co" style="color: #5E5E5E;">#Columns</span></span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;">colnames</span>(Mat1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;">colnames</span>(Mat1) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Col1"</span>,<span class="st" style="color: #20794D;">"Col2"</span>,<span class="st" style="color: #20794D;">"Col3"</span>)</span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;">colnames</span>(Mat1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Col1" "Col2" "Col3"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="co" style="color: #5E5E5E;">#Rows</span></span>
+<span id="cb11-2"><span class="fu" style="color: #4758AB;">rownames</span>(Mat1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;">rownames</span>(Mat1) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Row1"</span>,<span class="st" style="color: #20794D;">"Row2"</span>)</span>
+<span id="cb13-2"><span class="fu" style="color: #4758AB;">rownames</span>(Mat1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Row1" "Row2"</code></pre>
+</div>
+</div>
+<p>Similar to <code>vectors</code>, we can extract the elements using squarebrackets, but now we have to pass the indices to rows and columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="co" style="color: #5E5E5E;">#Extract the 2nd row</span></span>
+<span id="cb15-2">Mat1[<span class="dv" style="color: #AD0000;">2</span>,]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Col1 Col2 Col3 
+   2    1    3 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="co" style="color: #5E5E5E;">#Extract the 1st and 3rd columns</span></span>
+<span id="cb17-2">Mat1[,<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">3</span>)]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Col1 Col3
+Row1    1    2
+Row2    2    3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="co" style="color: #5E5E5E;">#Extract the element row = 2 column = 2</span></span>
+<span id="cb19-2">Mat1[<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+</section>
+<section id="data-frames" class="level2">
+<h2 class="anchored" data-anchor-id="data-frames">Data frames</h2>
+<p><code>Data frames</code> are objects design to store data tables in R. Similar to <code>matrix</code>, <code>data frames</code> are 2D objects but as said before, different columns can have different classes. In practice we can think of each column as being a different <code>vector</code>, and the <code>$</code> operator allows us to extract this <code>vector</code>. Thinking about data analysis, in a <code>data frame</code> each column is a variable and each row is an observation.</p>
+<p>We build <code>data.frames</code> with the function <code>data.frame</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">df1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">var1 =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">4</span>),</span>
+<span id="cb21-2">                  <span class="at" style="color: #657422;">var2 =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"a"</span>,<span class="st" style="color: #20794D;">"b"</span>,<span class="st" style="color: #20794D;">"c"</span>,<span class="st" style="color: #20794D;">"d"</span>),</span>
+<span id="cb21-3">                  <span class="at" style="color: #657422;">var3 =</span> <span class="fu" style="color: #4758AB;">c</span>(T,T,T,F))</span>
+<span id="cb21-4">df1</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  var1 var2  var3
+1    1    a  TRUE
+2    2    b  TRUE
+3    3    c  TRUE
+4    4    d FALSE</code></pre>
+</div>
+</div>
+<p>Extracting vectors</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">df1<span class="sc" style="color: #5E5E5E;">$</span>var1</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">df1<span class="sc" style="color: #5E5E5E;">$</span>var2</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "a" "b" "c" "d"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">df1<span class="sc" style="color: #5E5E5E;">$</span>var3</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE  TRUE  TRUE FALSE</code></pre>
+</div>
+</div>
+<p>As for <code>matrix</code>, we can use squartebrackets to extract elements (although I recommend extracting using the <code>$</code> operator first).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="co" style="color: #5E5E5E;">#Using squarebrackets</span></span>
+<span id="cb29-2">df1[<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "b"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="co" style="color: #5E5E5E;">#Using the $</span></span>
+<span id="cb31-2">df1<span class="sc" style="color: #5E5E5E;">$</span>var2[<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "b"</code></pre>
+</div>
+</div>
+<p>The names of columns (or variable) can be used in the squarebracket to extract the column.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1">df1[,<span class="st" style="color: #20794D;">"var1"</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4</code></pre>
+</div>
+</div>
+<p>For <code>matrix</code> and for <code>data.frames</code> we can find the sizes of the dimensions with the functions <code>nrow()</code>, <code>ncol()</code>, and <code>dim()</code>, which return the number of rows, columns, and both, respectively.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="co" style="color: #5E5E5E;">#number of rows</span></span>
+<span id="cb35-2"><span class="fu" style="color: #4758AB;">nrow</span>(df1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><span class="co" style="color: #5E5E5E;">#number of columns</span></span>
+<span id="cb37-2"><span class="fu" style="color: #4758AB;">ncol</span>(df1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><span class="co" style="color: #5E5E5E;">#length of dimensions</span></span>
+<span id="cb39-2"><span class="fu" style="color: #4758AB;">dim</span>(df1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4 3</code></pre>
+</div>
+</div>
+<p>So far, so good. In the next post I will deal with that <code>list</code> I talked about here, and we will see how powerful they are.</p>
+<p>I’ll be waiting for you!</p>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>base</category>
+  <guid>https://quartodomarcel.netlify.app/posts/R-objects-2/index.html</guid>
+  <pubDate>Wed, 24 Aug 2022 03:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/R-objects-2/matrix-2502954_1280.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>R objects</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/R-objects/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9124147692602552" crossorigin="anonymous"></script>
+<p>R is an extremely powerful language for data analysis and is used in many different fields. But many users start without taking the time to assimilate the different types of objects, which leads to mistakes that could simply be avoided. This in turn can lead to frustration, which is the gateway to the dark side of the force.</p>
+<center>
+<iframe src="https://giphy.com/embed/l3diT8stVH9qImalO" width="480" height="270" frameborder="0" class="giphy-embed" allowfullscreen="">
+</iframe>
+</center>
+<p>
+<a href="https://giphy.com/gifs/starwars-star-wars-revenge-of-the-sith-l3diT8stVH9qImalO">via GIPHY</a>
+</p>
+<p>When I started analyzing data with R I was on a very tight deadline and had to skip these steps, and I made a lot of mistakes. Really, a lot!</p>
+<p>So in this post I will talk about the basic object types, or classes, in R. Basic but effective. I hope it helps you.</p>
+<section id="atomic-data" class="level2">
+<h2 class="anchored" data-anchor-id="atomic-data">Atomic data</h2>
+<p>These are the basic data classes in R. More complex objects will always be built using them. There are 6 classes in R: <code>logical</code>, <code>integer</code>, <code>real</code>, <code>complex</code>, string (or <code>character</code>) and <code>raw</code>. <code>logical</code> are values like <code>TRUE</code> or <code>FALSE</code> (Known as Booleans). <code>integer</code>, <code>real</code> and <code>complex</code> are <code>numeric</code> types. <code>character</code> are values like words, in other languages this type of values are call as <code>strings</code>. And about <code>raw</code> I must be honest with you. I have never used it!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;">#logical</span></span>
+<span id="cb1-2"><span class="cn" style="color: #8f5902;">TRUE</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;">#integer</span></span>
+<span id="cb3-2">1L</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="co" style="color: #5E5E5E;">#real</span></span>
+<span id="cb5-2"><span class="fl" style="color: #AD0000;">1.2</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="co" style="color: #5E5E5E;">#complex</span></span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;">complex</span>(<span class="at" style="color: #657422;">real =</span> <span class="dv" style="color: #AD0000;">1</span>,<span class="at" style="color: #657422;">imaginary =</span> <span class="dv" style="color: #AD0000;">2</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1+2i</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="co" style="color: #5E5E5E;">#character</span></span>
+<span id="cb9-2"><span class="st" style="color: #20794D;">"String"</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "String"</code></pre>
+</div>
+</div>
+<p>You may have notice that there is special ways to create these objects. We use <code>""</code> to define a <code>character</code>. We add <code>L</code> to the end of a number to make it explicit that it is an <code>integer</code>. We need the <code>complex()</code> function to create a <code>complex</code> number. And <code>logical</code>s are defined by the uppercase words <code>TRUE</code> and <code>FALSE</code>, and their respective initials, <code>T</code> and <code>F</code>.</p>
+</section>
+<section id="vectors" class="level2">
+<h2 class="anchored" data-anchor-id="vectors">Vectors</h2>
+<p>Vectors are one-dimensional objects composed of a set of elements, where the order does not necessarily have a meaning, serving only to locate the element in the vector. The functions <code>c()</code> is used to create vector in R.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">v1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">5</span>)</span>
+<span id="cb11-2">v1</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 3 5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">v2 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"ball"</span>,<span class="st" style="color: #20794D;">"house"</span>)</span>
+<span id="cb13-2">v2</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "ball"  "house"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">v3 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(T,T,F)</span>
+<span id="cb15-2">v3</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE  TRUE FALSE</code></pre>
+</div>
+</div>
+<p>The operator <code>[]</code> can be used to extract the element of certain position in a vector. For example, let’s extract the second element of the vectors <code>v1</code>, <code>v2</code> and <code>v3</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">v1[<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">v2[<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "house"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">v3[<span class="dv" style="color: #AD0000;">2</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Pay attention when use this operator to not try access an non existing position in a vector. such as trying to access the fourth element in a vector (<code>v1</code>) with only three elements. This will result in a <code>NA</code> value, which is represent the <strong>missing values</strong> in R, which are a very important topic that I will cover in the future. Stay tuned!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">v1[<span class="dv" style="color: #AD0000;">4</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div>
+<p>There are other ways to create vectors in R considering their classes that I will dedicate a separate post for this.</p>
+<p>In R different classes cannot coexist in the same vector (we will see what a vector is later, for now just trust me) and there is coercion when we put them together. Coercion occurs in the following order:</p>
+<p><code>character &gt; complex &gt; real &gt; integer &gt; logical</code></p>
+<p>This means, if you put a <code>character</code> and a <code>numeric</code> together in a <code>vector</code>, R will coerce the <code>numeric</code> to become a <code>character</code>. If you put a <code>logical</code> in the same <code>vector</code> as a <code>numeric</code> it will be turned into a <code>numeric</code>. The functions <code>class()</code> and <code>typeof()</code> can be used to check the class and type, respectively, of R objects.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="co" style="color: #5E5E5E;">#class and typeof usage</span></span>
+<span id="cb25-2"><span class="fu" style="color: #4758AB;">class</span>(<span class="st" style="color: #20794D;">"ball"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="fu" style="color: #4758AB;">typeof</span>(1L)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "integer"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="fu" style="color: #4758AB;">class</span>(<span class="fl" style="color: #AD0000;">1.2</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="co" style="color: #5E5E5E;">#coercion</span></span>
+<span id="cb31-2">obj1 <span class="ot" style="color: #003B4F;">&lt;-</span><span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"ball"</span>,<span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb31-3"><span class="fu" style="color: #4758AB;">class</span>(obj1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="fu" style="color: #4758AB;">typeof</span>(obj1)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1">obj2 <span class="ot" style="color: #003B4F;">&lt;-</span><span class="fu" style="color: #4758AB;">c</span>(<span class="cn" style="color: #8f5902;">TRUE</span>,<span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb35-2"><span class="fu" style="color: #4758AB;">class</span>(obj2)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><span class="fu" style="color: #4758AB;">typeof</span>(obj2)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "double"</code></pre>
+</div>
+</div>
+<p>This behavior is the source of major errors and it is always necessary to check that your objects are of the desired class. After all, it is impossible to perform mathematical operations with <code>character</code> in R, for example.</p>
+<p>However, the coercion behavior can be used to our advantage in the case of the trick of using <code>logical</code>s and <code>numeric</code> together. Like in the case where we want to know how many numbers in an vector are greater than a certain value. By using the <code>&gt;</code> (greater than) operator we perform a logical test that returns <code>TRUE</code>/<code>FALSE</code> values. The <code>sum()</code> function, on the other hand, adds up all the elements of a <code>vector</code> and if it receives a <code>logical</code> <code>vector</code> it will transform <code>TRUE</code> into <code>1</code> and <code>FALSE</code> into <code>0</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><span class="co" style="color: #5E5E5E;">#a numeric vector</span></span>
+<span id="cb39-2">v1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">4</span>,<span class="dv" style="color: #AD0000;">5</span>,<span class="dv" style="color: #AD0000;">8</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb39-3"></span>
+<span id="cb39-4"></span>
+<span id="cb39-5"><span class="co" style="color: #5E5E5E;">#logical test</span></span>
+<span id="cb39-6">v1 <span class="sc" style="color: #5E5E5E;">&gt;</span> <span class="dv" style="color: #AD0000;">3</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><span class="co" style="color: #5E5E5E;">#use sum to get how many numbers are grater than 3</span></span>
+<span id="cb41-2"><span class="fu" style="color: #4758AB;">sum</span>(v1 <span class="sc" style="color: #5E5E5E;">&gt;</span> <span class="dv" style="color: #AD0000;">3</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<p>The post is getting long, so that’s it for now! In the next one we will talk about objects with larger dimensions like <code>matrix</code> and <code>data.frame</code>.</p>
+<p>I’m waiting for you!</p>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>base</category>
+  <guid>https://quartodomarcel.netlify.app/posts/R-objects/index.html</guid>
+  <pubDate>Fri, 12 Aug 2022 03:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/R-objects/cubes-g23e20f481_1920.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>My first R package</title>
+  <dc:creator>Marcel Ferreira</dc:creator>
+  <link>https://quartodomarcel.netlify.app/posts/post-with-code/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Hello everybody, I’m really excited to announce that I have finished (or almost) my first R package. The <code>tidyspec</code>: a package to analyze spectroscopy data using tidy-data philosophy.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://quartodomarcel.netlify.app/posts/post-with-code/tidyspec_prov.png" class="img-fluid figure-img" width="400"></p>
+<p></p><figcaption class="figure-caption">preliminar hex</figcaption><p></p>
+</figure>
+</div>
+<p>In the next few weeks I will be writing the function documentation and then finalizing the package. I am very happy because when I started using R to analyze my FTIR (infrared spectroscopy) data I could not apply <code>tidyverse</code> functions to my pipelines. It took me months of wracking my brains to find a model to leverage the existing packages and connect them to the <code>tidyverse</code>.</p>
+<p>You can check the <a href="https://github.com/marceelrf/tidyspec">github repository</a>.</p>
+<p>Enjoy!</p>
+
+
+
+ ]]></description>
+  <category>news</category>
+  <category>R</category>
+  <category>FTIR</category>
+  <category>biomaterials</category>
+  <guid>https://quartodomarcel.netlify.app/posts/post-with-code/index.html</guid>
+  <pubDate>Thu, 11 Aug 2022 03:00:00 GMT</pubDate>
+  <media:content url="https://quartodomarcel.netlify.app/posts/post-with-code/tidyspec_prov.png" medium="image" type="image/png" height="165" width="144"/>
 </item>
 </channel>
 </rss>

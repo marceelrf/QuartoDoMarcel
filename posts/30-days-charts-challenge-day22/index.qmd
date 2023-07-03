@@ -5,6 +5,7 @@ author: "Marcel Ferreira"
 date: "2023-04-22"
 categories: [R, Dataviz]
 image: "brazil.png"
+include-in-header: "../../asScript.js"
 ---
 
 ```{r}

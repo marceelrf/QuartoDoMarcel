@@ -5,6 +5,7 @@ author: "Marcel Ferreira"
 date: "2023-04-14"
 categories: [Observable,JavaScript, Dataviz]
 image: "chart.png"
+include-in-header: "../../asScript.js"
 ---
 
 In this day I used [Observablehq](https://observablehq.com/) as a new tool.

@@ -3,6 +3,7 @@ title: "Welcome To My Blog"
 author: "Marcel Ferreira"
 date: "2022-08-10"
 categories: [news]
+include-in-header: "../../asScript.js"
 ---
 
 This is the first post in a Quarto blog. Welcome!

@@ -5,6 +5,7 @@ author: "Marcel Ferreira"
 date: "2023-04-01"
 categories: [R, Dataviz]
 image: "Marvel_Logo.png"
+include-in-header: "../../asScript.js"
 ---
 
 ## Data

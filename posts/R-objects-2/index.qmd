@@ -5,6 +5,7 @@ author: "Marcel Ferreira"
 date: "2022-08-24"
 categories: [R, base]
 image: "matrix-2502954_1280.jpg"
+include-in-header: "../../asScript.js"
 ---
 
 

@@ -5,6 +5,7 @@ author: "Marcel Ferreira"
 date: "2023-04-12"
 categories: [R, Dataviz]
 image: "BBC_News_2019.svg.png"
+include-in-header: "../../asScript.js"
 ---
 
 ```{r}

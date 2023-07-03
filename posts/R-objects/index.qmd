@@ -5,6 +5,7 @@ author: "Marcel Ferreira"
 date: "2022-08-12"
 categories: [R, base]
 image: "cubes-g23e20f481_1920.jpg"
+include-in-header: "../../asScript.js"
 ---
 
 ```{=html}

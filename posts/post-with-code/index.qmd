@@ -4,6 +4,7 @@ author: "Marcel Ferreira"
 date: "2022-08-11"
 categories: [news, R, FTIR, biomaterials]
 image: "tidyspec_prov.png"
+include-in-header: "../../asScript.js"
 ---
 
 Hello everybody, I'm really excited to announce that I have finished (or almost) my first R package. The `tidyspec`: a package to analyze spectroscopy data using tidy-data philosophy.

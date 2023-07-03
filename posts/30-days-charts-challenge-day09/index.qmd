@@ -5,6 +5,7 @@ author: "Marcel Ferreira"
 date: "2023-04-09"
 categories: [R, Dataviz]
 image: "Campeonato_Brasileiro_Série_A_logo.png"
+include-in-header: "../../asScript.js"
 ---
 
 ```{r}
