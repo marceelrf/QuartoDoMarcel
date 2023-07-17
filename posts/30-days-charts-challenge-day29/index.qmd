@@ -14,8 +14,8 @@ library(BiocPkgTools)
 library(extrafont)
 library(ggtext)
 ```
-## Data
 
+## Data
 
 ```{r}
 data <- biocDownloadStats(pkgType = "software")
@@ -35,7 +35,7 @@ DEp <- DEp %>%
 
 ```
 
-``` {r}
+```{r}
 DEp %>% 
   filter(BaseDate < "2023-05-01") %>% 
   ggplot(aes(x = BaseDate, y = ND, col = Package)) +
@@ -69,4 +69,3 @@ DEp %>%
 ggsave(filename = "day29_finalplot.png",
        dpi = 600,width = 11)
 ```
-
